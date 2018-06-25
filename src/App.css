@@ -18,10 +18,10 @@ body {
 }
 .pinBtn {
   float: left;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 300;
-  width: 75px;
-  height: 75px;
+  width: 65px;
+  height: 65px;
   border: 2px solid #ffffff;
   border-radius: 45px;
   background: #202020;
