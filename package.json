@@ -7,6 +7,7 @@
     "docker": "^1.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-motion": "^0.5.2",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4"
   },

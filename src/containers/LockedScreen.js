@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Motion, spring } from 'react-motion';
 //import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 //import Button from '@material-ui/core/Button';
@@ -31,20 +32,25 @@ export default class LockScreen extends Component {
          console.log(this.state.pinInput);
       }.bind(this);
 
-      // Toggle blinking pin input
-      setInterval(
-         function() {
-            this.setState({
-               blink: !this.state.blink
-            });
-         }.bind(this),
-         600
-      );
+      //Toggle blinking pin input
+      // setInterval(
+      //    function() {
+      //       this.setState({
+      //          //blink: !this.state.blink
+      //          bounceHeight: 0
+      //       });
+      //    }.bind(this),
+      //    600
+      // );
    }
 
    render() {
       const dialPad = [1, 2, 3, 4, 5, 6, 7, 8, 9, '?', 0, 'X'];
       const pinInput = [0, 1, 2, 3];
+
+      //const springConfig = { stiffness: 180, damping: 6 };
+      const config = { stiffness: 140, damping: 14 };
+      //const toCSS = rotateX => ({ transform: `rotateX: ${rotateX}deg` });
 
       const PinButtons = () => {
          return dialPad.map((num, i) => {
@@ -59,22 +65,50 @@ export default class LockScreen extends Component {
       const PinInput = () => {
          return pinInput.map((num, i) => {
             if (i >= this.state.pinInput.length) {
+               // EMPTY
                return (
-                  <div key={`pinInput${i}`} style={{ display: 'flex', width: '20%', height: 50 }}>
-                     <div
-                        style={{
-                           alignSelf: 'flex-end',
-                           width: '100%',
-                           height: 4,
-                           background: this.state.blink ? '#21c2f8' : 'none'
-                        }}
-                     />
-                  </div>
+                  <Motion defaultStyle={{ rotateX: 0 }} style={{ rotateX: spring(this.state.bounceHeight, config) }}>
+                     {value => (
+                        <div
+                           key={`pinInput${i}`}
+                           style={{
+                              display: 'flex',
+                              width: '20%',
+                              height: 50
+                              //transform: `rotateY: ${value.rotateX}deg`
+                           }}>
+                           <div
+                              style={{
+                                 alignSelf: 'flex-end',
+                                 width: '100%',
+                                 height: 2,
+                                 //background: this.state.blink ? '#21c2f8' : 'none'
+                                 background: '#21c2f8',
+                                 marginBottom: value.rotateX
+                                 //transform: `rotateX: ${value.rotateX}`
+                                 //transform: `rotateX: ${value.rotateX}deg`
+                              }}
+                           />
+                        </div>
+                     )}
+                  </Motion>
                );
             } else {
+               // FILLED
                return (
-                  <div key={`pinInput${i}`} style={{ width: '20%', height: 50 }}>
-                     <div style={{ width: '100%', height: '100%', background: '#bdc3c7', opacity: 0.5 }} />
+                  <div
+                     key={`pinInput${i}`}
+                     style={{ display: 'flex', justifyContent: 'center', width: '20%', height: 50 }}>
+                     <div
+                        style={{
+                           width: '50%',
+                           height: '50%',
+                           background: '#ffffff',
+                           opacity: 0.9,
+                           borderRadius: 30,
+                           marginTop: 10
+                        }}
+                     />
                   </div>
                );
             }
