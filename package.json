@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^1.2.3",
     "docker": "^1.0.0",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-motion": "^0.5.2",

@@ -1,0 +1,12 @@
+{
+  "manifest": {
+    "name": "xledg-app",
+    "version": "1.0.0",
+    "machine": "small",
+    "port": "3000",
+    "containers": [{
+      "id": "app",
+      "image": "whaus777/xledg:latest"
+    }]
+  }
+}
