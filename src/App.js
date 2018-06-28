@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import LockScreen from './containers/LockedScreen';
+import HomeScreen from './containers/HomeScreen';
 
 const Dashboard = () => (
    <div>
@@ -20,7 +21,8 @@ class App extends Component {
                {/*<div />*/}
                {/*</div>*/}
 
-               <Route exact path="/" component={LockScreen} />
+               <Route exact path="/" component={HomeScreen} />
+               <Route path="/locked" component={LockScreen} />
                <Route path="/dashboard" component={Dashboard} />
             </div>
          </Router>

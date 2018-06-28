@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
-import ActiveKey from './components/ActiveKey';
 //import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-//import Button from '@material-ui/core/Button';
-import xrpIcon from '../images/xrp-icon.svg';
+import ActiveKey from './components/ActiveKey';
+import Logo from './components/Logo';
 
 export default class LockScreen extends Component {
    constructor(props) {
@@ -29,7 +28,7 @@ export default class LockScreen extends Component {
          });
       } else if (keyCode === 8 || keyCode === 'X') {
          this.setState({
-            pinInput: this.state.pinInput.slice(0, -1)
+            pinInput: ''
          });
       }
       console.log(this.state.pinInput);
@@ -61,22 +60,7 @@ export default class LockScreen extends Component {
             }}>
             <div style={{ maxWidth: 300 }}>
                {/*TITLE*/}
-               <div
-                  style={{
-                     display: 'flex',
-                     justifyContent: 'center',
-                     margin: '30px 0 15px 0'
-                  }}>
-                  <img
-                     src={xrpIcon}
-                     style={{ maxWidth: 100, maxHeight: 100 }}
-                     alt={'xLedg - XRPL Decentralized Exchange'}
-                  />
-                  <div
-                     style={{ fontSize: 50, fontWeight: 100, color: '#ffffff', alignSelf: 'center', marginLeft: -10 }}>
-                     ledg
-                  </div>
-               </div>
+               <Logo size={'lg'} />
 
                <div style={{ display: 'flex', margin: '15px 20px 30px 20px', justifyContent: 'space-between' }}>
                   <ActiveKey length={this.state.pinInput.length - 1} i={0} />
