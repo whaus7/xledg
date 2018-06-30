@@ -12,10 +12,12 @@ export default class Logo extends Component {
    }
 
    render() {
+      const { size } = this.props;
+
       let svgSize = null;
       let textSize = null;
 
-      switch (this.props.size) {
+      switch (size) {
          case 'sm':
             svgSize = 50;
             textSize = 20;
@@ -35,7 +37,7 @@ export default class Logo extends Component {
             style={{
                display: 'flex',
                justifyContent: 'center',
-               margin: '30px 0 15px 0'
+               margin: this.props.margin
             }}>
             <img
                src={xrpIcon}
@@ -43,7 +45,13 @@ export default class Logo extends Component {
                alt={'xLedg - XRPL Decentralized Exchange'}
             />
             <div
-               style={{ fontSize: textSize, fontWeight: 100, color: '#ffffff', alignSelf: 'center', marginLeft: -10 }}>
+               style={{
+                  fontSize: textSize,
+                  fontWeight: 100,
+                  color: '#ffffff',
+                  alignSelf: 'center',
+                  marginLeft: size === 'sm' ? -5 : -10
+               }}>
                ledg
             </div>
          </div>
@@ -52,5 +60,6 @@ export default class Logo extends Component {
 }
 
 Logo.propTypes = {
-   size: PropTypes.string
+   size: PropTypes.string,
+   margin: PropTypes.string
 };

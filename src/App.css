@@ -9,6 +9,19 @@ body {
   font-family: 'Heebo', sans-serif;
 }
 
+/*GLOBAL COMPONENTS*/
+.btn {
+  float: left;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 5px 10px;
+  border: 2px solid #ffffff;
+  border-radius: 3px;
+  background: #202020;
+  color: #f3f7f8;
+  text-decoration: none;
+}
+
 /*DIAL PAD*/
 .pinBtnWrap {
   display: inline-flex;
@@ -30,7 +43,8 @@ body {
   align-items: center;
   justify-content: space-around;
 }
-.pinBtn:hover {
+.pinBtn:hover,
+.btn:hover {
   border-color: #21c2f8;
   cursor: pointer;
 }

@@ -13,7 +13,7 @@ export default class ActiveKey extends Component {
 
    render() {
       const springConfig = { stiffness: 80, damping: 10 };
-      const springRadiusConfig = { stiffness: 120, damping: 60 };
+      //const springRadiusConfig = { stiffness: 120, damping: 60 };
 
       const ActiveKeyToggle = () => {
          if (this.props.i === this.props.length) {
@@ -33,7 +33,7 @@ export default class ActiveKey extends Component {
                   style={{
                      width: spring(30, springConfig),
                      height: spring(30, springConfig),
-                     radius: spring(30, springRadiusConfig),
+                     radius: spring(30, springConfig),
                      offset: spring(10, springConfig),
                      red: spring(255, springConfig),
                      green: spring(255, springConfig),

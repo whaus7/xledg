@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
-//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import ActiveKey from './components/ActiveKey';
 import Logo from './components/Logo';
 
-export default class LockScreen extends Component {
+class LockScreen extends Component {
    constructor(props) {
       super(props);
 
       this.state = {
-         pinInput: ''
+         pinInput: '',
+         newAccount: this.props.db.get('pindata').then(function(pindata) {
+            console.log(pindata);
+            try {
+               if (pindata.data === undefined || pindata.data === '') {
+                  return true;
+               }
+            } catch (e) {
+               console.log(e);
+               return false;
+            }
+         })
       };
 
       this.validKey = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -60,7 +72,9 @@ export default class LockScreen extends Component {
             }}>
             <div style={{ maxWidth: 300 }}>
                {/*TITLE*/}
-               <Logo size={'lg'} />
+               <Link to="/" style={{ textDecoration: 'none' }}>
+                  <Logo size={'lg'} margin={'30px 0 15px 0'} />
+               </Link>
 
                <div style={{ display: 'flex', margin: '15px 20px 30px 20px', justifyContent: 'space-between' }}>
                   <ActiveKey length={this.state.pinInput.length - 1} i={0} />
@@ -75,3 +89,15 @@ export default class LockScreen extends Component {
       );
    }
 }
+
+const mapStateToProps = state => {
+   return {
+      db: state.db
+   };
+};
+
+const mapDispatchToProps = dispatch => {
+   return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LockScreen);
