@@ -12,8 +12,7 @@ export default class ActiveKey extends Component {
    }
 
    render() {
-      const springConfig = { stiffness: 80, damping: 10 };
-      //const springRadiusConfig = { stiffness: 120, damping: 60 };
+      const springConfig = { stiffness: 120, damping: 10 };
 
       const ActiveKeyToggle = () => {
          if (this.props.i === this.props.length) {
