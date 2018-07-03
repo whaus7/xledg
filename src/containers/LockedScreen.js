@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 //import sodium from 'sodium';
+import nacl_factory from 'js-nacl';
 import { Motion, spring } from 'react-motion';
 import Noty from 'noty';
 
 import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
 import ActiveKey from './components/ActiveKey';
+
 
 class LockScreen extends Component {
    constructor(props) {
@@ -36,6 +38,12 @@ class LockScreen extends Component {
             }
          });
 
+      // TESTING
+		nacl_factory.instantiate(function (nacl) {
+		   console.log('TESTING NACL')
+			console.log(nacl.to_hex(nacl.random_bytes(16)));
+		});
+
       this.validKey = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
       document.onkeydown = function(e) {
@@ -46,22 +54,22 @@ class LockScreen extends Component {
 
    componentWillMount() {}
 
-   /* Generate a checksum and prepend it to data, returns as hex */
+   //Generate a checksum and prepend it to data, returns as hex
    // tohex_chksum(data) {
    //    if (typeof data === 'string') data = sodium.from_string(data);
    //    return sodium.crypto_generichash(4, data, '', 'hex') + sodium.to_hex(data);
    // }
 
-   /* Remove a checksum from the front of data, check if the data matches
-	** return the data if the checksum matches (as uint8array) or false
-	** if data does not match */
-   // fromhex_chksum(hex, format) {
-   //    let chksum = hex.slice(0, 8);
-   //    let payload = sodium.from_hex(hex.slice(8));
-   //    if (sodium.crypto_generichash(4, payload, '', 'hex') != chksum) return false;
-   //    if (format == 'string') return sodium.to_string(payload);
-   //    return payload;
-   // }
+   //Remove a checksum from the front of data, check if the data matches
+	//return the data if the checksum matches (as uint8array) or false
+	//if data does not match
+	// fromhex_chksum(hex, format) {
+    //   let chksum = hex.slice(0, 8);
+    //   let payload = sodium.from_hex(hex.slice(8));
+    //   if (sodium.crypto_generichash(4, payload, '', 'hex') != chksum) return false;
+    //   if (format == 'string') return sodium.to_string(payload);
+    //   return payload;
+	// }
 
    updatePinInput(key, keyCode) {
       if (this.validKey.indexOf(key) !== -1 && this.state.pinInput.length < 4) {
@@ -99,14 +107,14 @@ class LockScreen extends Component {
          // MATCH SUCCESS
          if (this.state.pinRepeat === this.state.pinInput) {
             console.log('winner!');
-            // insert new pin into DB
-            // TODO compile error with sodium.js??
-            //let salt;
+            //insert new pin into DB
+            //TODO compile error with sodium.js??
+            // let salt;
             // let pindata = {
             //    salt: this.tohex_chksum((salt = sodium.randombytes_buf(sodium.crypto_shorthash_KEYBYTES))),
             //    hash: this.tohex_chksum(sodium.crypto_shorthash(this.state.pinInput, salt))
             // };
-
+				//
             // this.props.db
             //    .upsert('pindata', function(doc) {
             //       return { data: JSON.stringify(pindata) };
