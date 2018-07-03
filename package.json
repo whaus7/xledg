@@ -7,7 +7,6 @@
     "docker": "^1.0.0",
     "immutability-helper": "^2.7.1",
     "js-nacl": "^1.2.2",
-    "libsodium": "^0.7.3",
     "noty": "^3.2.0-beta",
     "pouchdb": "^7.0.0",
     "pouchdb-upsert": "^2.2.0",
@@ -20,8 +19,7 @@
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.5",
-    "reduxsauce": "^1.0.0",
-    "sodium": "^2.0.3"
+    "reduxsauce": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

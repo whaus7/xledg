@@ -55,7 +55,7 @@ body {
   position: fixed;
   margin: 0;
   padding: 0;
-  z-index: 9999999;
+  z-index: 5000;
   -webkit-transform: translateZ(0) scale(1, 1);
   transform: translateZ(0) scale(1, 1);
   -webkit-backface-visibility: hidden;
@@ -142,7 +142,6 @@ body {
   animation: noty_modal_out .3s ease-out;
   -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards; }
-
 @-webkit-keyframes noty_modal_in {
   100% {
     opacity: .3; } }
@@ -184,7 +183,6 @@ body {
 @keyframes noty_anim_height {
   100% {
     height: 0; } }
-
 /*NOTY THEME - SUNSET*/
 .noty_theme__sunset.noty_bar {
   margin: 4px 0;

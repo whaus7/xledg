@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-//import sodium from 'sodium';
 import nacl_factory from 'js-nacl';
 import { Motion, spring } from 'react-motion';
 import Noty from 'noty';
