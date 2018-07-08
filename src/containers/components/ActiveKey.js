@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Motion, spring } from 'react-motion';
 
-//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
 export default class ActiveKey extends Component {
    constructor(props) {
       super(props);

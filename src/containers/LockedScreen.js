@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import nacl_factory from 'js-nacl';
-import { Motion, spring } from 'react-motion';
-import Noty from 'noty';
+import { notification } from '../services/helpers';
 
 import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
 import ActiveKey from './components/ActiveKey';
-
 
 class LockScreen extends Component {
    constructor(props) {
@@ -21,11 +21,13 @@ class LockScreen extends Component {
          pinRepeat: ''
       };
 
+      // Set the current account status
       this.props.db
          .get('pindata')
          .then(function(pindata) {
             console.log('get pindata - then');
             console.log(pindata);
+            that.props.setAccount('existing');
          })
          .catch(function(e) {
             console.log('get pindata - catch');
@@ -37,12 +39,6 @@ class LockScreen extends Component {
             }
          });
 
-      // TESTING
-		nacl_factory.instantiate(function (nacl) {
-		   console.log('TESTING NACL')
-			console.log(nacl.to_hex(nacl.random_bytes(16)));
-		});
-
       this.validKey = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
       document.onkeydown = function(e) {
@@ -52,23 +48,6 @@ class LockScreen extends Component {
    }
 
    componentWillMount() {}
-
-   //Generate a checksum and prepend it to data, returns as hex
-   // tohex_chksum(data) {
-   //    if (typeof data === 'string') data = sodium.from_string(data);
-   //    return sodium.crypto_generichash(4, data, '', 'hex') + sodium.to_hex(data);
-   // }
-
-   //Remove a checksum from the front of data, check if the data matches
-	//return the data if the checksum matches (as uint8array) or false
-	//if data does not match
-	// fromhex_chksum(hex, format) {
-    //   let chksum = hex.slice(0, 8);
-    //   let payload = sodium.from_hex(hex.slice(8));
-    //   if (sodium.crypto_generichash(4, payload, '', 'hex') != chksum) return false;
-    //   if (format == 'string') return sodium.to_string(payload);
-    //   return payload;
-	// }
 
    updatePinInput(key, keyCode) {
       if (this.validKey.indexOf(key) !== -1 && this.state.pinInput.length < 4) {
@@ -97,52 +76,74 @@ class LockScreen extends Component {
    }
 
    updateLockedView() {
-      if (this.props.walletStatus === 'new' && this.state.pinRepeat === '') {
-         this.setState({
-            pinInput: '',
-            pinRepeat: this.state.pinInput
-         });
-      } else if (this.props.walletStatus === 'new' && this.state.pinRepeat !== '') {
-         // MATCH SUCCESS
-         if (this.state.pinRepeat === this.state.pinInput) {
-            console.log('winner!');
-            //insert new pin into DB
-            //TODO compile error with sodium.js??
-            // let salt;
-            // let pindata = {
-            //    salt: this.tohex_chksum((salt = sodium.randombytes_buf(sodium.crypto_shorthash_KEYBYTES))),
-            //    hash: this.tohex_chksum(sodium.crypto_shorthash(this.state.pinInput, salt))
-            // };
-				//
-            // this.props.db
-            //    .upsert('pindata', function(doc) {
-            //       return { data: JSON.stringify(pindata) };
-            //    })
-            //    .then(function(x) {
-            //       console.log('insert pin - then');
-            //       console.log(x);
-            //    })
-            //    .catch(function(x) {
-            //       console.log('insert pin - catch');
-            //       console.log(x);
-            //    });
-         } else {
-            // NO MATCH ERROR
-            new Noty({
-               text: 'Mismatching PIN',
-               theme: 'sunset',
-               type: 'error',
-               layout: 'top',
-               timeout: 3000
-            }).show();
+      let that = this;
 
-            this.setState({
-               pinInput: '',
-               pinRepeat: ''
-            });
-         }
-      } else if (this.props.walletStatus === 'existing') {
-         // TODO check if pin matches DB - toast example
+      switch (this.props.walletStatus) {
+         case 'new':
+            // NEW ACCOUNT - PIN REPEAT
+            if (this.state.pinRepeat === '') {
+               this.setState({
+                  pinInput: '',
+                  pinRepeat: this.state.pinInput
+               });
+            } else if (this.state.pinRepeat !== '') {
+               // NEW ACCOUNT
+               // MATCH SUCCESS
+               if (this.state.pinRepeat === this.state.pinInput) {
+                  nacl_factory.instantiate(function(nacl) {
+                     // Some big salt
+                     let salt = nacl.to_hex(nacl.random_bytes(64));
+
+                     that.props.db.upsert('pindata', function(doc) {
+                        return {
+                           salt: salt,
+                           hash: nacl.to_hex(nacl.crypto_hash_string(salt + that.state.pinInput))
+                        };
+                     });
+
+                     // New account set - change views
+                     that.props.history.push('/password');
+                  });
+               } else {
+                  // NO MATCH ERROR
+                  notification('Mismatching PIN');
+
+                  this.setState({
+                     pinInput: '',
+                     pinRepeat: ''
+                  });
+               }
+            }
+            break;
+         case 'existing':
+            // EXISTING ACCOUNT CHECK IF PIN MATCHES
+            this.props.db
+               .get('pindata')
+               .then(function(pindata) {
+                  console.log('get pindata - then');
+                  console.log(pindata);
+
+                  // Check if PIN matches
+                  nacl_factory.instantiate(function(nacl) {
+                     // PIN MATCH
+                     if (nacl.to_hex(nacl.crypto_hash_string(pindata.salt + that.state.pinInput)) === pindata.hash) {
+                        that.props.history.push('/dashboard');
+                     } else {
+                        // NO MATCH ERROR
+                        notification('Invalid PIN');
+
+                        that.setState({
+                           pinInput: '',
+                           pinRepeat: ''
+                        });
+                     }
+                  });
+               })
+               .catch(function(e) {
+                  console.log('get pindata - catch');
+                  console.log(e);
+               });
+            break;
       }
    }
 
@@ -224,4 +225,4 @@ const mapDispatchToProps = dispatch => {
    };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LockScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LockScreen));

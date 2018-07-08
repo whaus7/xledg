@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Motion, spring } from 'react-motion';
 
 import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
@@ -14,11 +14,13 @@ class HomeScreen extends Component {
 
       this.state = {};
 
+      // Set the current account status
       this.props.db
          .get('pindata')
          .then(function(pindata) {
             console.log('get pindata - then');
             console.log(pindata);
+            that.props.setAccount('existing');
          })
          .catch(function(e) {
             console.log('get pindata - catch');
@@ -62,6 +64,25 @@ class HomeScreen extends Component {
                <div>
                   <Logo size={'sm'} margin={'0'} />
                </div>
+
+               {/*DEBUG - CLEAR LOCAL DB*/}
+               <div style={{ alignSelf: 'center' }}>
+                  <div
+                     className={'btn'}
+                     onClick={() => {
+                        this.props.db.get('pindata').then(
+                           function(doc) {
+                              return this.props.db.remove(doc);
+                           }.bind(this)
+                        );
+
+                        this.props.setAccount('new');
+                     }}
+                     style={{ marginRight: 15 }}>
+                     CLEAR DB
+                  </div>
+               </div>
+
                {walletStatus !== null ? (
                   <div style={{ alignSelf: 'center' }}>
                      {walletStatus === 'existing' ? (

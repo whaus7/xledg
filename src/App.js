@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import store from './redux';
-import { Provider, connect } from 'react-redux';
+import { Provider } from 'react-redux';
 import './App.css';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import LockScreen from './containers/LockedScreen';
 import HomeScreen from './containers/HomeScreen';
+import Password from './containers/Password';
 
 const Dashboard = () => (
    <div>
@@ -26,6 +27,7 @@ class App extends Component {
 
                   <Route exact path="/" component={HomeScreen} />
                   <Route path="/locked" component={LockScreen} />
+                  <Route path="/password" component={Password} />
                   <Route path="/dashboard" component={Dashboard} />
                </div>
             </Router>

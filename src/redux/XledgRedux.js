@@ -1,6 +1,7 @@
 import { createReducer, createActions } from 'reduxsauce';
 import update from 'immutability-helper';
 import PouchDB from 'pouchdb';
+PouchDB.plugin(require('pouchdb-upsert'));
 
 /* ------------- Types and Action Creators ------------- */
 

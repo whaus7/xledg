@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import xrpIcon from '../../images/xrp-icon.svg';
 
@@ -30,6 +29,11 @@ export default class Logo extends Component {
             svgSize = 100;
             textSize = 50;
             break;
+            // Default to small
+         default:
+				svgSize = 50;
+				textSize = 20;
+				break;
       }
 
       return (

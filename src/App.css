@@ -8,6 +8,11 @@
 body {
   font-family: 'Heebo', sans-serif;
 }
+p {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
 
 /*GLOBAL COMPONENTS*/
 .btn {
@@ -20,6 +25,9 @@ body {
   background: #202020;
   color: #f3f7f8;
   text-decoration: none;
+}
+.inputDark input {
+  color: #ffffff;
 }
 
 /*DIAL PAD*/
