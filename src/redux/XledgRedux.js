@@ -8,7 +8,11 @@ PouchDB.plugin(require('pouchdb-upsert'));
 const { Types, Creators } = createActions({
    // set the current account status
    // 'new', 'existing', 'corrupt'
-   setAccount: ['status']
+   setAccount: ['status'],
+
+   getGateways: [],
+   getGatewaysSuccess: ['response'],
+   getGatewaysFailure: ['error']
 });
 
 export const ActionTypes = Types;
@@ -18,7 +22,9 @@ export default Creators;
 
 export const INITIAL_STATE = {
    db: new PouchDB('xledg_db'),
-   walletStatus: null
+   walletStatus: null,
+   gateways: null,
+   submitFetching: 'idle'
 };
 
 /* ------------- Reducers ------------- */
@@ -37,8 +43,37 @@ export const xledgReducer = (state, action) => {
    }
 };
 
+export const dataApiReducer = (state, action) => {
+   switch (action.type) {
+      case 'GET_GATEWAYS':
+         return update(state, {
+            submitFetching: { $set: 'idle' }
+         });
+      case 'GET_GATEWAYS_SUCCESS':
+         console.log('DEBUG REDUX - get gateways');
+         console.log(state);
+         console.log(action);
+
+         //return state;
+         return update(state, {
+            gateways: { $set: action.response.data },
+            submitFetching: { $set: 'success' }
+         });
+      case 'GET_GATEWAYS_FAILURE':
+         return update(state, {
+            submitFetching: { $set: 'fail' }
+         });
+      default:
+         return state;
+   }
+};
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-   [Types.SET_ACCOUNT]: xledgReducer
+   [Types.SET_ACCOUNT]: xledgReducer,
+
+   [Types.GET_GATEWAYS]: dataApiReducer,
+   [Types.GET_GATEWAYS_SUCCESS]: dataApiReducer,
+   [Types.GET_GATEWAYS_FAILURE]: dataApiReducer
 });

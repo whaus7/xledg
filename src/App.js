@@ -7,12 +7,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import LockScreen from './containers/LockedScreen';
 import HomeScreen from './containers/HomeScreen';
 import Password from './containers/Password';
-
-const Dashboard = () => (
-   <div>
-      <h2>Wallet Dashboard</h2>
-   </div>
-);
+import Dashboard from './containers/Dashboard';
 
 class App extends Component {
    render() {
