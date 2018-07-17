@@ -33,6 +33,15 @@ export function updateSelectBasic(e, field) {
    this.setState({ [field]: e });
 }
 
+export const groupBy = (items, key) =>
+   items.reduce(
+      (result, item) => ({
+         ...result,
+         [item[key]]: [...(result[item[key]] || []), item]
+      }),
+      {}
+   );
+
 export const materialTheme = createMuiTheme({
    palette: {
       type: 'dark',

@@ -9,7 +9,6 @@ const { Types, Creators } = createActions({
    // set the current account status
    // 'new', 'existing', 'corrupt'
    setAccount: ['status'],
-
    getGateways: [],
    getGatewaysSuccess: ['response'],
    getGatewaysFailure: ['error']

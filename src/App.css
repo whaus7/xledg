@@ -7,11 +7,23 @@
 
 body {
   font-family: 'Heebo', sans-serif;
+  letter-spacing: 0.05em;
 }
 p {
   font-size: 12px;
   font-weight: 300;
-  letter-spacing: 0.05em;
+}
+label {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.07em;
+}
+h2 {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  margin: 0 0 10px 0;
 }
 
 /*GLOBAL COMPONENTS*/
