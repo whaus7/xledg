@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
 import Balances from './components/Balances';
+import TradingUI from './components/TradingUI';
 
 const RippleAPI = require('ripple-lib').RippleAPI;
 
@@ -21,6 +22,7 @@ class Dashboard extends Component {
             server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
          }),
          balanceSheet: null
+         //balances: null
       };
 
       // const api = new RippleAPI({
@@ -51,9 +53,9 @@ class Dashboard extends Component {
             /* insert code here */
             this.updateBalances();
          })
-         .then(() => {
-            //return api.disconnect();
-         })
+         //.then(() => {
+         //return api.disconnect();
+         //})
          .catch(console.error);
 
       // Set the current account status
@@ -76,6 +78,14 @@ class Dashboard extends Component {
    }
 
    updateBalances() {
+      this.state.api.getAccountInfo('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf').then(accountInfo => {
+         console.log('ACCOUNT INFO');
+         console.log(accountInfo);
+         this.setState({
+            accountInfo: accountInfo
+         });
+      });
+
       this.state.api.getBalanceSheet('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf').then(balanceSheet => {
          console.log('BALANCE SHEET');
          console.log(balanceSheet);
@@ -83,9 +93,22 @@ class Dashboard extends Component {
             balanceSheet: balanceSheet
          });
       });
+
+      // this.state.api.getBalances('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf').then(balances => {
+      //    console.log('BALANCES');
+      //    console.log(balances);
+      //    this.setState({
+      //       balances: balances
+      //    });
+      // });
    }
 
    componentWillReceiveProps(props) {
+      // close the modal if we have a successful saga
+      if (props.submitFetching === 'success') {
+         this.props.resetToIdle();
+      }
+
       console.log('props received');
       if (props.gateways !== null) {
          console.log('GATEWAYS');
@@ -119,8 +142,8 @@ class Dashboard extends Component {
                   background: '#202020',
                   justifyContent: 'space-between',
                   boxSizing: 'border-box',
-                  //height: 50,
-                  padding: 15
+                  padding: 15,
+                  borderBottom: '1px solid #383939'
                }}>
                {/*LOGO*/}
                <div>
@@ -132,7 +155,7 @@ class Dashboard extends Component {
 
             {/*BODY*/}
             <div
-               id={'header'}
+               id={'body'}
                style={{
                   display: 'flex',
                   width: '100%',
@@ -140,39 +163,51 @@ class Dashboard extends Component {
                   justifyContent: 'space-between',
                   boxSizing: 'border-box'
                }}>
-               {/*LEFT BAR*/}
+               {/*BALANCES*/}
                <div
                   style={{
                      width: '15%',
                      height: '100vh',
                      textAlign: 'left',
-                     background: '#2b2b2b',
                      color: '#ffffff',
-                     padding: 15
+                     padding: 15,
+                     borderRight: '1px solid #383939'
                   }}>
                   <h2>BALANCES</h2>
-                  {this.props.gateways !== null && this.state.balanceSheet !== null ? (
-                     <Balances gateways={this.props.gateways} balanceSheet={this.state.balanceSheet} />
+                  {this.props.gateways !== null && this.state.balanceSheet !== null && this.state.balances !== null ? (
+                     <Balances
+                        gateways={this.props.gateways}
+                        accountInfo={this.state.accountInfo}
+                        balanceSheet={this.state.balanceSheet}
+                     />
                   ) : (
                      false
                   )}
                </div>
 
-               {/*LEFT BAR*/}
+               {/*TRADING UI - OFFERS/ASK*/}
                <div
                   style={{
-                     width: '70%'
+                     width: '40%'
                   }}>
-                  BODY
+                  <TradingUI gateways={this.props.gateways} />
                </div>
 
-               {/*LEFT BAR*/}
+               {/*ORDER BOOK*/}
                <div
                   style={{
-                     width: '15%'
+                     width: '45%'
                   }}>
-                  RIGHT BAR
+                  ORDER BOOK
                </div>
+
+               {/*RIGHT BAR*/}
+               {/*<div*/}
+               {/*style={{*/}
+               {/*width: '15%'*/}
+               {/*}}>*/}
+               {/*RIGHT BAR*/}
+               {/*</div>*/}
             </div>
          </div>
       );
@@ -190,6 +225,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
    return {
+      resetToIdle: () => {
+         dispatch(ReduxActions.resetToIdle());
+      },
       setAccount: status => {
          dispatch(ReduxActions.setAccount(status));
       },

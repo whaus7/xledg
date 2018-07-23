@@ -4,9 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import nacl_factory from 'js-nacl';
-//import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider } from '@material-ui/core/styles';
-//import WithTheme from './WithTheme';
 import TextField from '@material-ui/core/TextField';
 
 import { notification, updateInput, materialTheme } from '../services/helpers';
@@ -78,31 +76,26 @@ class Password extends Component {
                   {/*CURRENT STATUS*/}
                   <p style={{ margin: '15px 0 0 0', color: '#ffffff' }}>{<CurrentStatus />}</p>
 
-                  {/*TODO - inputs by material UI google*/}
-                  <div style={{ margin: 0 }}>
-                     {/*<input />*/}
-                     <TextField
-                        id="password-input"
-                        value={this.state.passwordInput}
-                        onChange={e => this.updateInput(e, 'passwordInput')}
-                        label="Password"
-                        type="password"
-                        margin="normal"
-                        color="secondary"
-                     />
-                  </div>
-                  <div style={{ margin: 0 }}>
-                     {/*<input value={this.state.passwordRepeat} onInput={e => this.updateInput(e, 'passwordRepeat')} />*/}
-                     <TextField
-                        id="password-repeat"
-                        value={this.state.passwordRepeat}
-                        onChange={e => this.updateInput(e, 'passwordRepeat')}
-                        label="Repeat"
-                        type="password"
-                        margin="normal"
-                        color="secondary"
-                     />
-                  </div>
+                  {/*inputs by google material-ui*/}
+                  <TextField
+                     id="password-input"
+                     value={this.state.passwordInput}
+                     onChange={e => this.updateInput(e, 'passwordInput')}
+                     label="Password"
+                     type="password"
+                     margin="normal"
+                     color="secondary"
+                  />
+
+                  <TextField
+                     id="password-repeat"
+                     value={this.state.passwordRepeat}
+                     onChange={e => this.updateInput(e, 'passwordRepeat')}
+                     label="Repeat"
+                     type="password"
+                     margin="normal"
+                     color="secondary"
+                  />
 
                   {/*INSTRUCTIONS*/}
                   <p style={{ margin: '35px 0', color: '#ffffff' }}>

@@ -6,6 +6,9 @@ PouchDB.plugin(require('pouchdb-upsert'));
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
+   // reset saga progress variable to idle
+   resetToIdle: [],
+
    // set the current account status
    // 'new', 'existing', 'corrupt'
    setAccount: ['status'],
@@ -29,6 +32,10 @@ export const INITIAL_STATE = {
 /* ------------- Reducers ------------- */
 export const xledgReducer = (state, action) => {
    switch (action.type) {
+      case 'RESET_TO_IDLE':
+         return update(state, {
+            submitFetching: { $set: 'idle' }
+         });
       case 'SET_ACCOUNT':
          console.log('DEBUG REDUX - set account');
          console.log(state);
@@ -71,6 +78,7 @@ export const dataApiReducer = (state, action) => {
 
 export const reducer = createReducer(INITIAL_STATE, {
    [Types.SET_ACCOUNT]: xledgReducer,
+   [Types.RESET_TO_IDLE]: xledgReducer,
 
    [Types.GET_GATEWAYS]: dataApiReducer,
    [Types.GET_GATEWAYS_SUCCESS]: dataApiReducer,
