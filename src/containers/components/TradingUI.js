@@ -8,9 +8,13 @@ import 'react-select/dist/react-select.css';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import CurrencyFormatter from 'currency-formatter';
 
-import { materialTheme, updateInput } from '../../services/helpers';
+import { materialTheme, updateInput, importAll } from '../../services/helpers';
 
 import MAJOR_CURRENCIES from '../../services/major_currencies';
+const CURRENCY_ICONS = importAll(require.context('../../images/currency_icons', false, /\.(svg)$/));
+
+//import BTC_icon from '../../images/currency_icons/BTC.svg';
+//import XRP_icon from '../../images/currency_icons/XRP.svg';
 
 export default class TradingUI extends Component {
    constructor(props) {
@@ -23,6 +27,11 @@ export default class TradingUI extends Component {
       };
 
       this.updateInput = updateInput.bind(this);
+   }
+
+   componentDidMount() {
+      console.log('images');
+      console.log(CURRENCY_ICONS);
    }
 
    componentWillMount() {}
@@ -64,8 +73,18 @@ export default class TradingUI extends Component {
                   onMouseEnter={this.handleMouseEnter.bind(this)}
                   onMouseMove={this.handleMouseMove.bind(this)}
                   title={this.props.option.title}>
-                  {this.props.option.email}
-                  {this.props.children}
+                  <div style={{ display: 'flex' }}>
+                     <div style={{ alignSelf: 'center', marginRight: 10 }}>
+                        <img
+                           src={CURRENCY_ICONS[`${this.props.option.value}.svg`]}
+                           style={{ maxWidth: 25, maxHeight: 25 }}
+                        />
+                     </div>
+                     <div>
+                        <div style={{ marginRight: 10 }}>{this.props.option.value}</div>
+                        <div style={{ fontSize: 12, color: '#bdc3c7' }}>{this.props.option.label}</div>
+                     </div>
+                  </div>
                </div>
             );
          }

@@ -5,8 +5,9 @@ const MAJOR_CURRENCIES = [
    { value: 'ETH', label: 'Ethereum', icon: '/icons/ethereum.png' },
    { value: 'LTC', label: 'Litecoin', icon: '/icons/litecoin.png' },
    { value: 'USD', label: 'Dollar', icon: '/icons/usd.png' },
+   { value: 'USDT', label: 'Tether', icon: '/icons/usdt.png' },
    { value: 'EUR', label: 'Euro', icon: '/icons/eur.png' },
-   { value: 'KRW', label: 'KRW', icon: '/icons/krw.png' },
+   //{ value: 'KRW', label: 'KRW', icon: '/icons/krw.png' },
    { value: 'JPY', label: 'JPY', icon: '/icons/jpy.png' }
 ];
 

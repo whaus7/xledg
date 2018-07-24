@@ -11,24 +11,19 @@ export function notification(msg) {
    }).show();
 }
 
+// Input update helpers
 // Bind in constructor
 export function updateInput(e, field) {
    this.setState({ [field]: e.target.value });
 }
-
-// Bind in constructor
 export function updateInputNumber(e, field) {
    this.setState({ [field]: parseInt(e.target.value) });
 }
-
-// Bind in constructor
 export function updateInputToggle(e, field) {
    this.setState({
       [field]: e.target.checked
    });
 }
-
-// Bind in constructor
 export function updateSelectBasic(e, field) {
    this.setState({ [field]: e });
 }
@@ -41,6 +36,14 @@ export const groupBy = (items, key) =>
       }),
       {}
    );
+
+export function importAll(r) {
+   let images = {};
+   r.keys().map((item, index) => {
+      images[item.replace('./', '')] = r(item);
+   });
+   return images;
+}
 
 export const materialTheme = createMuiTheme({
    palette: {

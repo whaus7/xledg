@@ -57,6 +57,12 @@ h2 {
 .Select.has-value .Select-control {
   opacity: 1 !important;
 }
+.Select-menu-outer {
+  max-height: 400px !important;
+}
+.Select-menu {
+  max-height: 498px !important;
+}
 
 /*DIAL PAD*/
 .pinBtnWrap {
