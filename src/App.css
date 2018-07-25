@@ -61,7 +61,10 @@ h2 {
   max-height: 400px !important;
 }
 .Select-menu {
-  max-height: 498px !important;
+  max-height: 398px !important;
+}
+.Select-option {
+  padding: 4px 8px;
 }
 
 /*DIAL PAD*/
@@ -85,9 +88,12 @@ h2 {
   align-items: center;
   justify-content: space-around;
 }
-.pinBtn:hover,
-.btn:hover {
+.pinBtn:hover {
   border-color: #21c2f8 !important;
+  cursor: pointer;
+}
+.btn:hover {
+  opacity: 1 !important;
   cursor: pointer;
 }
 
