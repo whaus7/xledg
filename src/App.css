@@ -58,13 +58,13 @@ h2 {
   opacity: 1 !important;
 }
 .Select-menu-outer {
-  max-height: 400px !important;
+  max-height: 300px !important;
 }
 .Select-menu {
-  max-height: 398px !important;
+  max-height: 298px !important;
 }
 .Select-option {
-  padding: 4px 8px;
+  padding: 3px 8px;
 }
 
 /*DIAL PAD*/

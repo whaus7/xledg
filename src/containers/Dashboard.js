@@ -8,6 +8,7 @@ import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
 import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
+import OrderBook from './components/OrderBook';
 
 const RippleAPI = require('ripple-lib').RippleAPI;
 
@@ -198,7 +199,7 @@ class Dashboard extends Component {
                   style={{
                      width: '45%'
                   }}>
-                  ORDER BOOK
+                  <OrderBook />
                </div>
 
                {/*RIGHT BAR*/}

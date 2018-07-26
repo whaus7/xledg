@@ -9,7 +9,8 @@ import { OverlayTrigger, Popover } from 'react-bootstrap';
 import { materialTheme, updateInput, importAll } from '../../services/helpers';
 
 import MAJOR_CURRENCIES from '../../services/major_currencies';
-const CURRENCY_ICONS = importAll(require.context('../../images/currency_icons', false, /\.(svg)$/));
+const CURRENCY_ICONS_BLACK = importAll(require.context('../../images/currency_icons/black', false, /\.(svg)$/));
+const CURRENCY_ICONS_WHITE = importAll(require.context('../../images/currency_icons/white', false, /\.(svg)$/));
 
 export default class TradingUI extends Component {
    constructor(props) {
@@ -25,8 +26,8 @@ export default class TradingUI extends Component {
    }
 
    componentDidMount() {
-      console.log('images');
-      console.log(CURRENCY_ICONS);
+      // console.log('images');
+      // console.log(CURRENCY_ICONS);
    }
 
    componentWillMount() {}
@@ -72,11 +73,11 @@ export default class TradingUI extends Component {
                   <div style={{ display: 'flex' }}>
                      <div style={{ alignSelf: 'center', marginRight: 10 }}>
                         <img
-                           src={CURRENCY_ICONS[`${this.props.option.value}.svg`]}
+                           src={CURRENCY_ICONS_BLACK[`${this.props.option.value}.svg`]}
                            style={{ maxWidth: 25, maxHeight: 25 }}
                         />
                      </div>
-                     <div style={{ marginRight: 10, lineHeight: '18px' }}>
+                     <div style={{ marginRight: 10, lineHeight: '16px' }}>
                         <div style={{ marginRight: 10 }}>{this.props.option.value}</div>
                         <div style={{ fontSize: 12, color: '#bdc3c7' }}>{this.props.option.label}</div>
                      </div>
@@ -106,10 +107,16 @@ export default class TradingUI extends Component {
          render() {
             return (
                <div className="Select-value" title={this.props.value.title}>
-                  <span className="Select-value-label" style={{ color: '#ffffff', opacity: 1 }}>
-                     {this.props.value.title}
-                     {this.props.children}
-                  </span>
+                  <div style={{ display: 'flex', height: '100%' }}>
+                     <img
+                        src={CURRENCY_ICONS_WHITE[`${this.props.value.value}.svg`]}
+                        style={{ maxWidth: 22, maxHeight: 22, alignSelf: 'center', marginRight: 10 }}
+                     />
+                     <div style={{ marginRight: 10, lineHeight: '14px', alignSelf: 'center' }}>
+                        <div style={{ marginRight: 10, fontSize: 12 }}>{this.props.value.value}</div>
+                        <div style={{ fontSize: 11, color: '#bdc3c7' }}>{this.props.value.label}</div>
+                     </div>
+                  </div>
                </div>
             );
          }
