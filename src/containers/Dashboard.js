@@ -22,7 +22,8 @@ class Dashboard extends Component {
          api: new RippleAPI({
             server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
          }),
-         balanceSheet: null
+         balanceSheet: null,
+         orderBook: null
          //balances: null
       };
 
@@ -51,31 +52,47 @@ class Dashboard extends Component {
       this.state.api
          .connect()
          .then(() => {
-            /* insert code here */
-            this.updateBalances();
-         })
-         //.then(() => {
-         //return api.disconnect();
-         //})
-         .catch(console.error);
+            // Get the current wallet/account balances
+            that.updateBalances();
+            // Get the current orderbook
+            that.updateOrderBook();
 
-      // Set the current account status
-      // this.props.db
-      //    .get('pindata')
-      //    .then(function(pindata) {
-      //       console.log('get pindata - then');
-      //       console.log(pindata);
-      //       that.props.setAccount('existing');
-      //    })
-      //    .catch(function(e) {
-      //       console.log('get pindata - catch');
-      //       console.log(e);
-      //       if (e.message === 'missing') {
-      //          that.props.setAccount('new');
-      //       } else {
-      //          that.props.setAccount('existing');
-      //       }
-      //    });
+            setInterval(function() {
+               // Get the current wallet/account balances
+               that.updateBalances();
+
+               // Get the current orderbook
+               that.updateOrderBook();
+            }, 20000);
+         })
+         .catch(console.error);
+   }
+
+   updateOrderBook() {
+      this.state.api
+         .getOrderbook(
+            'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+            {
+               base: {
+                  currency: 'XRP'
+                  //counterparty: ''
+               },
+               counter: {
+                  currency: 'USD',
+                  counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
+               }
+            },
+            {
+               limit: 10
+            }
+         )
+         .then(orderBook => {
+            console.log('ORDER BOOK');
+            console.log(orderBook);
+            this.setState({
+               orderBook: orderBook
+            });
+         });
    }
 
    updateBalances() {
@@ -199,7 +216,7 @@ class Dashboard extends Component {
                   style={{
                      width: '45%'
                   }}>
-                  <OrderBook />
+                  {this.state.orderBook !== null ? <OrderBook orderBook={this.state.orderBook} /> : false}
                </div>
 
                {/*RIGHT BAR*/}
