@@ -23,13 +23,20 @@ class Dashboard extends Component {
             server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
          }),
          balanceSheet: null,
-         orderBook: null
-         //balances: null
-      };
+         orderBook: null,
 
-      // const api = new RippleAPI({
-      //    server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
-      // });
+         // DEFAULT PAIR
+         pair: {
+            base: {
+               currency: 'XRP'
+               //counterparty: ''
+            },
+            counter: {
+               currency: 'USD',
+               counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
+            }
+         }
+      };
 
       // Ripple API for XRP Ledger
       this.props.getGateways();
@@ -62,30 +69,26 @@ class Dashboard extends Component {
                that.updateBalances();
 
                // Get the current orderbook
-               that.updateOrderBook();
-            }, 20000);
+               if (that.state.orderInfo !== null) {
+                  that.updateOrderBook();
+               }
+            }, 200000);
          })
          .catch(console.error);
    }
 
+   // TODO build the pair from the order info and update the pair state
+   // call updateOrderBook on setState callback
+   updatePair() {}
+
    updateOrderBook() {
+      console.log('ORDER INFO');
+      console.log(this.state.orderInfo);
+
       this.state.api
-         .getOrderbook(
-            'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
-            {
-               base: {
-                  currency: 'XRP'
-                  //counterparty: ''
-               },
-               counter: {
-                  currency: 'USD',
-                  counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
-               }
-            },
-            {
-               limit: 10
-            }
-         )
+         .getOrderbook('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', this.state.pair, {
+            limit: 10
+         })
          .then(orderBook => {
             console.log('ORDER BOOK');
             console.log(orderBook);
@@ -208,7 +211,17 @@ class Dashboard extends Component {
                   style={{
                      width: '40%'
                   }}>
-                  <TradingUI gateways={this.props.gateways} />
+                  <TradingUI
+                     gateways={this.props.gateways}
+                     updateOrder={orderInfo => {
+                        this.setState(
+                           {
+                              orderInfo: orderInfo
+                           },
+                           () => this.updateOrderBook()
+                        );
+                     }}
+                  />
                </div>
 
                {/*ORDER BOOK*/}
@@ -216,7 +229,15 @@ class Dashboard extends Component {
                   style={{
                      width: '45%'
                   }}>
-                  {this.state.orderBook !== null ? <OrderBook orderBook={this.state.orderBook} /> : false}
+                  {this.state.orderBook !== null ? (
+                     <OrderBook orderBook={this.state.orderBook} />
+                  ) : (
+                     <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
+                        <div style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>
+                           Select a Trading Pair to View Order Book
+                        </div>
+                     </div>
+                  )}
                </div>
 
                {/*RIGHT BAR*/}

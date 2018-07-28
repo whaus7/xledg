@@ -18,11 +18,15 @@ export default class TradingUI extends Component {
 
       this.state = {
          action: 'buy',
-         offerAmountInput: '',
-         offerCurrency: ''
+         // BASE
+         baseAmount: '',
+         baseCurrency: '',
+         // COUNTER
+         counterAmount: '',
+         counterCurrency: ''
       };
 
-      this.updateInput = updateInput.bind(this);
+      // this.updateInput = updateInput.bind(this);
    }
 
    componentDidMount() {
@@ -34,9 +38,16 @@ export default class TradingUI extends Component {
 
    componentWillReceiveProps() {}
 
-   // onSelectChange(value) {
-   //    this.setState({ offerCurrency: value });
-   // }
+   updateOrder() {
+      if (
+         this.state.baseCurrency !== '' &&
+         this.state.baseCurrency.value.length === 3 &&
+         this.state.counterCurrency !== '' &&
+         this.state.counterCurrency.value.length === 3
+      ) {
+         this.props.updateOrder(this.state);
+      }
+   }
 
    render() {
       const { accountInfo, gateways, balanceSheet } = this.props;
@@ -159,27 +170,63 @@ export default class TradingUI extends Component {
                </div>
             </div>
 
-            {/*OFFER CONTAINER*/}
+            {/*OFFER (BASE) CONTAINER*/}
             <div style={{ display: 'flex', padding: '0 15px 15px 15px' }}>
                <div style={{ width: '100%', paddingRight: 15 }}>
                   <TextField
                      style={{
-                        width: '100%'
+                        width: '100%',
+                        marginBottom: 10
                      }}
                      id="offer-amount-input"
-                     value={this.state.offerAmountInput}
-                     onChange={e => this.updateInput(e, 'offerAmountInput')}
+                     value={this.state.baseAmount}
+                     onChange={e => {
+                        this.setState({ baseAmount: e.target.value }, () => this.updateOrder());
+                     }}
                      label="Amount"
                      type="number"
                      margin="none"
                      color="secondary"
                   />
+
+                  <Select
+                     onChange={val => {
+                        this.setState({ baseCurrency: val }, () => this.updateOrder());
+                     }}
+                     value={this.state.baseCurrency}
+                     optionComponent={CurrencyOption}
+                     options={MAJOR_CURRENCIES}
+                     placeholder={'Currency'}
+                     valueComponent={CurrencyValue}
+                  />
                </div>
 
-               <div style={{ width: '100%', alignSelf: 'flex-end' }}>
+               {/*@ SIGN*/}
+               <div style={{ alignSelf: 'center', fontSize: 30, fontWeight: 100, color: '#ffffff' }}>@</div>
+
+               {/*ASK (COUNTER) CONTAINER*/}
+               <div style={{ width: '100%', paddingLeft: 15 }}>
+                  <TextField
+                     style={{
+                        width: '100%',
+                        marginBottom: 10
+                     }}
+                     id="offer-amount-input"
+                     value={this.state.counterAmount}
+                     onChange={e => {
+                        this.setState({ counterAmount: e.target.value }, () => this.updateOrder());
+                     }}
+                     label="Amount"
+                     type="number"
+                     margin="none"
+                     color="secondary"
+                  />
+
                   <Select
-                     onChange={val => this.setState({ offerCurrency: val })}
-                     value={this.state.offerCurrency}
+                     onChange={val => {
+                        this.setState({ counterCurrency: val }, () => this.updateOrder());
+                     }}
+                     value={this.state.counterCurrency}
                      optionComponent={CurrencyOption}
                      options={MAJOR_CURRENCIES}
                      placeholder={'Currency'}
@@ -195,5 +242,6 @@ export default class TradingUI extends Component {
 TradingUI.propTypes = {
    gateways: PropTypes.object,
    accountInfo: PropTypes.object,
-   balanceSheet: PropTypes.object
+   balanceSheet: PropTypes.object,
+   updateOrder: PropTypes.func
 };
