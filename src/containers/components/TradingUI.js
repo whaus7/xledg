@@ -16,15 +16,15 @@ export default class TradingUI extends Component {
    constructor(props) {
       super(props);
 
-      this.state = {
-         action: 'buy',
-         // BASE
-         baseAmount: '',
-         baseCurrency: '',
-         // COUNTER
-         counterAmount: '',
-         counterCurrency: ''
-      };
+      // this.state = {
+      //    action: 'buy',
+      //    // BASE
+      //    baseAmount: '',
+      //    baseCurrency: '',
+      //    // COUNTER
+      //    counterPrice: '',
+      //    counterCurrency: ''
+      // };
 
       // this.updateInput = updateInput.bind(this);
    }
@@ -40,10 +40,10 @@ export default class TradingUI extends Component {
 
    updateOrder() {
       if (
-         this.state.baseCurrency !== '' &&
-         this.state.baseCurrency.value.length === 3 &&
-         this.state.counterCurrency !== '' &&
-         this.state.counterCurrency.value.length === 3
+         this.props.baseCurrency !== '' &&
+         this.props.baseCurrency.value.length === 3 &&
+         this.props.counterCurrency !== '' &&
+         this.props.counterCurrency.value.length === 3
       ) {
          this.props.updateOrder(this.state);
       }
@@ -52,7 +52,7 @@ export default class TradingUI extends Component {
    render() {
       const { accountInfo, gateways, balanceSheet } = this.props;
 
-      // OPTION
+      // OPTION - REACT-SELECT
       class CurrencyOption extends Component {
          constructor(props) {
             super(props);
@@ -82,15 +82,17 @@ export default class TradingUI extends Component {
                   onMouseMove={this.handleMouseMove.bind(this)}
                   title={this.props.option.title}>
                   <div style={{ display: 'flex' }}>
-                     <div style={{ alignSelf: 'center', marginRight: 10 }}>
+                     <div style={{ alignSelf: 'center', marginRight: 10, height: 20 }}>
                         <img
                            src={CURRENCY_ICONS_BLACK[`${this.props.option.value}.svg`]}
-                           style={{ maxWidth: 25, maxHeight: 25 }}
+                           style={{ maxWidth: 20, maxHeight: 20 }}
                         />
                      </div>
-                     <div style={{ marginRight: 10, lineHeight: '16px' }}>
-                        <div style={{ marginRight: 10 }}>{this.props.option.value}</div>
-                        <div style={{ fontSize: 12, color: '#bdc3c7' }}>{this.props.option.label}</div>
+                     <div style={{ fontSize: 16, minWidth: 40, marginRight: 10, alignSelf: 'center' }}>
+                        {this.props.option.value}
+                     </div>
+                     <div style={{ fontSize: 12, alignSelf: 'center', color: '#bdc3c7' }}>
+                        {this.props.option.label}
                      </div>
                   </div>
                </div>
@@ -109,7 +111,7 @@ export default class TradingUI extends Component {
          option: PropTypes.object.isRequired
       };
 
-      // SELECTION
+      // SELECTION - REACT-SELECT
       class CurrencyValue extends Component {
          constructor(props) {
             super(props);
@@ -121,12 +123,10 @@ export default class TradingUI extends Component {
                   <div style={{ display: 'flex', height: '100%' }}>
                      <img
                         src={CURRENCY_ICONS_WHITE[`${this.props.value.value}.svg`]}
-                        style={{ maxWidth: 22, maxHeight: 22, alignSelf: 'center', marginRight: 10 }}
+                        style={{ maxWidth: 20, maxHeight: 20, alignSelf: 'center', marginRight: 10 }}
                      />
-                     <div style={{ marginRight: 10, lineHeight: '14px', alignSelf: 'center' }}>
-                        <div style={{ marginRight: 10, fontSize: 12 }}>{this.props.value.value}</div>
-                        <div style={{ fontSize: 11, color: '#bdc3c7' }}>{this.props.value.label}</div>
-                     </div>
+                     <div style={{ fontSize: 16, marginRight: 10 }}>{this.props.value.value}</div>
+                     <div style={{ fontSize: 12, color: '#bdc3c7' }}>{this.props.value.label}</div>
                   </div>
                </div>
             );
@@ -145,12 +145,13 @@ export default class TradingUI extends Component {
             <div style={{ display: 'flex', padding: 15 }}>
                <div
                   onClick={() => {
-                     this.setState({ action: 'buy' });
+                     //this.setState({ action: 'buy' });
+                     this.props.updateAction('buy');
                   }}
                   className={'btn'}
                   style={{
-                     borderColor: this.state.action === 'buy' ? '#21c2f8' : '#ffffff',
-                     opacity: this.state.action === 'buy' ? 1 : 0.5,
+                     borderColor: this.props.action === 'buy' ? '#21c2f8' : '#ffffff',
+                     opacity: this.props.action === 'buy' ? 1 : 0.5,
                      width: '100%',
                      marginRight: 10
                   }}>
@@ -158,12 +159,13 @@ export default class TradingUI extends Component {
                </div>
                <div
                   onClick={() => {
-                     this.setState({ action: 'sell' });
+                     //this.setState({ action: 'sell' });
+                     this.props.updateAction('sell');
                   }}
                   className={'btn'}
                   style={{
-                     borderColor: this.state.action === 'sell' ? '#21c2f8' : '#ffffff',
-                     opacity: this.state.action === 'sell' ? 1 : 0.5,
+                     borderColor: this.props.action === 'sell' ? '#21c2f8' : '#ffffff',
+                     opacity: this.props.action === 'sell' ? 1 : 0.5,
                      width: '100%'
                   }}>
                   SELL
@@ -179,7 +181,7 @@ export default class TradingUI extends Component {
                         marginBottom: 10
                      }}
                      id="offer-amount-input"
-                     value={this.state.baseAmount}
+                     value={this.props.baseAmount}
                      onChange={e => {
                         this.setState({ baseAmount: e.target.value }, () => this.updateOrder());
                      }}
@@ -193,7 +195,7 @@ export default class TradingUI extends Component {
                      onChange={val => {
                         this.setState({ baseCurrency: val }, () => this.updateOrder());
                      }}
-                     value={this.state.baseCurrency}
+                     value={this.props.baseCurrency}
                      optionComponent={CurrencyOption}
                      options={MAJOR_CURRENCIES}
                      placeholder={'Currency'}
@@ -211,12 +213,12 @@ export default class TradingUI extends Component {
                         width: '100%',
                         marginBottom: 10
                      }}
-                     id="offer-amount-input"
-                     value={this.state.counterAmount}
+                     id="offer-price-input"
+                     value={this.props.counterPrice}
                      onChange={e => {
-                        this.setState({ counterAmount: e.target.value }, () => this.updateOrder());
+                        this.setState({ counterPrice: e.target.value }, () => this.updateOrder());
                      }}
-                     label="Amount"
+                     label="Price"
                      type="number"
                      margin="none"
                      color="secondary"
@@ -226,7 +228,7 @@ export default class TradingUI extends Component {
                      onChange={val => {
                         this.setState({ counterCurrency: val }, () => this.updateOrder());
                      }}
-                     value={this.state.counterCurrency}
+                     value={this.props.counterCurrency}
                      optionComponent={CurrencyOption}
                      options={MAJOR_CURRENCIES}
                      placeholder={'Currency'}
@@ -243,5 +245,10 @@ TradingUI.propTypes = {
    gateways: PropTypes.object,
    accountInfo: PropTypes.object,
    balanceSheet: PropTypes.object,
-   updateOrder: PropTypes.func
+
+   updateAction: PropTypes.func,
+   updateBaseAmount: PropTypes.func,
+   updateBaseCurrency: PropTypes.func,
+   updateCounterPrice: PropTypes.func,
+   updateCounterCurrency: PropTypes.func
 };

@@ -14,7 +14,13 @@ const { Types, Creators } = createActions({
    setAccount: ['status'],
    getGateways: [],
    getGatewaysSuccess: ['response'],
-   getGatewaysFailure: ['error']
+   getGatewaysFailure: ['error'],
+
+   updateAction: ['action'],
+   updateBaseAmount: ['amount'],
+   updateBaseCurrency: ['currency'],
+   updateCounterPrice: ['price'],
+   updateCounterCurrency: ['currency']
 });
 
 export const ActionTypes = Types;
@@ -26,7 +32,15 @@ export const INITIAL_STATE = {
    db: new PouchDB('xledg_db'),
    walletStatus: null,
    gateways: null,
-   submitFetching: 'idle'
+   submitFetching: 'idle',
+
+   action: 'buy',
+   // BASE
+   baseAmount: '',
+   baseCurrency: '',
+   // COUNTER
+   counterPrice: '',
+   counterCurrency: ''
 };
 
 /* ------------- Reducers ------------- */
@@ -43,6 +57,26 @@ export const xledgReducer = (state, action) => {
 
          return update(state, {
             walletStatus: { $set: action.status }
+         });
+      case 'UPDATE_ACTION':
+         return update(state, {
+            action: { $set: action.action }
+         });
+      case 'UPDATE_BASE_AMOUNT':
+         return update(state, {
+            baseAmount: { $set: action.amount }
+         });
+      case 'UPDATE_BASE_CURRENCY':
+         return update(state, {
+            baseCurrency: { $set: action.currency }
+         });
+      case 'UPDATE_COUNTER_PRICE':
+         return update(state, {
+            counterPrice: { $set: action.price }
+         });
+      case 'UPDATE_COUNTER_CURRENCY':
+         return update(state, {
+            counterCurrency: { $set: action.currency }
          });
       default:
          return state;
@@ -79,6 +113,12 @@ export const dataApiReducer = (state, action) => {
 export const reducer = createReducer(INITIAL_STATE, {
    [Types.SET_ACCOUNT]: xledgReducer,
    [Types.RESET_TO_IDLE]: xledgReducer,
+
+   [Types.UPDATE_ACTION]: xledgReducer,
+   [Types.UPDATE_BASE_AMOUNT]: xledgReducer,
+   [Types.UPDATE_BASE_CURRENCY]: xledgReducer,
+   [Types.UPDATE_COUNTER_PRICE]: xledgReducer,
+   [Types.UPDATE_COUNTER_CURRENCY]: xledgReducer,
 
    [Types.GET_GATEWAYS]: dataApiReducer,
    [Types.GET_GATEWAYS_SUCCESS]: dataApiReducer,

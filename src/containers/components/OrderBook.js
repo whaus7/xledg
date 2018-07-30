@@ -20,7 +20,14 @@ export default class OrderBook extends Component {
 
    componentWillMount() {}
 
-   componentWillReceiveProps() {}
+   componentWillUpdate() {
+      console.log('wtf?');
+   }
+
+   componentWillReceiveProps(nextProps) {
+      console.log('nextProps');
+      console.log(nextProps);
+   }
 
    render() {
       const { orderBook } = this.props;
@@ -53,23 +60,24 @@ export default class OrderBook extends Component {
                display: 'flex',
                color: '#ffffff',
                padding: 15,
-               fontSize: 12
+               fontSize: 12,
+               flexDirection: this.props.action === 'buy' ? 'row' : 'row-reverse'
             }}>
             <div
                style={{
-                  width: '100%',
-                  paddingLeft: 10
+                  width: '100%'
+                  //paddingRight: 10
                }}>
-               <h2>OFFERS TO BUY</h2>
-               <Orders orders={orderBook.bids} type={'bids'} />
+               <h2 style={{ color: this.props.action === 'buy' ? '#21c2f8' : '#ffffff' }}>OFFERS TO SELL</h2>
+               <Orders orders={orderBook.asks} type={'asks'} />
             </div>
             <div
                style={{
-                  width: '100%',
-                  paddingRight: 10
+                  width: '100%'
+                  //paddingLeft: 10
                }}>
-               <h2>OFFERS TO SELL</h2>
-               <Orders orders={orderBook.asks} type={'asks'} />
+               <h2 style={{ color: this.props.action === 'sell' ? '#21c2f8' : '#ffffff' }}>OFFERS TO BUY</h2>
+               <Orders orders={orderBook.bids} type={'bids'} />
             </div>
          </div>
       );
@@ -77,5 +85,6 @@ export default class OrderBook extends Component {
 }
 
 OrderBook.propTypes = {
-   orderBook: PropTypes.object
+   orderBook: PropTypes.object,
+   action: PropTypes.string
 };

@@ -29,7 +29,7 @@ class Dashboard extends Component {
          pair: {
             base: {
                currency: 'XRP'
-               //counterparty: ''
+               //counterparty: false
             },
             counter: {
                currency: 'USD',
@@ -79,7 +79,34 @@ class Dashboard extends Component {
 
    // TODO build the pair from the order info and update the pair state
    // call updateOrderBook on setState callback
-   updatePair() {}
+   updatePair(orderInfo) {
+      let pair = {
+         base: {
+            currency: orderInfo.baseCurrency.value
+         },
+         counter: {
+            currency: orderInfo.counterCurrency.value,
+            counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
+         }
+      };
+
+      // TODO need UI for selecting counterparty and wire it into pair below
+      if (orderInfo.baseCurrency.value !== 'XRP') {
+         pair.base.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
+      }
+
+      if (orderInfo.counterCurrency.value !== 'XRP') {
+         pair.counter.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
+      }
+
+      this.setState(
+         {
+            orderInfo: orderInfo,
+            pair: pair
+         },
+         () => this.updateOrderBook()
+      );
+   }
 
    updateOrderBook() {
       console.log('ORDER INFO');
@@ -212,25 +239,31 @@ class Dashboard extends Component {
                      width: '40%'
                   }}>
                   <TradingUI
-                     gateways={this.props.gateways}
-                     updateOrder={orderInfo => {
-                        this.setState(
-                           {
-                              orderInfo: orderInfo
-                           },
-                           () => this.updateOrderBook()
-                        );
-                     }}
+                     {...this.props}
+                     //gateways={this.props.gateways}
+                     // updateOrder={orderInfo => {
+                     //    this.setState(
+                     //       {
+                     //          orderInfo: orderInfo
+                     //       },
+                     //       () => this.updatePair()
+                     //    );
+                     // }}
+                     // orderInfo={this.props.orderInfo}
+                     // updateOrder={orderInfo => {
+                     //    this.props.updateOrder(orderInfo);
+                     // }}
                   />
                </div>
 
                {/*ORDER BOOK*/}
                <div
                   style={{
-                     width: '45%'
+                     width: '45%',
+                     borderLeft: '1px solid #383939'
                   }}>
                   {this.state.orderBook !== null ? (
-                     <OrderBook orderBook={this.state.orderBook} />
+                     <OrderBook orderBook={this.state.orderBook} action={this.props.action} />
                   ) : (
                      <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
                         <div style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>
@@ -258,7 +291,12 @@ const mapStateToProps = state => {
       db: state.xledg.db,
       walletStatus: state.xledg.walletStatus,
       gateways: state.xledg.gateways,
-      submitFetching: state.xledg.submitFetching
+      submitFetching: state.xledg.submitFetching,
+      action: state.xledg.action,
+      baseAmount: state.xledg.baseAmount,
+      baseCurrency: state.xledg.baseCurrency,
+      counterPrice: state.xledg.counterPrice,
+      counterCurrency: state.xledg.counterCurrency
    };
 };
 
@@ -272,6 +310,21 @@ const mapDispatchToProps = dispatch => {
       },
       getGateways: () => {
          dispatch(ReduxActions.getGateways());
+      },
+      updateAction: action => {
+         dispatch(ReduxActions.updateAction(action));
+      },
+      updateBaseAmount: amount => {
+         dispatch(ReduxActions.updateAction(amount));
+      },
+      updateBaseCurrency: currency => {
+         dispatch(ReduxActions.updateAction(currency));
+      },
+      updateCounterPrice: price => {
+         dispatch(ReduxActions.updateCounterPrice(price));
+      },
+      updateCounterCurrency: currency => {
+         dispatch(ReduxActions.updateCounterCurrency(currency));
       }
    };
 };
