@@ -38,16 +38,16 @@ export default class TradingUI extends Component {
 
    componentWillReceiveProps() {}
 
-   updateOrder() {
-      if (
-         this.props.baseCurrency !== '' &&
-         this.props.baseCurrency.value.length === 3 &&
-         this.props.counterCurrency !== '' &&
-         this.props.counterCurrency.value.length === 3
-      ) {
-         this.props.updateOrder(this.state);
-      }
-   }
+   // updateOrder() {
+   //    if (
+   //       this.props.baseCurrency !== '' &&
+   //       this.props.baseCurrency.value.length === 3 &&
+   //       this.props.counterCurrency !== '' &&
+   //       this.props.counterCurrency.value.length === 3
+   //    ) {
+   //       this.props.updateOrder(this.state);
+   //    }
+   // }
 
    render() {
       const { accountInfo, gateways, balanceSheet } = this.props;
@@ -183,7 +183,8 @@ export default class TradingUI extends Component {
                      id="offer-amount-input"
                      value={this.props.baseAmount}
                      onChange={e => {
-                        this.setState({ baseAmount: e.target.value }, () => this.updateOrder());
+                        //this.setState({ baseAmount: e.target.value }, () => this.updateOrder());
+                        this.props.updateBaseAmount(e.target.value);
                      }}
                      label="Amount"
                      type="number"
@@ -193,7 +194,8 @@ export default class TradingUI extends Component {
 
                   <Select
                      onChange={val => {
-                        this.setState({ baseCurrency: val }, () => this.updateOrder());
+                        //this.setState({ baseCurrency: val }, () => this.updateOrder());
+                        this.props.updateBaseCurrency(val);
                      }}
                      value={this.props.baseCurrency}
                      optionComponent={CurrencyOption}
@@ -216,7 +218,8 @@ export default class TradingUI extends Component {
                      id="offer-price-input"
                      value={this.props.counterPrice}
                      onChange={e => {
-                        this.setState({ counterPrice: e.target.value }, () => this.updateOrder());
+                        //this.setState({ counterPrice: e.target.value }, () => this.updateOrder());
+                        this.props.updateCounterPrice(e.target.value);
                      }}
                      label="Price"
                      type="number"
@@ -226,7 +229,8 @@ export default class TradingUI extends Component {
 
                   <Select
                      onChange={val => {
-                        this.setState({ counterCurrency: val }, () => this.updateOrder());
+                        //this.setState({ counterCurrency: val }, () => this.updateOrder());
+                        this.props.updateCounterCurrency(val);
                      }}
                      value={this.props.counterCurrency}
                      optionComponent={CurrencyOption}

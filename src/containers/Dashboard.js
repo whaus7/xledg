@@ -19,11 +19,12 @@ class Dashboard extends Component {
       let that = this;
 
       this.state = {
+         balanceSheet: null,
+         orderBook: null,
+
          api: new RippleAPI({
             server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
          }),
-         balanceSheet: null,
-         orderBook: null,
 
          // DEFAULT PAIR
          pair: {
@@ -292,6 +293,7 @@ const mapStateToProps = state => {
       walletStatus: state.xledg.walletStatus,
       gateways: state.xledg.gateways,
       submitFetching: state.xledg.submitFetching,
+
       action: state.xledg.action,
       baseAmount: state.xledg.baseAmount,
       baseCurrency: state.xledg.baseCurrency,
@@ -315,10 +317,10 @@ const mapDispatchToProps = dispatch => {
          dispatch(ReduxActions.updateAction(action));
       },
       updateBaseAmount: amount => {
-         dispatch(ReduxActions.updateAction(amount));
+         dispatch(ReduxActions.updateBaseAmount(amount));
       },
       updateBaseCurrency: currency => {
-         dispatch(ReduxActions.updateAction(currency));
+         dispatch(ReduxActions.updateBaseCurrency(currency));
       },
       updateCounterPrice: price => {
          dispatch(ReduxActions.updateCounterPrice(price));

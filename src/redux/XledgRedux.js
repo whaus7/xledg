@@ -2,9 +2,9 @@ import { createReducer, createActions } from 'reduxsauce';
 import update from 'immutability-helper';
 import PouchDB from 'pouchdb';
 PouchDB.plugin(require('pouchdb-upsert'));
+const RippleAPI = require('ripple-lib').RippleAPI;
 
 /* ------------- Types and Action Creators ------------- */
-
 const { Types, Creators } = createActions({
    // reset saga progress variable to idle
    resetToIdle: [],
@@ -34,6 +34,9 @@ export const INITIAL_STATE = {
    gateways: null,
    submitFetching: 'idle',
 
+   // api: new RippleAPI({
+   //    server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
+   // }),
    action: 'buy',
    // BASE
    baseAmount: '',
