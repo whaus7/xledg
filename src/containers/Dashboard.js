@@ -22,9 +22,9 @@ class Dashboard extends Component {
          balanceSheet: null,
          orderBook: null,
 
-         api: new RippleAPI({
-            server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
-         }),
+         // api: new RippleAPI({
+         //    server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
+         // }),
 
          // DEFAULT PAIR
          pair: {
@@ -39,43 +39,43 @@ class Dashboard extends Component {
          }
       };
 
-      // Ripple API for XRP Ledger
-      this.props.getGateways();
+      // // Ripple API for XRP Ledger
+      // this.props.getGateways();
+      //
+      // // DATA API - XRP Ledger
+      // this.state.api.on('error', (errorCode, errorMessage) => {
+      //    console.log(errorCode + ': ' + errorMessage);
+      // });
+      //
+      // this.state.api.on('connected', () => {
+      //    console.log('connected');
+      // });
+      //
+      // this.state.api.on('disconnected', code => {
+      //    // code - [close code](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent) sent by the server
+      //    // will be 1000 if this was normal closure
+      //    console.log('disconnected, code:', code);
+      // });
 
-      // DATA API - XRP Ledger
-      this.state.api.on('error', (errorCode, errorMessage) => {
-         console.log(errorCode + ': ' + errorMessage);
-      });
-
-      this.state.api.on('connected', () => {
-         console.log('connected');
-      });
-
-      this.state.api.on('disconnected', code => {
-         // code - [close code](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent) sent by the server
-         // will be 1000 if this was normal closure
-         console.log('disconnected, code:', code);
-      });
-
-      this.state.api
-         .connect()
-         .then(() => {
-            // Get the current wallet/account balances
-            that.updateBalances();
-            // Get the current orderbook
-            that.updateOrderBook();
-
-            setInterval(function() {
-               // Get the current wallet/account balances
-               that.updateBalances();
-
-               // Get the current orderbook
-               if (that.state.orderInfo !== null) {
-                  that.updateOrderBook();
-               }
-            }, 200000);
-         })
-         .catch(console.error);
+      // this.state.api
+      //    .connect()
+      //    .then(() => {
+      //       // Get the current wallet/account balances
+      //       that.updateBalances();
+      //       // Get the current orderbook
+      //       that.updateOrderBook();
+      //
+      //       setInterval(function() {
+      //          // Get the current wallet/account balances
+      //          that.updateBalances();
+      //
+      //          // Get the current orderbook
+      //          if (that.state.orderInfo !== null) {
+      //             that.updateOrderBook();
+      //          }
+      //       }, 200000);
+      //    })
+      //    .catch(console.error);
    }
 
    // TODO build the pair from the order info and update the pair state
@@ -306,9 +306,6 @@ const mapDispatchToProps = dispatch => {
    return {
       resetToIdle: () => {
          dispatch(ReduxActions.resetToIdle());
-      },
-      setAccount: status => {
-         dispatch(ReduxActions.setAccount(status));
       },
       getGateways: () => {
          dispatch(ReduxActions.getGateways());
