@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-//import Grid from '@material-ui/core/Grid';
-//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import ReduxActions from '../redux/XledgRedux';
@@ -10,178 +7,47 @@ import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
 import OrderBook from './components/OrderBook';
 
-const RippleAPI = require('ripple-lib').RippleAPI;
-
 class Dashboard extends Component {
    constructor(props) {
       super(props);
 
-      let that = this;
-
-      this.state = {
-         balanceSheet: null,
-         orderBook: null,
-
-         // api: new RippleAPI({
-         //    server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
-         // }),
-
-         // DEFAULT PAIR
-         pair: {
-            base: {
-               currency: 'XRP'
-               //counterparty: false
-            },
-            counter: {
-               currency: 'USD',
-               counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
-            }
-         }
-      };
-
-      // // Ripple API for XRP Ledger
-      // this.props.getGateways();
-      //
-      // // DATA API - XRP Ledger
-      // this.state.api.on('error', (errorCode, errorMessage) => {
-      //    console.log(errorCode + ': ' + errorMessage);
-      // });
-      //
-      // this.state.api.on('connected', () => {
-      //    console.log('connected');
-      // });
-      //
-      // this.state.api.on('disconnected', code => {
-      //    // code - [close code](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent) sent by the server
-      //    // will be 1000 if this was normal closure
-      //    console.log('disconnected, code:', code);
-      // });
-
-      // this.state.api
-      //    .connect()
-      //    .then(() => {
-      //       // Get the current wallet/account balances
-      //       that.updateBalances();
-      //       // Get the current orderbook
-      //       that.updateOrderBook();
-      //
-      //       setInterval(function() {
-      //          // Get the current wallet/account balances
-      //          that.updateBalances();
-      //
-      //          // Get the current orderbook
-      //          if (that.state.orderInfo !== null) {
-      //             that.updateOrderBook();
-      //          }
-      //       }, 200000);
-      //    })
-      //    .catch(console.error);
+      // Connect to Ripple API
+      this.props.connect();
    }
 
-   // TODO build the pair from the order info and update the pair state
-   // call updateOrderBook on setState callback
-   updatePair(orderInfo) {
-      let pair = {
-         base: {
-            currency: orderInfo.baseCurrency.value
-         },
-         counter: {
-            currency: orderInfo.counterCurrency.value,
-            counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
-         }
-      };
-
-      // TODO need UI for selecting counterparty and wire it into pair below
-      if (orderInfo.baseCurrency.value !== 'XRP') {
-         pair.base.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
+   componentWillReceiveProps(nextProps) {
+      if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
+         this.props.getGateways();
+         this.props.getBalanceSheet();
+         this.props.getAccountInfo();
+         this.props.updateOrderBook(nextProps.pair);
       }
 
-      if (orderInfo.counterCurrency.value !== 'XRP') {
-         pair.counter.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
+      // Update the order book immediately if pair is changed
+      if (
+         nextProps.baseCurrency.value !== this.props.baseCurrency.value ||
+         nextProps.counterCurrency.value !== this.props.counterCurrency.value
+      ) {
+         this.props.updateOrderBook(nextProps.pair);
       }
 
-      this.setState(
-         {
-            orderInfo: orderInfo,
-            pair: pair
-         },
-         () => this.updateOrderBook()
-      );
-   }
-
-   updateOrderBook() {
-      console.log('ORDER INFO');
-      console.log(this.state.orderInfo);
-
-      this.state.api
-         .getOrderbook('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', this.state.pair, {
-            limit: 10
-         })
-         .then(orderBook => {
-            console.log('ORDER BOOK');
-            console.log(orderBook);
-            this.setState({
-               orderBook: orderBook
-            });
-         });
-   }
-
-   updateBalances() {
-      this.state.api.getAccountInfo('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf').then(accountInfo => {
-         console.log('ACCOUNT INFO');
-         console.log(accountInfo);
-         this.setState({
-            accountInfo: accountInfo
-         });
-      });
-
-      this.state.api.getBalanceSheet('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf').then(balanceSheet => {
-         console.log('BALANCE SHEET');
-         console.log(balanceSheet);
-         this.setState({
-            balanceSheet: balanceSheet
-         });
-      });
-
-      // this.state.api.getBalances('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf').then(balances => {
-      //    console.log('BALANCES');
-      //    console.log(balances);
-      //    this.setState({
-      //       balances: balances
-      //    });
-      // });
-   }
-
-   componentWillReceiveProps(props) {
-      // close the modal if we have a successful saga
-      if (props.submitFetching === 'success') {
-         this.props.resetToIdle();
-      }
-
-      console.log('props received');
-      if (props.gateways !== null) {
-         console.log('GATEWAYS');
-         console.log(props.gateways);
-         console.log('BALANCE SHEET');
-         console.log(this.state.balanceSheet);
-      }
+      // TODO need a good way to update on interval
+      // Maybe just a timeout delay on props receiving since there is too many updates this way
+      // setInterval(function() {
+      //    if (nextProps.rippleApiConnected) {
+      //       nextProps.getBalanceSheet();
+      //       nextProps.getAccountInfo();
+      //       nextProps.updateOrderBook(nextProps.pair);
+      //    }
+      // }, 20000);
    }
 
    render() {
-      const { walletStatus } = this.props;
+      //const { walletStatus } = this.props;
 
       return (
          // DASHBOARD
-         <div
-            style={
-               {
-                  // display: 'flex',
-                  // height: '100vh',
-                  // justifyContent: 'center',
-                  // textAlign: 'center',
-                  // background: '#202020'
-               }
-            }>
+         <div>
             {/*HEADER*/}
             <div
                id={'header'}
@@ -223,11 +89,13 @@ class Dashboard extends Component {
                      borderRight: '1px solid #383939'
                   }}>
                   <h2>BALANCES</h2>
-                  {this.props.gateways !== null && this.state.balanceSheet !== null && this.state.balances !== null ? (
+                  {this.props.gateways !== null &&
+                  this.props.balanceSheet !== null &&
+                  this.props.accountInfo !== null ? (
                      <Balances
                         gateways={this.props.gateways}
-                        accountInfo={this.state.accountInfo}
-                        balanceSheet={this.state.balanceSheet}
+                        accountInfo={this.props.accountInfo}
+                        balanceSheet={this.props.balanceSheet}
                      />
                   ) : (
                      false
@@ -239,22 +107,7 @@ class Dashboard extends Component {
                   style={{
                      width: '40%'
                   }}>
-                  <TradingUI
-                     {...this.props}
-                     //gateways={this.props.gateways}
-                     // updateOrder={orderInfo => {
-                     //    this.setState(
-                     //       {
-                     //          orderInfo: orderInfo
-                     //       },
-                     //       () => this.updatePair()
-                     //    );
-                     // }}
-                     // orderInfo={this.props.orderInfo}
-                     // updateOrder={orderInfo => {
-                     //    this.props.updateOrder(orderInfo);
-                     // }}
-                  />
+                  <TradingUI {...this.props} />
                </div>
 
                {/*ORDER BOOK*/}
@@ -263,11 +116,12 @@ class Dashboard extends Component {
                      width: '45%',
                      borderLeft: '1px solid #383939'
                   }}>
-                  {this.state.orderBook !== null ? (
-                     <OrderBook orderBook={this.state.orderBook} action={this.props.action} />
+                  {this.props.orderBook !== null ? (
+                     <OrderBook orderBook={this.props.orderBook} action={this.props.action} />
                   ) : (
                      <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
-                        <div style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>
+                        <div
+                           style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>
                            Select a Trading Pair to View Order Book
                         </div>
                      </div>
@@ -292,13 +146,16 @@ const mapStateToProps = state => {
       db: state.xledg.db,
       walletStatus: state.xledg.walletStatus,
       gateways: state.xledg.gateways,
-      submitFetching: state.xledg.submitFetching,
-
+      rippleApiConnected: state.xledg.rippleApiConnected,
+      accountInfo: state.xledg.accountInfo,
+      balanceSheet: state.xledg.balanceSheet,
       action: state.xledg.action,
       baseAmount: state.xledg.baseAmount,
       baseCurrency: state.xledg.baseCurrency,
       counterPrice: state.xledg.counterPrice,
-      counterCurrency: state.xledg.counterCurrency
+      counterCurrency: state.xledg.counterCurrency,
+      pair: state.xledg.pair,
+      orderBook: state.xledg.orderBook
    };
 };
 
@@ -307,8 +164,17 @@ const mapDispatchToProps = dispatch => {
       resetToIdle: () => {
          dispatch(ReduxActions.resetToIdle());
       },
+      connect: () => {
+         dispatch(ReduxActions.connect());
+      },
       getGateways: () => {
          dispatch(ReduxActions.getGateways());
+      },
+      getAccountInfo: () => {
+         dispatch(ReduxActions.getAccountInfo());
+      },
+      getBalanceSheet: () => {
+         dispatch(ReduxActions.getBalanceSheet());
       },
       updateAction: action => {
          dispatch(ReduxActions.updateAction(action));
@@ -324,6 +190,9 @@ const mapDispatchToProps = dispatch => {
       },
       updateCounterCurrency: currency => {
          dispatch(ReduxActions.updateCounterCurrency(currency));
+      },
+      updateOrderBook: pair => {
+         dispatch(ReduxActions.updateOrderBook(pair));
       }
    };
 };

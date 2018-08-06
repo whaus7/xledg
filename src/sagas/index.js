@@ -1,31 +1,20 @@
-import { takeLatest, all, take } from 'redux-saga/effects';
-//import 'babel-polyfill';
+import { takeLatest, all } from 'redux-saga/effects';
 import API from '../services/Api';
-//import DebugConfig from '../Config/DebugConfig';
 
-const RippleAPI = require('ripple-lib').RippleAPI;
-
-/* ------------- Types ------------- */
+// Action Types
 import { ActionTypes } from '../redux/XledgRedux';
 
-/* ------------- Sagas ------------- */
+// Sagas
+import { getGateways, connect, getBalanceSheet, getAccountInfo, updateOrderBook } from './XledgSagas';
 
-import { getGateways, apiConnect } from './XledgSagas';
-
-/* ------------- API ------------- */
-
-// The API we use is only used from Sagas, so we create it here and pass along
-// to the sagas which need it.
-//const api = DebugConfig.useFixtures ? FixtureAPI : API.create();
-const dataAPI = API.create();
-
-const rippleAPI = new RippleAPI({
-   server: 'wss://s1.ripple.com' // Public rippled server hosted by Ripple, Inc.
-});
+// API
+const xledgAPI = API.apiHaus();
 
 /* ------------- Connect Types To Sagas ------------- */
-
 export default function* root() {
-   yield all([takeLatest(ActionTypes.GET_GATEWAYS, getGateways, dataAPI)]);
-   yield all([takeLatest(ActionTypes.API_CONNECT, apiConnect, rippleAPI)]);
+   yield all([takeLatest(ActionTypes.GET_GATEWAYS, getGateways, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.CONNECT, connect, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.GET_ACCOUNT_INFO, getAccountInfo, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.GET_BALANCE_SHEET, getBalanceSheet, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.UPDATE_ORDER_BOOK, updateOrderBook, xledgAPI)]);
 }

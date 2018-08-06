@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-//import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import nacl_factory from 'js-nacl';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
-import { notification, updateInput, materialTheme } from '../services/helpers';
+import { updateInput, materialTheme } from '../services/helpers';
 import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
 
 class Password extends Component {
    constructor(props) {
       super(props);
-
-      let that = this;
 
       this.state = {
          passwordInput: '',

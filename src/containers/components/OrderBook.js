@@ -1,32 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { OverlayTrigger, Popover } from 'react-bootstrap';
-import { materialTheme, updateInput, importAll } from '../../services/helpers';
+import { updateInput } from '../../services/helpers';
 
 export default class OrderBook extends Component {
    constructor(props) {
       super(props);
 
-      this.state = {};
-
       this.updateInput = updateInput.bind(this);
-   }
-
-   componentDidMount() {
-      // console.log('images');
-      // console.log(CURRENCY_ICONS);
-   }
-
-   componentWillMount() {}
-
-   componentWillUpdate() {
-      console.log('wtf?');
-   }
-
-   componentWillReceiveProps(nextProps) {
-      console.log('nextProps');
-      console.log(nextProps);
    }
 
    render() {
@@ -44,11 +25,14 @@ export default class OrderBook extends Component {
                   <div style={{ width: 30 }}>{order.specification.quantity.currency}</div>
                   <div style={{ width: 10, marginRight: 7, position: 'relative', top: -1 }}>@</div>
                   <div style={{ width: 100 }}>
-                     {parseFloat(order.specification.totalPrice.value / order.specification.quantity.value).toFixed(4)}{' '}
+                     {parseFloat(
+                        order.specification.totalPrice.value / order.specification.quantity.value
+                     ).toFixed(4)}{' '}
                      {order.specification.totalPrice.currency}
                   </div>
                </div>
             );
+            return true;
          });
 
          return orderRows;
@@ -66,18 +50,20 @@ export default class OrderBook extends Component {
             <div
                style={{
                   width: '100%'
-                  //paddingRight: 10
                }}>
                <h2 style={{ color: this.props.action === 'buy' ? '#21c2f8' : '#ffffff' }}>OFFERS TO SELL</h2>
-               <Orders orders={orderBook.asks} type={'asks'} />
+               <div style={{ maxHeight: 150, overflow: 'auto' }}>
+                  <Orders orders={orderBook.asks} type={'asks'} />
+               </div>
             </div>
             <div
                style={{
                   width: '100%'
-                  //paddingLeft: 10
                }}>
                <h2 style={{ color: this.props.action === 'sell' ? '#21c2f8' : '#ffffff' }}>OFFERS TO BUY</h2>
-               <Orders orders={orderBook.bids} type={'bids'} />
+               <div style={{ maxHeight: 150, overflow: 'auto' }}>
+                  <Orders orders={orderBook.bids} type={'bids'} />
+               </div>
             </div>
          </div>
       );

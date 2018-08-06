@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-//import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import nacl_factory from 'js-nacl';
 import { notification } from '../services/helpers';
@@ -126,7 +124,10 @@ class LockScreen extends Component {
                   // Check if PIN matches
                   nacl_factory.instantiate(function(nacl) {
                      // PIN MATCH
-                     if (nacl.to_hex(nacl.crypto_hash_string(pindata.salt + that.state.pinInput)) === pindata.hash) {
+                     if (
+                        nacl.to_hex(nacl.crypto_hash_string(pindata.salt + that.state.pinInput)) ===
+                        pindata.hash
+                     ) {
                         that.props.history.push('/dashboard');
                      } else {
                         // NO MATCH ERROR
@@ -144,6 +145,8 @@ class LockScreen extends Component {
                   console.log(e);
                });
             break;
+         default:
+            return true;
       }
    }
 
@@ -195,7 +198,8 @@ class LockScreen extends Component {
                )}
 
                {/*PIN ANIMATED INPUTS*/}
-               <div style={{ display: 'flex', margin: '15px 20px 30px 20px', justifyContent: 'space-between' }}>
+               <div
+                  style={{ display: 'flex', margin: '15px 20px 30px 20px', justifyContent: 'space-between' }}>
                   <ActiveKey length={this.state.pinInput.length - 1} i={0} />
                   <ActiveKey length={this.state.pinInput.length - 1} i={1} />
                   <ActiveKey length={this.state.pinInput.length - 1} i={2} />

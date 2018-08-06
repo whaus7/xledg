@@ -17,7 +17,7 @@ export function updateInput(e, field) {
    this.setState({ [field]: e.target.value });
 }
 export function updateInputNumber(e, field) {
-   this.setState({ [field]: parseInt(e.target.value) });
+   this.setState({ [field]: parseInt(e.target.value, 10) });
 }
 export function updateInputToggle(e, field) {
    this.setState({
@@ -41,6 +41,7 @@ export function importAll(r) {
    let images = {};
    r.keys().map((item, index) => {
       images[item.replace('./', '')] = r(item);
+      return true;
    });
    return images;
 }

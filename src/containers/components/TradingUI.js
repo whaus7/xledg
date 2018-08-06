@@ -5,59 +5,20 @@ import TextField from '@material-ui/core/TextField';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import { OverlayTrigger, Popover } from 'react-bootstrap';
-import { materialTheme, updateInput, importAll } from '../../services/helpers';
+import { materialTheme, importAll } from '../../services/helpers';
 
 import MAJOR_CURRENCIES from '../../services/major_currencies';
-const CURRENCY_ICONS_BLACK = importAll(require.context('../../images/currency_icons/black', false, /\.(svg)$/));
-const CURRENCY_ICONS_WHITE = importAll(require.context('../../images/currency_icons/white', false, /\.(svg)$/));
+const CURRENCY_ICONS_BLACK = importAll(
+   require.context('../../images/currency_icons/black', false, /\.(svg)$/)
+);
+const CURRENCY_ICONS_WHITE = importAll(
+   require.context('../../images/currency_icons/white', false, /\.(svg)$/)
+);
 
 export default class TradingUI extends Component {
-   constructor(props) {
-      super(props);
-
-      // this.state = {
-      //    action: 'buy',
-      //    // BASE
-      //    baseAmount: '',
-      //    baseCurrency: '',
-      //    // COUNTER
-      //    counterPrice: '',
-      //    counterCurrency: ''
-      // };
-
-      // this.updateInput = updateInput.bind(this);
-   }
-
-   componentDidMount() {
-      // console.log('images');
-      // console.log(CURRENCY_ICONS);
-   }
-
-   componentWillMount() {}
-
-   componentWillReceiveProps() {}
-
-   // updateOrder() {
-   //    if (
-   //       this.props.baseCurrency !== '' &&
-   //       this.props.baseCurrency.value.length === 3 &&
-   //       this.props.counterCurrency !== '' &&
-   //       this.props.counterCurrency.value.length === 3
-   //    ) {
-   //       this.props.updateOrder(this.state);
-   //    }
-   // }
-
    render() {
-      const { accountInfo, gateways, balanceSheet } = this.props;
-
       // OPTION - REACT-SELECT
       class CurrencyOption extends Component {
-         constructor(props) {
-            super(props);
-         }
-
          handleMouseDown(event) {
             event.preventDefault();
             event.stopPropagation();
@@ -86,6 +47,7 @@ export default class TradingUI extends Component {
                         <img
                            src={CURRENCY_ICONS_BLACK[`${this.props.option.value}.svg`]}
                            style={{ maxWidth: 20, maxHeight: 20 }}
+                           alt={`${this.props.option.value} Icon`}
                         />
                      </div>
                      <div style={{ fontSize: 16, minWidth: 40, marginRight: 10, alignSelf: 'center' }}>
@@ -113,10 +75,6 @@ export default class TradingUI extends Component {
 
       // SELECTION - REACT-SELECT
       class CurrencyValue extends Component {
-         constructor(props) {
-            super(props);
-         }
-
          render() {
             return (
                <div className="Select-value" title={this.props.value.title}>
@@ -124,6 +82,7 @@ export default class TradingUI extends Component {
                      <img
                         src={CURRENCY_ICONS_WHITE[`${this.props.value.value}.svg`]}
                         style={{ maxWidth: 20, maxHeight: 20, alignSelf: 'center', marginRight: 10 }}
+                        alt={`${this.props.value.value} Icon`}
                      />
                      <div style={{ fontSize: 16, marginRight: 10 }}>{this.props.value.value}</div>
                      <div style={{ fontSize: 12, color: '#bdc3c7' }}>{this.props.value.label}</div>
@@ -246,10 +205,6 @@ export default class TradingUI extends Component {
 }
 
 TradingUI.propTypes = {
-   gateways: PropTypes.object,
-   accountInfo: PropTypes.object,
-   balanceSheet: PropTypes.object,
-
    updateAction: PropTypes.func,
    updateBaseAmount: PropTypes.func,
    updateBaseCurrency: PropTypes.func,

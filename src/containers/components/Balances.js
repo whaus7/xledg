@@ -30,6 +30,7 @@ export default class Balances extends Component {
          let total = 0;
          groupedAssets[key].map(asset => {
             total += parseFloat(asset.value, 10);
+            return true;
          });
          groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
       }
@@ -45,12 +46,13 @@ export default class Balances extends Component {
          if (gateway.account === counterparty) {
             name = gateway.name;
          }
+         return true;
       });
       return name;
    }
 
    render() {
-      const { accountInfo, gateways, balanceSheet } = this.props;
+      const { accountInfo, balanceSheet } = this.props;
 
       const Issuers = props => {
          let issuerRows = [];
@@ -63,11 +65,14 @@ export default class Balances extends Component {
                      style={{ display: 'flex', justifyContent: 'space-between', margin: '5px 0' }}>
                      <label>{this.getIssuerName(asset.counterparty, props.currency)}</label>
                      <label>
-                        {CurrencyFormatter.format(parseFloat(asset.value).toFixed(2), { code: asset.currency })}
+                        {CurrencyFormatter.format(parseFloat(asset.value).toFixed(2), {
+                           code: asset.currency
+                        })}
                      </label>
                   </div>
                );
             }
+            return true;
          });
 
          return issuerRows;
@@ -104,7 +109,11 @@ export default class Balances extends Component {
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '5px 0' }}>
                <label>XRP</label>
                <label>
-                  <img src={xrpIcon} style={{ maxWidth: 12, maxHeight: 12, marginRight: 1 }} />
+                  <img
+                     src={xrpIcon}
+                     style={{ maxWidth: 12, maxHeight: 12, marginRight: 1 }}
+                     alt={'XRP Icon'}
+                  />
                   {parseFloat(accountInfo.xrpBalance).toFixed(2)}
                </label>
             </div>

@@ -58,10 +58,10 @@ h2 {
   opacity: 1 !important;
 }
 .Select-menu-outer {
-  max-height: 300px !important;
+  max-height: 200px !important;
 }
 .Select-menu {
-  max-height: 298px !important;
+  max-height: 198px !important;
 }
 .Select-option {
   padding: 3px 8px;
