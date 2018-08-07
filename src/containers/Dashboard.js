@@ -62,7 +62,7 @@ class Dashboard extends Component {
                }}>
                {/*LOGO*/}
                <div>
-                  <Logo size={'sm'} margin={'0'} />
+                  <Logo size={'xs'} margin={'0'} />
                </div>
 
                <div style={{ alignSelf: 'center' }}>Actions</div>
@@ -105,19 +105,43 @@ class Dashboard extends Component {
                {/*TRADING UI - OFFERS/ASK*/}
                <div
                   style={{
-                     width: '40%'
+                     width: '45%'
                   }}>
-                  <TradingUI {...this.props} />
+                  {/*<TradingUI {...this.props} />*/}
+
+                  {/*{this.props.orderBook !== null ? (*/}
+                  {/*<OrderBook*/}
+                  {/*orderBook={this.props.orderBook}*/}
+                  {/*action={this.props.action}*/}
+                  {/*updateFromOrder={order => this.props.updateFromOrder(order)}*/}
+                  {/*titleTextAlign={'center'}*/}
+                  {/*/>*/}
+                  {/*) : (*/}
+                  {/*<div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>*/}
+                  {/*<div*/}
+                  {/*style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>*/}
+                  {/*Select a Trading Pair to View Order Book*/}
+                  {/*</div>*/}
+                  {/*</div>*/}
+                  {/*)}*/}
                </div>
 
                {/*ORDER BOOK*/}
                <div
                   style={{
-                     width: '45%',
+                     width: '40%',
                      borderLeft: '1px solid #383939'
                   }}>
+                  <TradingUI {...this.props} />
+
                   {this.props.orderBook !== null ? (
-                     <OrderBook orderBook={this.props.orderBook} action={this.props.action} />
+                     <OrderBook
+                        orderBook={this.props.orderBook}
+                        action={this.props.action}
+                        updateFromOrder={order => this.props.updateFromOrder(order)}
+                        titleTextAlign={'center'}
+                        height={200}
+                     />
                   ) : (
                      <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
                         <div
@@ -126,6 +150,22 @@ class Dashboard extends Component {
                         </div>
                      </div>
                   )}
+
+                  {/*{this.props.orderBook !== null ? (*/}
+                  {/*<OrderBook*/}
+                  {/*orderBook={this.props.orderBook}*/}
+                  {/*action={this.props.action}*/}
+                  {/*updateFromOrder={order => this.props.updateFromOrder(order)}*/}
+                  {/*titleTextAlign={'left'}*/}
+                  {/*/>*/}
+                  {/*) : (*/}
+                  {/*<div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>*/}
+                  {/*<div*/}
+                  {/*style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>*/}
+                  {/*Select a Trading Pair to View Order Book*/}
+                  {/*</div>*/}
+                  {/*</div>*/}
+                  {/*)}*/}
                </div>
 
                {/*RIGHT BAR*/}
@@ -161,9 +201,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
    return {
-      resetToIdle: () => {
-         dispatch(ReduxActions.resetToIdle());
-      },
       connect: () => {
          dispatch(ReduxActions.connect());
       },
@@ -178,6 +215,9 @@ const mapDispatchToProps = dispatch => {
       },
       updateAction: action => {
          dispatch(ReduxActions.updateAction(action));
+      },
+      updateFromOrder: order => {
+         dispatch(ReduxActions.updateFromOrder(order));
       },
       updateBaseAmount: amount => {
          dispatch(ReduxActions.updateBaseAmount(amount));

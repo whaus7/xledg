@@ -11,14 +11,18 @@ export default class OrderBook extends Component {
    }
 
    render() {
-      const { orderBook } = this.props;
+      const { orderBook, titleTextAlign, height } = this.props;
 
       const Orders = props => {
          let orderRows = [];
 
          props.orders.map((order, i) => {
             orderRows.push(
-               <div key={`${props.type}_${i}`} style={{ display: 'flex', margin: '3px 0' }}>
+               <div
+                  className={'orderRow'}
+                  key={`${props.type}_${i}`}
+                  style={{ display: 'flex', margin: '3px 0' }}
+                  onClick={() => this.props.updateFromOrder(order)}>
                   <div style={{ width: 75, marginRight: 7, textAlign: 'right' }}>
                      {parseFloat(order.specification.quantity.value).toFixed(2)}
                   </div>
@@ -27,7 +31,7 @@ export default class OrderBook extends Component {
                   <div style={{ width: 100 }}>
                      {parseFloat(
                         order.specification.totalPrice.value / order.specification.quantity.value
-                     ).toFixed(4)}{' '}
+                     ).toFixed(6)}{' '}
                      {order.specification.totalPrice.currency}
                   </div>
                </div>
@@ -44,15 +48,21 @@ export default class OrderBook extends Component {
                display: 'flex',
                color: '#ffffff',
                padding: 15,
-               fontSize: 12,
-               flexDirection: this.props.action === 'buy' ? 'row' : 'row-reverse'
+               fontSize: 12
+               //flexDirection: this.props.action === 'buy' ? 'row' : 'row-reverse'
             }}>
             <div
                style={{
                   width: '100%'
                }}>
-               <h2 style={{ color: this.props.action === 'buy' ? '#21c2f8' : '#ffffff' }}>OFFERS TO SELL</h2>
-               <div style={{ maxHeight: 150, overflow: 'auto' }}>
+               <h2
+                  style={{
+                     color: this.props.action === 'buy' ? '#dd7777' : '#ffffff',
+                     textAlign: titleTextAlign
+                  }}>
+                  OFFERS TO SELL
+               </h2>
+               <div style={{ maxHeight: height, overflow: 'auto' }}>
                   <Orders orders={orderBook.asks} type={'asks'} />
                </div>
             </div>
@@ -60,8 +70,14 @@ export default class OrderBook extends Component {
                style={{
                   width: '100%'
                }}>
-               <h2 style={{ color: this.props.action === 'sell' ? '#21c2f8' : '#ffffff' }}>OFFERS TO BUY</h2>
-               <div style={{ maxHeight: 150, overflow: 'auto' }}>
+               <h2
+                  style={{
+                     color: this.props.action === 'sell' ? '#77dd77' : '#ffffff',
+                     textAlign: titleTextAlign
+                  }}>
+                  OFFERS TO BUY
+               </h2>
+               <div style={{ maxHeight: height, overflow: 'auto' }}>
                   <Orders orders={orderBook.bids} type={'bids'} />
                </div>
             </div>
@@ -72,5 +88,8 @@ export default class OrderBook extends Component {
 
 OrderBook.propTypes = {
    orderBook: PropTypes.object,
-   action: PropTypes.string
+   action: PropTypes.string,
+   updateFromOrder: PropTypes.func,
+   titleTextAlign: PropTypes.string,
+   height: PropTypes.number
 };

@@ -3,12 +3,6 @@ import PropTypes from 'prop-types';
 import { Motion, spring } from 'react-motion';
 
 export default class ActiveKey extends Component {
-   constructor(props) {
-      super(props);
-
-      this.state = {};
-   }
-
    render() {
       const springConfig = { stiffness: 120, damping: 10 };
 

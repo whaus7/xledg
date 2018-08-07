@@ -5,9 +5,16 @@ PouchDB.plugin(require('pouchdb-upsert'));
 
 /* ------------- Types and Action Creators ------------- */
 const { Types, Creators } = createActions({
-   // reset saga progress variable to idle
-   resetToIdle: [],
+   // xLedg Actions
+   setAccount: ['status'], // 'new', 'existing', 'corrupt'
+   updateAction: ['action'],
+   updateBaseAmount: ['amount'],
+   updateBaseCurrency: ['currency'],
+   updateCounterPrice: ['price'],
+   updateCounterCurrency: ['currency'],
+   updateFromOrder: ['order'],
 
+   // Ripple API Actions
    connect: [],
    connectSuccess: ['response'],
    connectFailure: ['error'],
@@ -24,18 +31,10 @@ const { Types, Creators } = createActions({
    updateOrderBookSuccess: ['response'],
    updateOrderBookFailure: ['error'],
 
-   // set the current account status
-   // 'new', 'existing', 'corrupt'
-   setAccount: ['status'],
+   // Data API Actions
    getGateways: [],
    getGatewaysSuccess: ['response'],
-   getGatewaysFailure: ['error'],
-
-   updateAction: ['action'],
-   updateBaseAmount: ['amount'],
-   updateBaseCurrency: ['currency'],
-   updateCounterPrice: ['price'],
-   updateCounterCurrency: ['currency']
+   getGatewaysFailure: ['error']
 });
 
 export const ActionTypes = Types;
@@ -130,6 +129,19 @@ export const xledgReducer = (state, action) => {
             counterCurrency: { $set: action.currency },
             pair: { counter: { $set: counter } }
          });
+      case 'UPDATE_FROM_ORDER':
+         console.log('DEBUG REDUX - update from order');
+         console.log(state);
+         console.log(action);
+
+         // TODO update trading UI with fullfilled order
+         return update(state, {
+            action: { $set: action.order.specification.direction === 'sell' ? 'buy' : 'sell' },
+            baseAmount: { $set: action.order.specification.quantity.value },
+            counterPrice: { $set: parseFloat(action.order.properties.makerExchangeRate).toFixed(6) }
+         });
+
+      //return state;
       default:
          return state;
    }
@@ -188,10 +200,6 @@ export const rippleApiReducer = (state, action) => {
       case 'UPDATE_ORDER_BOOK':
          return state;
       case 'UPDATE_ORDER_BOOK_SUCCESS':
-         // console.log('DEBUG REDUX - ripple API update order book');
-         // console.log(state);
-         // console.log(action);
-
          return update(state, {
             orderBook: { $set: action.response }
          });
@@ -208,12 +216,12 @@ export const rippleApiReducer = (state, action) => {
 export const reducer = createReducer(INITIAL_STATE, {
    // xLedg Actions
    [Types.SET_ACCOUNT]: xledgReducer,
-   [Types.RESET_TO_IDLE]: xledgReducer,
    [Types.UPDATE_ACTION]: xledgReducer,
    [Types.UPDATE_BASE_AMOUNT]: xledgReducer,
    [Types.UPDATE_BASE_CURRENCY]: xledgReducer,
    [Types.UPDATE_COUNTER_PRICE]: xledgReducer,
    [Types.UPDATE_COUNTER_CURRENCY]: xledgReducer,
+   [Types.UPDATE_FROM_ORDER]: xledgReducer,
 
    // Ripple API Actions
    [Types.CONNECT]: rippleApiReducer,

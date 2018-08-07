@@ -109,7 +109,7 @@ export default class TradingUI extends Component {
                   }}
                   className={'btn'}
                   style={{
-                     borderColor: this.props.action === 'buy' ? '#21c2f8' : '#ffffff',
+                     borderColor: this.props.action === 'buy' ? '#77dd77' : '#ffffff',
                      opacity: this.props.action === 'buy' ? 1 : 0.5,
                      width: '100%',
                      marginRight: 10
@@ -123,7 +123,7 @@ export default class TradingUI extends Component {
                   }}
                   className={'btn'}
                   style={{
-                     borderColor: this.props.action === 'sell' ? '#21c2f8' : '#ffffff',
+                     borderColor: this.props.action === 'sell' ? '#dd7777' : '#ffffff',
                      opacity: this.props.action === 'sell' ? 1 : 0.5,
                      width: '100%'
                   }}>
@@ -142,7 +142,6 @@ export default class TradingUI extends Component {
                      id="offer-amount-input"
                      value={this.props.baseAmount}
                      onChange={e => {
-                        //this.setState({ baseAmount: e.target.value }, () => this.updateOrder());
                         this.props.updateBaseAmount(e.target.value);
                      }}
                      label="Amount"
@@ -177,7 +176,6 @@ export default class TradingUI extends Component {
                      id="offer-price-input"
                      value={this.props.counterPrice}
                      onChange={e => {
-                        //this.setState({ counterPrice: e.target.value }, () => this.updateOrder());
                         this.props.updateCounterPrice(e.target.value);
                      }}
                      label="Price"
@@ -188,7 +186,6 @@ export default class TradingUI extends Component {
 
                   <Select
                      onChange={val => {
-                        //this.setState({ counterCurrency: val }, () => this.updateOrder());
                         this.props.updateCounterCurrency(val);
                      }}
                      value={this.props.counterCurrency}
@@ -199,12 +196,28 @@ export default class TradingUI extends Component {
                   />
                </div>
             </div>
+
+            <div style={{ display: 'flex', padding: 15 }}>
+               <div
+                  onClick={() => {
+                     this.props.updateAction('buy');
+                  }}
+                  className={'btn'}
+                  style={{
+                     borderColor: this.props.action === 'buy' ? '#77dd77' : '#dd7777',
+                     width: '100%',
+                     marginRight: 10
+                  }}>
+                  {`PLACE ${this.props.action.toUpperCase()} ORDER`}
+               </div>
+            </div>
          </MuiThemeProvider>
       );
    }
 }
 
 TradingUI.propTypes = {
+   action: PropTypes.string,
    updateAction: PropTypes.func,
    updateBaseAmount: PropTypes.func,
    updateBaseCurrency: PropTypes.func,
