@@ -6,7 +6,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
 import { materialTheme, importAll } from '../../services/helpers';
-
+import COLORS from '../../services/colors';
 import MAJOR_CURRENCIES from '../../services/major_currencies';
 const CURRENCY_ICONS_BLACK = importAll(
    require.context('../../images/currency_icons/black', false, /\.(svg)$/)
@@ -53,7 +53,7 @@ export default class TradingUI extends Component {
                      <div style={{ fontSize: 16, minWidth: 40, marginRight: 10, alignSelf: 'center' }}>
                         {this.props.option.value}
                      </div>
-                     <div style={{ fontSize: 12, alignSelf: 'center', color: '#bdc3c7' }}>
+                     <div style={{ fontSize: 12, alignSelf: 'center', color: COLORS.grey }}>
                         {this.props.option.label}
                      </div>
                   </div>
@@ -85,7 +85,7 @@ export default class TradingUI extends Component {
                         alt={`${this.props.value.value} Icon`}
                      />
                      <div style={{ fontSize: 16, marginRight: 10 }}>{this.props.value.value}</div>
-                     <div style={{ fontSize: 12, color: '#bdc3c7' }}>{this.props.value.label}</div>
+                     <div style={{ fontSize: 12, color: COLORS.grey }}>{this.props.value.label}</div>
                   </div>
                </div>
             );
@@ -104,12 +104,11 @@ export default class TradingUI extends Component {
             <div style={{ display: 'flex', padding: 15 }}>
                <div
                   onClick={() => {
-                     //this.setState({ action: 'buy' });
                      this.props.updateAction('buy');
                   }}
                   className={'btn'}
                   style={{
-                     borderColor: this.props.action === 'buy' ? '#77dd77' : '#ffffff',
+                     borderColor: this.props.action === 'buy' ? COLORS.green : COLORS.white,
                      opacity: this.props.action === 'buy' ? 1 : 0.5,
                      width: '100%',
                      marginRight: 10
@@ -118,12 +117,11 @@ export default class TradingUI extends Component {
                </div>
                <div
                   onClick={() => {
-                     //this.setState({ action: 'sell' });
                      this.props.updateAction('sell');
                   }}
                   className={'btn'}
                   style={{
-                     borderColor: this.props.action === 'sell' ? '#dd7777' : '#ffffff',
+                     borderColor: this.props.action === 'sell' ? COLORS.red : COLORS.white,
                      opacity: this.props.action === 'sell' ? 1 : 0.5,
                      width: '100%'
                   }}>
@@ -152,7 +150,6 @@ export default class TradingUI extends Component {
 
                   <Select
                      onChange={val => {
-                        //this.setState({ baseCurrency: val }, () => this.updateOrder());
                         this.props.updateBaseCurrency(val);
                      }}
                      value={this.props.baseCurrency}
@@ -164,7 +161,9 @@ export default class TradingUI extends Component {
                </div>
 
                {/*@ SIGN*/}
-               <div style={{ alignSelf: 'center', fontSize: 30, fontWeight: 100, color: '#ffffff' }}>@</div>
+               <div style={{ alignSelf: 'center', fontSize: 30, fontWeight: 100, color: COLORS.white }}>
+                  @
+               </div>
 
                {/*ASK (COUNTER) CONTAINER*/}
                <div style={{ width: '100%', paddingLeft: 15 }}>
@@ -204,7 +203,7 @@ export default class TradingUI extends Component {
                   }}
                   className={'btn'}
                   style={{
-                     borderColor: this.props.action === 'buy' ? '#77dd77' : '#dd7777',
+                     borderColor: this.props.action === 'buy' ? COLORS.green : COLORS.red,
                      width: '100%',
                      marginRight: 10
                   }}>

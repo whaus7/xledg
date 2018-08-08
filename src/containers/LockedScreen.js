@@ -7,6 +7,7 @@ import { notification } from '../services/helpers';
 import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
 import ActiveKey from './components/ActiveKey';
+import COLORS from '../services/colors';
 
 class LockScreen extends Component {
    constructor(props) {
@@ -182,7 +183,7 @@ class LockScreen extends Component {
                height: '100vh',
                justifyContent: 'center',
                textAlign: 'center',
-               background: '#202020'
+               background: COLORS.mocha
             }}>
             <div style={{ maxWidth: 300 }}>
                {/*TITLE*/}
@@ -192,7 +193,9 @@ class LockScreen extends Component {
 
                {/*CURRENT STATUS*/}
                {this.props.walletStatus !== null ? (
-                  <div style={{ margin: '10px 0', fontSize: 12, color: '#ffffff' }}>{<CurrentStatus />}</div>
+                  <div style={{ margin: '10px 0', fontSize: 12, color: COLORS.white }}>
+                     {<CurrentStatus />}
+                  </div>
                ) : (
                   false
                )}

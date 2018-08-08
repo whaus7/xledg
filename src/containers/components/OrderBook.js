@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { updateInput } from '../../services/helpers';
+import COLORS from '../../services/colors';
 
 export default class OrderBook extends Component {
    constructor(props) {
@@ -46,7 +47,7 @@ export default class OrderBook extends Component {
          <div
             style={{
                display: 'flex',
-               color: '#ffffff',
+               color: COLORS.white,
                padding: 15,
                fontSize: 12
                //flexDirection: this.props.action === 'buy' ? 'row' : 'row-reverse'
@@ -57,7 +58,7 @@ export default class OrderBook extends Component {
                }}>
                <h2
                   style={{
-                     color: this.props.action === 'buy' ? '#dd7777' : '#ffffff',
+                     color: this.props.action === 'buy' ? COLORS.red : COLORS.white,
                      textAlign: titleTextAlign
                   }}>
                   OFFERS TO SELL
@@ -72,7 +73,7 @@ export default class OrderBook extends Component {
                }}>
                <h2
                   style={{
-                     color: this.props.action === 'sell' ? '#77dd77' : '#ffffff',
+                     color: this.props.action === 'sell' ? COLORS.green : COLORS.white,
                      textAlign: titleTextAlign
                   }}>
                   OFFERS TO BUY
