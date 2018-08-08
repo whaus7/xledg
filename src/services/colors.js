@@ -9,6 +9,5 @@ const COLORS = {
    green: '#77dd77',
    red: '#dd7777'
 };
-//77dd77
 
 export default COLORS;
