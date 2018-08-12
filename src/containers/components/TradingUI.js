@@ -199,7 +199,7 @@ export default class TradingUI extends Component {
             <div style={{ display: 'flex', padding: 15 }}>
                <div
                   onClick={() => {
-                     this.props.updateAction('buy');
+                     this.props.prepareOrder();
                   }}
                   className={'btn'}
                   style={{
@@ -221,5 +221,6 @@ TradingUI.propTypes = {
    updateBaseAmount: PropTypes.func,
    updateBaseCurrency: PropTypes.func,
    updateCounterPrice: PropTypes.func,
-   updateCounterCurrency: PropTypes.func
+   updateCounterCurrency: PropTypes.func,
+   prepareOrder: PropTypes.func
 };

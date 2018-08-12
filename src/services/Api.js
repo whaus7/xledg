@@ -64,13 +64,42 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
          });
    };
 
+   const prepareOrder = (address, order, instructions) => {
+      return rippleAPI
+         .prepareOrder(address, order, instructions)
+         .then(preparedOrder => {
+            return preparedOrder;
+         })
+         .catch(error => {
+            return error;
+         });
+   };
+
+   const signTx = (txJSON, key) => {
+      return rippleAPI.sign(txJSON, key);
+   };
+
+   const submitTx = signedTransaction => {
+      return rippleAPI
+         .submit(signedTransaction)
+         .then(response => {
+            return response;
+         })
+         .catch(error => {
+            return error;
+         });
+   };
+
    return {
       // All our Data API & Ripple API functions
       getGateways,
       connect,
       getAccountInfo,
       getBalanceSheet,
-      updateOrderBook
+      updateOrderBook,
+      prepareOrder,
+      signTx,
+      submitTx
    };
 };
 

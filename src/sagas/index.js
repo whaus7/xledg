@@ -5,7 +5,16 @@ import API from '../services/Api';
 import { ActionTypes } from '../redux/XledgRedux';
 
 // Sagas
-import { getGateways, connect, getBalanceSheet, getAccountInfo, updateOrderBook } from './XledgSagas';
+import {
+   getGateways,
+   connect,
+   getBalanceSheet,
+   getAccountInfo,
+   updateOrderBook,
+   prepareOrder,
+   signTx,
+   submitTx
+} from './XledgSagas';
 
 // API
 const xledgAPI = API.apiHaus();
@@ -17,4 +26,7 @@ export default function* root() {
    yield all([takeLatest(ActionTypes.GET_ACCOUNT_INFO, getAccountInfo, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_BALANCE_SHEET, getBalanceSheet, xledgAPI)]);
    yield all([takeLatest(ActionTypes.UPDATE_ORDER_BOOK, updateOrderBook, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.PREPARE_ORDER, prepareOrder, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.SIGN_TX, signTx, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.SUBMIT_TX, submitTx, xledgAPI)]);
 }

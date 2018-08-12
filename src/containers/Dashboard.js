@@ -11,6 +11,10 @@ class Dashboard extends Component {
    constructor(props) {
       super(props);
 
+      this.state = {
+         key: ''
+      };
+
       // Connect to Ripple API
       this.props.connect();
    }
@@ -23,6 +27,16 @@ class Dashboard extends Component {
          this.props.updateOrderBook(nextProps.pair);
       }
 
+      // Sign the currently prepared transaction/order
+      if (nextProps.preparedOrder !== null) {
+         this.props.signTx(nextProps.preparedOrder.txJSON, this.state.key);
+      }
+
+      // Submit the currently signed transaction/order
+      if (nextProps.signedTransaction !== null) {
+         this.props.submitTx(nextProps.signedTransaction.signedTransaction);
+      }
+
       // Update the order book immediately if pair is changed
       if (
          nextProps.baseCurrency.value !== this.props.baseCurrency.value ||
@@ -30,20 +44,10 @@ class Dashboard extends Component {
       ) {
          this.props.updateOrderBook(nextProps.pair);
       }
-
-      // TODO need a good way to update on interval
-      // Maybe just a timeout delay on props receiving since there is too many updates this way
-      // setInterval(function() {
-      //    if (nextProps.rippleApiConnected) {
-      //       nextProps.getBalanceSheet();
-      //       nextProps.getAccountInfo();
-      //       nextProps.updateOrderBook(nextProps.pair);
-      //    }
-      // }, 20000);
    }
 
    render() {
-      //const { walletStatus } = this.props;
+      const { baseCurrency, baseAmount, counterCurrency, counterPrice } = this.props;
 
       return (
          // DASHBOARD
@@ -100,31 +104,26 @@ class Dashboard extends Component {
                   ) : (
                      false
                   )}
+                  {/*TEMP KEY INPUT*/}
+                  <div style={{ marginTop: 20 }}>
+                     <input
+                        placeholder={'for testing'}
+                        onChange={e => {
+                           this.setState({
+                              key: e.target.value
+                           });
+                        }}
+                        value={this.state.key}
+                     />
+                  </div>
                </div>
 
                {/*TRADING UI - OFFERS/ASK*/}
                <div
                   style={{
                      width: '45%'
-                  }}>
-                  {/*<TradingUI {...this.props} />*/}
-
-                  {/*{this.props.orderBook !== null ? (*/}
-                  {/*<OrderBook*/}
-                  {/*orderBook={this.props.orderBook}*/}
-                  {/*action={this.props.action}*/}
-                  {/*updateFromOrder={order => this.props.updateFromOrder(order)}*/}
-                  {/*titleTextAlign={'center'}*/}
-                  {/*/>*/}
-                  {/*) : (*/}
-                  {/*<div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>*/}
-                  {/*<div*/}
-                  {/*style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>*/}
-                  {/*Select a Trading Pair to View Order Book*/}
-                  {/*</div>*/}
-                  {/*</div>*/}
-                  {/*)}*/}
-               </div>
+                  }}
+               />
 
                {/*ORDER BOOK*/}
                <div
@@ -132,7 +131,30 @@ class Dashboard extends Component {
                      width: '40%',
                      borderLeft: '1px solid #383939'
                   }}>
-                  <TradingUI {...this.props} />
+                  <TradingUI
+                     {...this.props}
+                     prepareOrder={() =>
+                        this.props.prepareOrder(
+                           'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+                           {
+                              direction: this.props.action,
+                              quantity: {
+                                 currency: baseCurrency.value,
+                                 value: baseAmount
+                              },
+                              totalPrice: {
+                                 counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
+                                 currency: counterCurrency.value,
+                                 value: counterPrice
+                              }
+                           },
+                           {
+                              maxFee: 500,
+                              maxLedgerVersion: 100
+                           }
+                        )
+                     }
+                  />
 
                   {this.props.orderBook !== null ? (
                      <OrderBook
@@ -150,22 +172,6 @@ class Dashboard extends Component {
                         </div>
                      </div>
                   )}
-
-                  {/*{this.props.orderBook !== null ? (*/}
-                  {/*<OrderBook*/}
-                  {/*orderBook={this.props.orderBook}*/}
-                  {/*action={this.props.action}*/}
-                  {/*updateFromOrder={order => this.props.updateFromOrder(order)}*/}
-                  {/*titleTextAlign={'left'}*/}
-                  {/*/>*/}
-                  {/*) : (*/}
-                  {/*<div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>*/}
-                  {/*<div*/}
-                  {/*style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>*/}
-                  {/*Select a Trading Pair to View Order Book*/}
-                  {/*</div>*/}
-                  {/*</div>*/}
-                  {/*)}*/}
                </div>
 
                {/*RIGHT BAR*/}
@@ -195,7 +201,9 @@ const mapStateToProps = state => {
       counterPrice: state.xledg.counterPrice,
       counterCurrency: state.xledg.counterCurrency,
       pair: state.xledg.pair,
-      orderBook: state.xledg.orderBook
+      orderBook: state.xledg.orderBook,
+      preparedOrder: state.xledg.preparedOrder,
+      signedTransaction: state.xledg.signedTransaction
    };
 };
 
@@ -233,6 +241,15 @@ const mapDispatchToProps = dispatch => {
       },
       updateOrderBook: pair => {
          dispatch(ReduxActions.updateOrderBook(pair));
+      },
+      prepareOrder: (address, order, instructions) => {
+         dispatch(ReduxActions.prepareOrder(address, order, instructions));
+      },
+      signTx: (txJSON, key) => {
+         dispatch(ReduxActions.signTx(txJSON, key));
+      },
+      submitTx: signedTransaction => {
+         dispatch(ReduxActions.submitTx(signedTransaction));
       }
    };
 };

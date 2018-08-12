@@ -85,3 +85,39 @@ export function* updateOrderBook(api, { pair }) {
       yield put(XledgActions.updateOrderBookSuccess(response));
    }
 }
+
+// Prepare the current order for submission
+export function* prepareOrder(api, { address, order, instructions }) {
+   const response = yield call(api.prepareOrder, address, order, instructions);
+
+   if ('message' in response) {
+      notifyError(response);
+      yield put(XledgActions.prepareOrderFailure(response));
+   } else {
+      yield put(XledgActions.prepareOrderSuccess(response));
+   }
+}
+
+// Sign a transaction
+export function* signTx(api, { txJSON, key }) {
+   const response = yield call(api.signTx, txJSON, key);
+
+   if ('message' in response) {
+      notifyError(response);
+      yield put(XledgActions.signTxFailure(response));
+   } else {
+      yield put(XledgActions.signTxSuccess(response));
+   }
+}
+
+// Submit a signed transaction
+export function* submitTx(api, { signedTransaction }) {
+   const response = yield call(api.submitTx, signedTransaction);
+
+   if ('message' in response) {
+      notifyError(response);
+      yield put(XledgActions.submitTxFailure(response));
+   } else {
+      yield put(XledgActions.submitTxSuccess(response));
+   }
+}

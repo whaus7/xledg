@@ -31,6 +31,18 @@ const { Types, Creators } = createActions({
    updateOrderBookSuccess: ['response'],
    updateOrderBookFailure: ['error'],
 
+   prepareOrder: ['address', 'order', 'options'],
+   prepareOrderSuccess: ['response'],
+   prepareOrderFailure: ['error'],
+
+   signTx: ['txJSON', 'key'],
+   signTxSuccess: ['response'],
+   signTxFailure: ['error'],
+
+   submitTx: ['signedTransaction'],
+   submitTxSuccess: ['response'],
+   submitTxFailure: ['error'],
+
    // Data API Actions
    getGateways: [],
    getGatewaysSuccess: ['response'],
@@ -77,7 +89,9 @@ export const INITIAL_STATE = {
          counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
       }
    },
-   orderBook: null
+   orderBook: null,
+   preparedOrder: null,
+   signedTransaction: null
 };
 
 /* ------------- Reducers ------------- */
@@ -134,11 +148,16 @@ export const xledgReducer = (state, action) => {
          console.log(state);
          console.log(action);
 
+         //order.specification.totalPrice.value / order.specification.quantity.value
          // TODO update trading UI with fullfilled order
          return update(state, {
             action: { $set: action.order.specification.direction === 'sell' ? 'buy' : 'sell' },
             baseAmount: { $set: action.order.specification.quantity.value },
-            counterPrice: { $set: parseFloat(action.order.properties.makerExchangeRate).toFixed(6) }
+            counterPrice: {
+               $set: parseFloat(
+                  action.order.specification.totalPrice.value / action.order.specification.quantity.value
+               ).toFixed(6)
+            }
          });
 
       //return state;
@@ -206,6 +225,40 @@ export const rippleApiReducer = (state, action) => {
       case 'UPDATE_ORDER_BOOK_FAILURE':
          return state;
 
+      // PREPARE ORDER
+      case 'PREPARE_ORDER':
+         return state;
+      case 'PREPARE_ORDER_SUCCESS':
+         return update(state, {
+            preparedOrder: { $set: action.response }
+         });
+      case 'PREPARE_ORDER_FAILURE':
+         return state;
+
+      // SIGN TRANSACTION
+      case 'SIGN_TX':
+         return state;
+      case 'SIGN_TX_SUCCESS':
+         return update(state, {
+            signedTransaction: { $set: action.response },
+            preparedOrder: { $set: null }
+         });
+      case 'SIGN_TX_FAILURE':
+         return state;
+
+      // SUBMIT TRANSACTION
+      case 'SUBMIT':
+         return state;
+      case 'SUBMIT_TX_SUCCESS':
+         console.log('DEBUG REDUX - order submitted successfully!');
+         console.log(state);
+         console.log(action);
+         return update(state, {
+            signedTransaction: { $set: null }
+         });
+      case 'SUBMIT_TX_FAILURE':
+         return state;
+
       default:
          return state;
    }
@@ -239,6 +292,18 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.UPDATE_ORDER_BOOK]: rippleApiReducer,
    [Types.UPDATE_ORDER_BOOK_SUCCESS]: rippleApiReducer,
    [Types.UPDATE_ORDER_BOOK_FAILURE]: rippleApiReducer,
+
+   [Types.PREPARE_ORDER]: rippleApiReducer,
+   [Types.PREPARE_ORDER_SUCCESS]: rippleApiReducer,
+   [Types.PREPARE_ORDER_FAILURE]: rippleApiReducer,
+
+   [Types.SIGN_TX]: rippleApiReducer,
+   [Types.SIGN_TX_SUCCESS]: rippleApiReducer,
+   [Types.SIGN_TX_FAILURE]: rippleApiReducer,
+
+   [Types.SUBMIT_TX]: rippleApiReducer,
+   [Types.SUBMIT_TX_SUCCESS]: rippleApiReducer,
+   [Types.SUBMIT_TX_FAILURE]: rippleApiReducer,
 
    // Data API Actions
    [Types.GET_GATEWAYS]: dataApiReducer,
