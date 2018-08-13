@@ -59,11 +59,19 @@ export default class OrderBook extends Component {
                <h2
                   style={{
                      color: this.props.action === 'buy' ? COLORS.red : COLORS.white,
+                     opacity: this.props.action === 'buy' ? 1 : 0.5,
                      textAlign: titleTextAlign
                   }}>
                   OFFERS TO SELL
                </h2>
-               <div style={{ maxHeight: height, overflow: 'auto' }}>
+               <div
+                  className={'customScroll'}
+                  style={{
+                     maxHeight: height,
+                     overflowY: 'scroll',
+                     overflowX: 'hidden',
+                     opacity: this.props.action === 'buy' ? 1 : 0.5
+                  }}>
                   <Orders orders={orderBook.asks} type={'asks'} />
                </div>
             </div>
@@ -74,11 +82,19 @@ export default class OrderBook extends Component {
                <h2
                   style={{
                      color: this.props.action === 'sell' ? COLORS.green : COLORS.white,
+                     opacity: this.props.action === 'sell' ? 1 : 0.5,
                      textAlign: titleTextAlign
                   }}>
                   OFFERS TO BUY
                </h2>
-               <div style={{ maxHeight: height, overflow: 'auto' }}>
+               <div
+                  className={'customScroll'}
+                  style={{
+                     maxHeight: height,
+                     overflowY: 'scroll',
+                     overflowX: 'hidden',
+                     opacity: this.props.action === 'sell' ? 1 : 0.5
+                  }}>
                   <Orders orders={orderBook.bids} type={'bids'} />
                </div>
             </div>

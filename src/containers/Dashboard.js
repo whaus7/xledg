@@ -6,13 +6,15 @@ import Logo from './components/Logo';
 import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
 import OrderBook from './components/OrderBook';
+import PendingTxs from './components/PendingTxs';
+import COLORS from '../services/colors';
 
 class Dashboard extends Component {
    constructor(props) {
       super(props);
 
       this.state = {
-         key: ''
+         key: '' // for testing
       };
 
       // Connect to Ripple API
@@ -33,8 +35,8 @@ class Dashboard extends Component {
       }
 
       // Submit the currently signed transaction/order
-      if (nextProps.signedTransaction !== null) {
-         this.props.submitTx(nextProps.signedTransaction.signedTransaction);
+      if (nextProps.signedTx !== null) {
+         this.props.submitTx(nextProps.signedTx.signedTransaction);
       }
 
       // Update the order book immediately if pair is changed
@@ -92,18 +94,28 @@ class Dashboard extends Component {
                      padding: 15,
                      borderRight: '1px solid #383939'
                   }}>
-                  <h2>BALANCES</h2>
-                  {this.props.gateways !== null &&
-                  this.props.balanceSheet !== null &&
-                  this.props.accountInfo !== null ? (
-                     <Balances
-                        gateways={this.props.gateways}
-                        accountInfo={this.props.accountInfo}
-                        balanceSheet={this.props.balanceSheet}
-                     />
+                  <div style={{ marginBottom: 25 }}>
+                     <h2>BALANCES</h2>
+                     {this.props.gateways !== null &&
+                     this.props.balanceSheet !== null &&
+                     this.props.accountInfo !== null ? (
+                        <Balances
+                           gateways={this.props.gateways}
+                           accountInfo={this.props.accountInfo}
+                           balanceSheet={this.props.balanceSheet}
+                        />
+                     ) : (
+                        false
+                     )}
+                  </div>
+
+                  <h2>PENDING ORDERS</h2>
+                  {this.props.pendingTxs.length > 0 ? (
+                     <PendingTxs pendingTxs={this.props.pendingTxs} />
                   ) : (
-                     false
+                     <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
                   )}
+
                   {/*TEMP KEY INPUT*/}
                   <div style={{ marginTop: 20 }}>
                      <input
@@ -203,7 +215,8 @@ const mapStateToProps = state => {
       pair: state.xledg.pair,
       orderBook: state.xledg.orderBook,
       preparedOrder: state.xledg.preparedOrder,
-      signedTransaction: state.xledg.signedTransaction
+      signedTx: state.xledg.signedTx,
+      pendingTxs: state.xledg.pendingTxs
    };
 };
 
@@ -248,8 +261,8 @@ const mapDispatchToProps = dispatch => {
       signTx: (txJSON, key) => {
          dispatch(ReduxActions.signTx(txJSON, key));
       },
-      submitTx: signedTransaction => {
-         dispatch(ReduxActions.submitTx(signedTransaction));
+      submitTx: signedTx => {
+         dispatch(ReduxActions.submitTx(signedTx));
       }
    };
 };

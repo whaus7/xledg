@@ -7,7 +7,7 @@ const COLORS = {
    white: '#ffffff',
    eggshell: '#f3f7f8',
    green: '#77dd77',
-   red: '#dd7777'
+   red: '#ff6161'
 };
 
 export default COLORS;

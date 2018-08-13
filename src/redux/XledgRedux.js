@@ -39,9 +39,13 @@ const { Types, Creators } = createActions({
    signTxSuccess: ['response'],
    signTxFailure: ['error'],
 
-   submitTx: ['signedTransaction'],
+   submitTx: ['signedTx'],
    submitTxSuccess: ['response'],
    submitTxFailure: ['error'],
+
+   getTxStatus: ['txID'],
+   getTxStatusSuccess: ['response'],
+   getTxStatusFailure: ['error'],
 
    // Data API Actions
    getGateways: [],
@@ -91,7 +95,8 @@ export const INITIAL_STATE = {
    },
    orderBook: null,
    preparedOrder: null,
-   signedTransaction: null
+   signedTx: null,
+   pendingTxs: []
 };
 
 /* ------------- Reducers ------------- */
@@ -240,7 +245,8 @@ export const rippleApiReducer = (state, action) => {
          return state;
       case 'SIGN_TX_SUCCESS':
          return update(state, {
-            signedTransaction: { $set: action.response },
+            signedTx: { $set: action.response },
+            pendingTxs: { $push: [action.response] },
             preparedOrder: { $set: null }
          });
       case 'SIGN_TX_FAILURE':
@@ -254,9 +260,23 @@ export const rippleApiReducer = (state, action) => {
          console.log(state);
          console.log(action);
          return update(state, {
-            signedTransaction: { $set: null }
+            signedTx: { $set: null }
          });
       case 'SUBMIT_TX_FAILURE':
+         return state;
+
+      // GET TRANSACTION STATUS
+      case 'GET_TX_STATUS':
+         return state;
+      case 'GET_TX_STATUS_SUCCESS':
+         console.log('DEBUG REDUX - TX status success');
+         console.log(state);
+         console.log(action);
+         return state;
+      // return update(state, {
+      // 	signedTx: { $set: null }
+      // });
+      case 'GET_TX_STATUS_FAILURE':
          return state;
 
       default:
@@ -304,6 +324,10 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.SUBMIT_TX]: rippleApiReducer,
    [Types.SUBMIT_TX_SUCCESS]: rippleApiReducer,
    [Types.SUBMIT_TX_FAILURE]: rippleApiReducer,
+
+   [Types.GET_TX_STATUS]: rippleApiReducer,
+   [Types.GET_TX_STATUS_SUCCESS]: rippleApiReducer,
+   [Types.GET_TX_STATUS_FAILURE]: rippleApiReducer,
 
    // Data API Actions
    [Types.GET_GATEWAYS]: dataApiReducer,

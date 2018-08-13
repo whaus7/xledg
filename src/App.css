@@ -34,15 +34,32 @@ h2 {
   text-decoration: none;
   text-align: center;
 }
+.btnHover:hover {
+  opacity: 1 !important;
+}
+
+.customScroll::-webkit-scrollbar {
+  width: 3px;
+}
+.customScroll::-webkit-scrollbar-track {
+  background-color: #202020;
+}
+.customScroll::-webkit-scrollbar-thumb {
+  background-color: #21c2f8;
+}
+
 .Select-control {
-  border: 2px solid #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
   background: #202020 !important ;
   color: #f3f7f8 !important;
-  opacity: .5;
 }
 .Select-control:hover {
+  border: 2px solid rgba(255, 255, 255, 1) !important;
   cursor: pointer;
   opacity: 1;
+}
+.Select--single > .Select-control .Select-value {
+  color: #ffffff !important;
 }
 .Select.is-open .Select-control {
   border-color: #21c2f8 !important;
@@ -62,11 +79,8 @@ h2 {
 }
 
 /*ORDER BOOK*/
-.orderRow {
-  opacity: .7;
-}
 .orderRow:hover {
-  opacity: 1;
+  color: #21c2f8;
   cursor: pointer;
 }
 

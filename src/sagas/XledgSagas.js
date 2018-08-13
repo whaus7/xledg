@@ -111,13 +111,25 @@ export function* signTx(api, { txJSON, key }) {
 }
 
 // Submit a signed transaction
-export function* submitTx(api, { signedTransaction }) {
-   const response = yield call(api.submitTx, signedTransaction);
+export function* submitTx(api, { signedTx }) {
+   const response = yield call(api.submitTx, signedTx);
 
    if ('message' in response) {
       notifyError(response);
       yield put(XledgActions.submitTxFailure(response));
    } else {
       yield put(XledgActions.submitTxSuccess(response));
+   }
+}
+
+// Get the status of a pending transaction
+export function* getTxStatus(api, { txID }) {
+   const response = yield call(api.getTxStatus, txID);
+
+   if ('message' in response) {
+      notifyError(response);
+      yield put(XledgActions.getTxStatusFailure(response));
+   } else {
+      yield put(XledgActions.getTxStatusSuccess(response));
    }
 }

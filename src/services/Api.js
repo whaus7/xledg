@@ -79,11 +79,22 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       return rippleAPI.sign(txJSON, key);
    };
 
-   const submitTx = signedTransaction => {
+   const submitTx = signedTx => {
       return rippleAPI
-         .submit(signedTransaction)
+         .submit(signedTx)
          .then(response => {
             return response;
+         })
+         .catch(error => {
+            return error;
+         });
+   };
+
+   const getTxStatus = txID => {
+      return rippleAPI
+         .getTransaction(txID)
+         .then(txStatus => {
+            return txStatus;
          })
          .catch(error => {
             return error;
@@ -99,7 +110,8 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       updateOrderBook,
       prepareOrder,
       signTx,
-      submitTx
+      submitTx,
+      getTxStatus
    };
 };
 

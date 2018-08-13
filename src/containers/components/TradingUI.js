@@ -50,11 +50,15 @@ export default class TradingUI extends Component {
                            alt={`${this.props.option.value} Icon`}
                         />
                      </div>
-                     <div style={{ fontSize: 16, minWidth: 40, marginRight: 10, alignSelf: 'center' }}>
-                        {this.props.option.value}
-                     </div>
-                     <div style={{ fontSize: 12, alignSelf: 'center', color: COLORS.grey }}>
-                        {this.props.option.label}
+                     <div
+                        style={{
+                           fontSize: 14,
+                           minWidth: 40,
+                           marginRight: 10,
+                           alignSelf: 'center'
+                        }}>
+                        <span>{this.props.option.value}</span>
+                        <span style={{ color: COLORS.grey }}> - {this.props.option.label}</span>
                      </div>
                   </div>
                </div>
@@ -84,8 +88,10 @@ export default class TradingUI extends Component {
                         style={{ maxWidth: 20, maxHeight: 20, alignSelf: 'center', marginRight: 10 }}
                         alt={`${this.props.value.value} Icon`}
                      />
-                     <div style={{ fontSize: 16, marginRight: 10 }}>{this.props.value.value}</div>
-                     <div style={{ fontSize: 12, color: COLORS.grey }}>{this.props.value.label}</div>
+                     <div style={{ fontSize: 14, marginRight: 10 }}>
+                        <span>{this.props.value.value}</span>
+                        <span style={{ color: COLORS.grey }}> - {this.props.value.label}</span>
+                     </div>
                   </div>
                </div>
             );
@@ -201,8 +207,9 @@ export default class TradingUI extends Component {
                   onClick={() => {
                      this.props.prepareOrder();
                   }}
-                  className={'btn'}
+                  className={'btn btnHover'}
                   style={{
+                     opacity: 0.5,
                      borderColor: this.props.action === 'buy' ? COLORS.green : COLORS.red,
                      width: '100%',
                      marginRight: 10
