@@ -13,7 +13,8 @@ import {
    updateOrderBook,
    prepareOrder,
    signTx,
-   submitTx
+   submitTx,
+   getTxStatus
 } from './XledgSagas';
 
 // API
@@ -29,4 +30,5 @@ export default function* root() {
    yield all([takeLatest(ActionTypes.PREPARE_ORDER, prepareOrder, xledgAPI)]);
    yield all([takeLatest(ActionTypes.SIGN_TX, signTx, xledgAPI)]);
    yield all([takeLatest(ActionTypes.SUBMIT_TX, submitTx, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.GET_TX_STATUS, getTxStatus, xledgAPI)]);
 }

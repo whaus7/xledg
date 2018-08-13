@@ -111,7 +111,10 @@ class Dashboard extends Component {
 
                   <h2>PENDING ORDERS</h2>
                   {this.props.pendingTxs.length > 0 ? (
-                     <PendingTxs pendingTxs={this.props.pendingTxs} />
+                     <PendingTxs
+                        pendingTxs={this.props.pendingTxs}
+                        getTxStatus={txID => this.props.getTxStatus(txID)}
+                     />
                   ) : (
                      <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
                   )}
@@ -263,6 +266,9 @@ const mapDispatchToProps = dispatch => {
       },
       submitTx: signedTx => {
          dispatch(ReduxActions.submitTx(signedTx));
+      },
+      getTxStatus: txID => {
+         dispatch(ReduxActions.getTxStatus(txID));
       }
    };
 };

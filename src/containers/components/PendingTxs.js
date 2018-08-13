@@ -7,15 +7,19 @@ export default class PendingTxs extends Component {
    constructor(props) {
       super(props);
 
-      this.state = {
-         txsStatus: this.props.pendingTxs
-      };
+      //this.state = {
+      //txsStatus: this.props.pendingTxs
+      //};
 
-      setInterval(function() {
-         this.props.pendingTxs.map(tx => {
-            // TODO hmm. how to update TX status nicely
-         });
-      }, 3000);
+      setInterval(
+         function() {
+            this.props.pendingTxs.map(tx => {
+               // TODO hmm. how to update TX status nicely
+               this.props.getTxStatus(tx.id);
+            });
+         }.bind(this),
+         5000
+      );
    }
 
    // componentWillReceiveProps(nextProps) {
