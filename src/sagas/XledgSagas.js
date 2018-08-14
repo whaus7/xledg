@@ -133,3 +133,15 @@ export function* getTxStatus(api, { txID }) {
       yield put(XledgActions.getTxStatusSuccess(response));
    }
 }
+
+// Get all transactions for an account (created/partially filled/completed)
+export function* getTxs(api, { address }) {
+   const response = yield call(api.getTxs, address);
+
+   if ('message' in response) {
+      notifyError(response);
+      yield put(XledgActions.getTxsFailure(response));
+   } else {
+      yield put(XledgActions.getTxsSuccess(response));
+   }
+}

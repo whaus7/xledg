@@ -1,6 +1,7 @@
 import { createReducer, createActions } from 'reduxsauce';
 import update from 'immutability-helper';
 import PouchDB from 'pouchdb';
+import { notification } from '../services/helpers';
 PouchDB.plugin(require('pouchdb-upsert'));
 
 /* ------------- Types and Action Creators ------------- */
@@ -46,6 +47,10 @@ const { Types, Creators } = createActions({
    getTxStatus: ['txID'],
    getTxStatusSuccess: ['response'],
    getTxStatusFailure: ['error'],
+
+   getTxs: ['address'],
+   getTxsSuccess: ['response'],
+   getTxsFailure: ['error'],
 
    // Data API Actions
    getGateways: [],
@@ -96,7 +101,7 @@ export const INITIAL_STATE = {
    orderBook: null,
    preparedOrder: null,
    signedTx: null,
-   pendingTxs: []
+   allTxs: []
 };
 
 /* ------------- Reducers ------------- */
@@ -246,7 +251,7 @@ export const rippleApiReducer = (state, action) => {
       case 'SIGN_TX_SUCCESS':
          return update(state, {
             signedTx: { $set: action.response },
-            pendingTxs: { $push: [action.response] },
+            //pendingTxs: { $push: [action.response] },
             preparedOrder: { $set: null }
          });
       case 'SIGN_TX_FAILURE':
@@ -256,6 +261,7 @@ export const rippleApiReducer = (state, action) => {
       case 'SUBMIT':
          return state;
       case 'SUBMIT_TX_SUCCESS':
+         notification('Order Submitted');
          console.log('DEBUG REDUX - order submitted successfully!');
          console.log(state);
          console.log(action);
@@ -272,11 +278,36 @@ export const rippleApiReducer = (state, action) => {
          console.log('DEBUG REDUX - TX status success');
          console.log(state);
          console.log(action);
+         // let newPendingTxs = [];
+
+         // Find our pending transaction and update its status data
+         // state.pendingTxs.map(tx => {
+         //    if (tx.id === action.response.id) {
+         //       tx.status = action.response;
+         //    }
+         //    newPendingTxs.push(tx);
+         // });
+
          return state;
       // return update(state, {
-      // 	signedTx: { $set: null }
+      //    pendingTxs: { $set: newPendingTxs }
       // });
       case 'GET_TX_STATUS_FAILURE':
+         return state;
+
+      // GET ALL TRANSACTIONS FOR ACCOUNT
+      case 'GET_TXS':
+         return state;
+      case 'GET_TXS_SUCCESS':
+         console.log('DEBUG REDUX - all TXs success');
+         console.log(state);
+         console.log(action);
+
+         //   return state;
+         return update(state, {
+            allTxs: { $set: action.response }
+         });
+      case 'GET_TXS_FAILURE':
          return state;
 
       default:
@@ -328,6 +359,10 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.GET_TX_STATUS]: rippleApiReducer,
    [Types.GET_TX_STATUS_SUCCESS]: rippleApiReducer,
    [Types.GET_TX_STATUS_FAILURE]: rippleApiReducer,
+
+   [Types.GET_TXS]: rippleApiReducer,
+   [Types.GET_TXS_SUCCESS]: rippleApiReducer,
+   [Types.GET_TXS_FAILURE]: rippleApiReducer,
 
    // Data API Actions
    [Types.GET_GATEWAYS]: dataApiReducer,

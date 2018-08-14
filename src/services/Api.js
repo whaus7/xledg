@@ -2,7 +2,7 @@ import apisauce from 'apisauce';
 const RippleAPI = require('ripple-lib').RippleAPI;
 
 // Will haus and manage both the dataAPI and rippleAPI objects
-const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'wss://s1.ripple.com') => {
+const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'wss://s2.ripple.com') => {
    const dataAPI = apisauce.create({
       baseURL,
       timeout: 60000
@@ -101,6 +101,19 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
          });
    };
 
+   const getTxs = account => {
+      return rippleAPI
+         .getTransactions(account, {
+            types: ['order']
+         })
+         .then(txs => {
+            return txs;
+         })
+         .catch(error => {
+            return error;
+         });
+   };
+
    return {
       // All our Data API & Ripple API functions
       getGateways,
@@ -111,7 +124,8 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       prepareOrder,
       signTx,
       submitTx,
-      getTxStatus
+      getTxStatus,
+      getTxs
    };
 };
 

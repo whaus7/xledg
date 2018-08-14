@@ -6,7 +6,7 @@ import Logo from './components/Logo';
 import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
 import OrderBook from './components/OrderBook';
-import PendingTxs from './components/PendingTxs';
+import Txs from './components/Txs';
 import COLORS from '../services/colors';
 
 class Dashboard extends Component {
@@ -109,11 +109,12 @@ class Dashboard extends Component {
                      )}
                   </div>
 
-                  <h2>PENDING ORDERS</h2>
-                  {this.props.pendingTxs.length > 0 ? (
-                     <PendingTxs
+                  {this.props.rippleApiConnected > 0 ? (
+                     <Txs
                         pendingTxs={this.props.pendingTxs}
                         getTxStatus={txID => this.props.getTxStatus(txID)}
+                        allTxs={this.props.allTxs}
+                        getTxs={address => this.props.getTxs(address)}
                      />
                   ) : (
                      <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
@@ -219,7 +220,7 @@ const mapStateToProps = state => {
       orderBook: state.xledg.orderBook,
       preparedOrder: state.xledg.preparedOrder,
       signedTx: state.xledg.signedTx,
-      pendingTxs: state.xledg.pendingTxs
+      allTxs: state.xledg.allTxs
    };
 };
 
@@ -269,6 +270,9 @@ const mapDispatchToProps = dispatch => {
       },
       getTxStatus: txID => {
          dispatch(ReduxActions.getTxStatus(txID));
+      },
+      getTxs: address => {
+         dispatch(ReduxActions.getTxs(address));
       }
    };
 };
