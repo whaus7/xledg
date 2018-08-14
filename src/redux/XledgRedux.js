@@ -251,7 +251,6 @@ export const rippleApiReducer = (state, action) => {
       case 'SIGN_TX_SUCCESS':
          return update(state, {
             signedTx: { $set: action.response },
-            //pendingTxs: { $push: [action.response] },
             preparedOrder: { $set: null }
          });
       case 'SIGN_TX_FAILURE':

@@ -1,15 +1,13 @@
-
 body {
   font-family: 'Heebo', sans-serif;
   letter-spacing: 0.05em;
+  font-weight: 300;
 }
 p {
   font-size: 12px;
-  font-weight: 300;
 }
 label {
   font-size: 13px;
-  font-weight: 400;
   letter-spacing: 0.07em;
   align-self: center;
 }
@@ -38,6 +36,7 @@ h2 {
   opacity: 1 !important;
 }
 
+/*CUSTOM STYLED SCROLL BARS*/
 .customScroll::-webkit-scrollbar {
   width: 3px;
 }
@@ -48,6 +47,7 @@ h2 {
   background-color: #21c2f8;
 }
 
+/*REACT SELECT*/
 .Select-control {
   border: 2px solid rgba(255, 255, 255, 0.5) !important;
   background: #202020 !important ;

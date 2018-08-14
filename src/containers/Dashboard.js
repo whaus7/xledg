@@ -94,7 +94,7 @@ class Dashboard extends Component {
                      padding: 15,
                      borderRight: '1px solid #383939'
                   }}>
-                  <div style={{ marginBottom: 25 }}>
+                  <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
                      <h2>BALANCES</h2>
                      {this.props.gateways !== null &&
                      this.props.balanceSheet !== null &&
@@ -110,12 +110,7 @@ class Dashboard extends Component {
                   </div>
 
                   {this.props.rippleApiConnected > 0 ? (
-                     <Txs
-                        pendingTxs={this.props.pendingTxs}
-                        getTxStatus={txID => this.props.getTxStatus(txID)}
-                        allTxs={this.props.allTxs}
-                        getTxs={address => this.props.getTxs(address)}
-                     />
+                     <Txs allTxs={this.props.allTxs} getTxs={address => this.props.getTxs(address)} />
                   ) : (
                      <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
                   )}
