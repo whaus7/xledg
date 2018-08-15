@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import COLORS from '../../services/colors';
-//import Order from './Order';
 
 export default class Txs extends Component {
    constructor(props) {
@@ -14,13 +13,9 @@ export default class Txs extends Component {
          function() {
             this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
          }.bind(this),
-         60000
+         5000
       );
    }
-
-   // componentWillReceiveProps(nextProps) {
-   //
-   // }
 
    render() {
       const { allTxs } = this.props;
@@ -37,31 +32,47 @@ export default class Txs extends Component {
                pendingTxsRows.push(
                   <div
                      key={`pending_txs_${i}`}
-                     //className={'orderRow'}
-                     style={{ margin: '0 0 10px 0' }}
-                     //onClick={() => this.props.updateFromOrder(order)}
-                  >
-                     <div style={{ width: '100%' }}>
-                        {/*index debug*/}
-                        {/*{i}.*/}
-                        <span
-                           style={{
-                              color: tx.specification.direction === 'buy' ? COLORS.green : COLORS.red
-                           }}>
-                           {tx.specification.direction.toUpperCase()}
-                        </span>{' '}
-                        {parseFloat(tx.specification.quantity.value).toFixed(2)}
-                        {tx.specification.quantity.currency}
-                     </div>
-
-                     <div style={{ display: 'flex', width: '100%' }}>
-                        <div style={{ width: 8, marginRight: 7, position: 'relative', top: -1 }}>@</div>
-                        <div style={{ width: 100 }}>
-                           {parseFloat(
-                              tx.specification.totalPrice.value / tx.specification.quantity.value
-                           ).toFixed(6)}{' '}
-                           {tx.specification.totalPrice.currency}
+                     className={'btnHover'}
+                     style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        margin: '0 0 10px 0',
+                        opacity: 0.5
+                     }}
+                     onClick={() => this.props.cancelOrder(tx)}>
+                     {/*ORDER*/}
+                     <div style={{ lineHeight: '14px' }}>
+                        <div style={{ width: '100%' }}>
+                           {/*index debug*/}
+                           {i}.
+                           <span
+                              style={{
+                                 color: tx.specification.direction === 'buy' ? COLORS.green : COLORS.red
+                              }}>
+                              {tx.specification.direction.toUpperCase()}
+                           </span>{' '}
+                           {parseFloat(tx.specification.quantity.value).toFixed(2)}
+                           {tx.specification.quantity.currency}
                         </div>
+
+                        <div style={{ display: 'flex', width: '100%' }}>
+                           <div style={{ width: 8, marginRight: 7, position: 'relative', top: -1 }}>@</div>
+                           <div style={{ width: 100 }}>
+                              {parseFloat(
+                                 tx.specification.totalPrice.value / tx.specification.quantity.value
+                              ).toFixed(6)}{' '}
+                              {tx.specification.totalPrice.currency}
+                           </div>
+                        </div>
+                     </div>
+                     {/*CANCEL BUTTON*/}
+                     <div
+                        className={'btnHover'}
+                        style={{
+                           fontSize: 16,
+                           padding: '0 5px'
+                        }}>
+                        x
                      </div>
                   </div>
                );
@@ -69,13 +80,12 @@ export default class Txs extends Component {
                completedTxsRows.push(
                   <div
                      key={`completed_txs_${i}`}
-                     //className={'orderRow'}
-                     style={{ margin: '0 0 10px 0' }}
+                     style={{ margin: '0 0 10px 0', lineHeight: '14px' }}
                      //onClick={() => this.props.updateFromOrder(order)}
                   >
                      <div style={{ width: '100%' }}>
                         {/*index debug*/}
-                        {/*{i}.*/}
+                        {i}.
                         <span
                            style={{
                               color: tx.specification.direction === 'buy' ? COLORS.green : COLORS.red
@@ -119,11 +129,12 @@ export default class Txs extends Component {
                <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
                   <h2>ORDER HISTORY</h2>
                   <div
-                     className={'customScroll'}
+                     className={'customScroll btnHover'}
                      style={{
                         maxHeight: 150,
                         overflowY: 'scroll',
-                        overflowX: 'hidden'
+                        overflowX: 'hidden',
+                        opacity: 0.5
                      }}>
                      {completedTxsRows}
                   </div>
@@ -154,5 +165,6 @@ export default class Txs extends Component {
 
 Txs.propTypes = {
    allTxs: PropTypes.array,
-   getTxs: PropTypes.func
+   getTxs: PropTypes.func,
+   cancelOrder: PropTypes.func
 };

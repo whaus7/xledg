@@ -34,6 +34,7 @@ h2 {
 }
 .btnHover:hover {
   opacity: 1 !important;
+  cursor: pointer;
 }
 
 /*CUSTOM STYLED SCROLL BARS*/
@@ -250,13 +251,13 @@ h2 {
     height: 0; } }
 /*NOTY THEME - SUNSET*/
 .noty_theme__sunset.noty_bar {
-  margin: 4px 0;
+  margin: 11px 0;
   overflow: hidden;
   border-radius: 2px;
   position: relative;
 }
 .noty_body {
-  padding: 10px;
+  padding: 10px 100px;
   font-size: 12px;
   font-weight: 300;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, .1);
@@ -292,7 +293,7 @@ h2 {
   opacity: .6;
 }
 .noty_theme__sunset.noty_type__success {
-  background-color: #06D6A0;
+  background-color: #21c2f8;
   color: #fff;
 }
 

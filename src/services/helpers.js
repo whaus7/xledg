@@ -1,13 +1,13 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import Noty from 'noty';
 
-export function notification(msg) {
+export function notification(msg, type) {
    new Noty({
       text: msg,
       theme: 'sunset',
-      type: 'error',
+      type: type,
       layout: 'top',
-      timeout: 3000
+      timeout: 300000
    }).show();
 }
 

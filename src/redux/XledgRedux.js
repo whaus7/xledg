@@ -260,7 +260,7 @@ export const rippleApiReducer = (state, action) => {
       case 'SUBMIT':
          return state;
       case 'SUBMIT_TX_SUCCESS':
-         notification('Order Submitted');
+         notification('ORDER SUBMITTED', 'success');
          console.log('DEBUG REDUX - order submitted successfully!');
          console.log(state);
          console.log(action);
@@ -274,9 +274,9 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_TX_STATUS':
          return state;
       case 'GET_TX_STATUS_SUCCESS':
-         console.log('DEBUG REDUX - TX status success');
-         console.log(state);
-         console.log(action);
+         // console.log('DEBUG REDUX - TX status success');
+         // console.log(state);
+         // console.log(action);
          // let newPendingTxs = [];
 
          // Find our pending transaction and update its status data

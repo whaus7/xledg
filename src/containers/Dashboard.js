@@ -39,6 +39,17 @@ class Dashboard extends Component {
          this.props.submitTx(nextProps.signedTx.signedTransaction);
       }
 
+      // Update the transaction list when a order is submitted
+      if (this.props.signedTx !== null && nextProps.signedTx === null) {
+         setTimeout(
+            function() {
+               this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
+            }.bind(this),
+            500
+         );
+         //this.props.submitTx(nextProps.signedTx.signedTransaction);
+      }
+
       // Update the order book immediately if pair is changed
       if (
          nextProps.baseCurrency.value !== this.props.baseCurrency.value ||
@@ -88,7 +99,7 @@ class Dashboard extends Component {
                <div
                   style={{
                      width: '15%',
-                     height: '100vh',
+                     height: '100%',
                      textAlign: 'left',
                      color: '#ffffff',
                      padding: 15,

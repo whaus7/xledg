@@ -105,7 +105,7 @@ class LockScreen extends Component {
                   });
                } else {
                   // NO MATCH ERROR
-                  notification('Mismatching PIN');
+                  notification('Mismatching PIN', 'error');
 
                   this.setState({
                      pinInput: '',
@@ -132,7 +132,7 @@ class LockScreen extends Component {
                         that.props.history.push('/dashboard');
                      } else {
                         // NO MATCH ERROR
-                        notification('Invalid PIN');
+                        notification('Invalid PIN', 'error');
 
                         that.setState({
                            pinInput: '',
