@@ -121,7 +121,18 @@ class Dashboard extends Component {
                   </div>
 
                   {this.props.rippleApiConnected > 0 ? (
-                     <Txs allTxs={this.props.allTxs} getTxs={address => this.props.getTxs(address)} />
+                     <Txs
+                        allTxs={this.props.allTxs}
+                        getTxs={address => this.props.getTxs(address)}
+                        // cancelOrder={tx => {
+                        //    console.log(tx);
+                        //    this.props.cancelOrder('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', tx.specification);
+                        // }}
+                        cancelOrder={tx => {
+                           console.log(tx);
+                           this.props.cancelOrder('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', { orderSequence: tx.sequence });
+                        }}
+                     />
                   ) : (
                      <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
                   )}
@@ -267,6 +278,9 @@ const mapDispatchToProps = dispatch => {
       },
       prepareOrder: (address, order, instructions) => {
          dispatch(ReduxActions.prepareOrder(address, order, instructions));
+      },
+      cancelOrder: (address, orderCancellation) => {
+         dispatch(ReduxActions.cancelOrder(address, orderCancellation));
       },
       signTx: (txJSON, key) => {
          dispatch(ReduxActions.signTx(txJSON, key));

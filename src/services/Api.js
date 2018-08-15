@@ -75,6 +75,17 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
          });
    };
 
+   const cancelOrder = (address, orderCancellation) => {
+      return rippleAPI
+         .prepareOrderCancellation(address, orderCancellation)
+         .then(response => {
+            return response;
+         })
+         .catch(error => {
+            return error;
+         });
+   };
+
    const signTx = (txJSON, key) => {
       return rippleAPI.sign(txJSON, key);
    };
@@ -122,6 +133,7 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       getBalanceSheet,
       updateOrderBook,
       prepareOrder,
+      cancelOrder,
       signTx,
       submitTx,
       getTxStatus,

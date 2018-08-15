@@ -13,7 +13,7 @@ export default class Txs extends Component {
          function() {
             this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
          }.bind(this),
-         5000
+         30000
       );
    }
 

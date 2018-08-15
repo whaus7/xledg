@@ -12,6 +12,7 @@ import {
    getAccountInfo,
    updateOrderBook,
    prepareOrder,
+   cancelOrder,
    signTx,
    submitTx,
    getTxStatus,
@@ -29,6 +30,7 @@ export default function* root() {
    yield all([takeLatest(ActionTypes.GET_BALANCE_SHEET, getBalanceSheet, xledgAPI)]);
    yield all([takeLatest(ActionTypes.UPDATE_ORDER_BOOK, updateOrderBook, xledgAPI)]);
    yield all([takeLatest(ActionTypes.PREPARE_ORDER, prepareOrder, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.CANCEL_ORDER, cancelOrder, xledgAPI)]);
    yield all([takeLatest(ActionTypes.SIGN_TX, signTx, xledgAPI)]);
    yield all([takeLatest(ActionTypes.SUBMIT_TX, submitTx, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_TX_STATUS, getTxStatus, xledgAPI)]);

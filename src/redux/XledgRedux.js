@@ -36,6 +36,10 @@ const { Types, Creators } = createActions({
    prepareOrderSuccess: ['response'],
    prepareOrderFailure: ['error'],
 
+   cancelOrder: ['address', 'orderCancellation'],
+   cancelOrderSuccess: ['response'],
+   cancelOrderFailure: ['error'],
+
    signTx: ['txJSON', 'key'],
    signTxSuccess: ['response'],
    signTxFailure: ['error'],
@@ -245,6 +249,20 @@ export const rippleApiReducer = (state, action) => {
       case 'PREPARE_ORDER_FAILURE':
          return state;
 
+      // CANCEL ORDER
+      case 'CANCEL_ORDER':
+         return state;
+      case 'CANCEL_ORDER_SUCCESS':
+         console.log('DEBUG REDUX - cancel order successfull!');
+         console.log(state);
+         console.log(action);
+         return state;
+      // return update(state, {
+      // 	preparedOrder: { $set: action.response }
+      // });
+      case 'CANCEL_ORDER_FAILURE':
+         return state;
+
       // SIGN TRANSACTION
       case 'SIGN_TX':
          return state;
@@ -346,6 +364,10 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.PREPARE_ORDER]: rippleApiReducer,
    [Types.PREPARE_ORDER_SUCCESS]: rippleApiReducer,
    [Types.PREPARE_ORDER_FAILURE]: rippleApiReducer,
+
+   [Types.CANCEL_ORDER]: rippleApiReducer,
+   [Types.CANCEL_ORDER_SUCCESS]: rippleApiReducer,
+   [Types.CANCEL_ORDER_FAILURE]: rippleApiReducer,
 
    [Types.SIGN_TX]: rippleApiReducer,
    [Types.SIGN_TX_SUCCESS]: rippleApiReducer,

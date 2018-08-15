@@ -98,6 +98,18 @@ export function* prepareOrder(api, { address, order, instructions }) {
    }
 }
 
+// Cancel an open order
+export function* cancelOrder(api, { address, orderCancellation }) {
+   const response = yield call(api.cancelOrder, address, orderCancellation);
+
+   if ('message' in response) {
+      notifyError(response);
+      yield put(XledgActions.cancelOrderFailure(response));
+   } else {
+      yield put(XledgActions.cancelOrderSuccess(response));
+   }
+}
+
 // Sign a transaction
 export function* signTx(api, { txJSON, key }) {
    const response = yield call(api.signTx, txJSON, key);
