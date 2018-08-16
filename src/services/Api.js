@@ -115,10 +115,22 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    const getTxs = account => {
       return rippleAPI
          .getTransactions(account, {
-            types: ['order']
+            types: ['order'],
+            limit: 10
          })
          .then(txs => {
             return txs;
+         })
+         .catch(error => {
+            return error;
+         });
+   };
+
+   const getOrders = (address, options) => {
+      return rippleAPI
+         .getOrders(address, options)
+         .then(openOrders => {
+            return openOrders;
          })
          .catch(error => {
             return error;
@@ -137,7 +149,8 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       signTx,
       submitTx,
       getTxStatus,
-      getTxs
+      getTxs,
+      getOrders
    };
 };
 

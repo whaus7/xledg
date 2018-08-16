@@ -7,7 +7,7 @@ export function notification(msg, type) {
       theme: 'sunset',
       type: type,
       layout: 'top',
-      timeout: 300000
+      timeout: 5000
    }).show();
 }
 

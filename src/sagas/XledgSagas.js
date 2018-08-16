@@ -157,3 +157,16 @@ export function* getTxs(api, { address }) {
       yield put(XledgActions.getTxsSuccess(response));
    }
 }
+
+// Returns open orders for the specified account
+// Open orders are orders that have not yet been fully executed and are still in the order book
+export function* getOrders(api, { address, options }) {
+   const response = yield call(api.getOrders, address, options);
+
+   if ('message' in response) {
+      notifyError(response);
+      yield put(XledgActions.getOrdersFailure(response));
+   } else {
+      yield put(XledgActions.getOrdersSuccess(response));
+   }
+}

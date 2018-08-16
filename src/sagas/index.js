@@ -16,7 +16,8 @@ import {
    signTx,
    submitTx,
    getTxStatus,
-   getTxs
+   getTxs,
+   getOrders
 } from './XledgSagas';
 
 // API
@@ -35,4 +36,5 @@ export default function* root() {
    yield all([takeLatest(ActionTypes.SUBMIT_TX, submitTx, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_TX_STATUS, getTxStatus, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_TXS, getTxs, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.GET_ORDERS, getOrders, xledgAPI)]);
 }

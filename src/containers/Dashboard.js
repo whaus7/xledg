@@ -44,8 +44,9 @@ class Dashboard extends Component {
          setTimeout(
             function() {
                this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
+               this.props.getOrders('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
             }.bind(this),
-            500
+            6000
          );
          //this.props.submitTx(nextProps.signedTx.signedTransaction);
       }
@@ -123,14 +124,14 @@ class Dashboard extends Component {
                   {this.props.rippleApiConnected > 0 ? (
                      <Txs
                         allTxs={this.props.allTxs}
+                        openOrders={this.props.openOrders}
                         getTxs={address => this.props.getTxs(address)}
-                        // cancelOrder={tx => {
-                        //    console.log(tx);
-                        //    this.props.cancelOrder('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', tx.specification);
-                        // }}
+                        getOrders={address => this.props.getOrders(address, { limit: 10 })}
                         cancelOrder={tx => {
                            console.log(tx);
-                           this.props.cancelOrder('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', { orderSequence: tx.sequence });
+                           this.props.cancelOrder('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', {
+                              orderSequence: tx.properties.sequence
+                           });
                         }}
                      />
                   ) : (
@@ -237,7 +238,8 @@ const mapStateToProps = state => {
       orderBook: state.xledg.orderBook,
       preparedOrder: state.xledg.preparedOrder,
       signedTx: state.xledg.signedTx,
-      allTxs: state.xledg.allTxs
+      allTxs: state.xledg.allTxs,
+      openOrders: state.xledg.openOrders
    };
 };
 
@@ -293,6 +295,9 @@ const mapDispatchToProps = dispatch => {
       },
       getTxs: address => {
          dispatch(ReduxActions.getTxs(address));
+      },
+      getOrders: (address, options) => {
+         dispatch(ReduxActions.getOrders(address, options));
       }
    };
 };

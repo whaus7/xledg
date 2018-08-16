@@ -56,6 +56,10 @@ const { Types, Creators } = createActions({
    getTxsSuccess: ['response'],
    getTxsFailure: ['error'],
 
+   getOrders: ['address', 'options'],
+   getOrdersSuccess: ['response'],
+   getOrdersFailure: ['error'],
+
    // Data API Actions
    getGateways: [],
    getGatewaysSuccess: ['response'],
@@ -105,7 +109,8 @@ export const INITIAL_STATE = {
    orderBook: null,
    preparedOrder: null,
    signedTx: null,
-   allTxs: []
+   allTxs: [],
+   openOrders: []
 };
 
 /* ------------- Reducers ------------- */
@@ -256,10 +261,10 @@ export const rippleApiReducer = (state, action) => {
          console.log('DEBUG REDUX - cancel order successfull!');
          console.log(state);
          console.log(action);
-         return state;
-      // return update(state, {
-      // 	preparedOrder: { $set: action.response }
-      // });
+         //return state;
+         return update(state, {
+            preparedOrder: { $set: action.response }
+         });
       case 'CANCEL_ORDER_FAILURE':
          return state;
 
@@ -327,6 +332,21 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_TXS_FAILURE':
          return state;
 
+      // GET ALL OPEN ORDERS FOR ACCOUNT
+      case 'GET_ORDERS':
+         return state;
+      case 'GET_ORDERS_SUCCESS':
+         console.log('DEBUG REDUX - all open orders success');
+         console.log(state);
+         console.log(action);
+
+         //   return state;
+         return update(state, {
+            openOrders: { $set: action.response }
+         });
+      case 'GET_ORDERS_FAILURE':
+         return state;
+
       default:
          return state;
    }
@@ -384,6 +404,10 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.GET_TXS]: rippleApiReducer,
    [Types.GET_TXS_SUCCESS]: rippleApiReducer,
    [Types.GET_TXS_FAILURE]: rippleApiReducer,
+
+   [Types.GET_ORDERS]: rippleApiReducer,
+   [Types.GET_ORDERS_SUCCESS]: rippleApiReducer,
+   [Types.GET_ORDERS_FAILURE]: rippleApiReducer,
 
    // Data API Actions
    [Types.GET_GATEWAYS]: dataApiReducer,
