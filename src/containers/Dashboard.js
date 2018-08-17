@@ -14,7 +14,8 @@ class Dashboard extends Component {
       super(props);
 
       this.state = {
-         key: '' // for testing
+         key: '', // for testing,
+         showLoading: false
       };
 
       // Connect to Ripple API
@@ -41,14 +42,22 @@ class Dashboard extends Component {
 
       // Update the transaction list when a order is submitted
       if (this.props.signedTx !== null && nextProps.signedTx === null) {
+         this.setState({
+            showLoading: true
+         });
          setTimeout(
             function() {
                this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
                this.props.getOrders('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
+               this.props.getBalanceSheet();
+               this.props.getAccountInfo();
+
+               this.setState({
+                  showLoading: false
+               });
             }.bind(this),
-            6000
+            7000
          );
-         //this.props.submitTx(nextProps.signedTx.signedTransaction);
       }
 
       // Update the order book immediately if pair is changed
@@ -86,6 +95,11 @@ class Dashboard extends Component {
                <div style={{ alignSelf: 'center' }}>Actions</div>
             </div>
 
+            {/*LOADING BAR*/}
+            <div style={{ position: 'relative' }}>
+               <div className={`loadingBar ${this.state.showLoading ? 'inProgress' : ''}`} />
+            </div>
+
             {/*BODY*/}
             <div
                id={'body'}
@@ -115,6 +129,8 @@ class Dashboard extends Component {
                            gateways={this.props.gateways}
                            accountInfo={this.props.accountInfo}
                            balanceSheet={this.props.balanceSheet}
+                           assetTotals={this.props.assetTotals}
+                           updateTotals={totals => this.props.updateTotals(totals)}
                         />
                      ) : (
                         false
@@ -228,6 +244,7 @@ const mapStateToProps = state => {
       gateways: state.xledg.gateways,
       rippleApiConnected: state.xledg.rippleApiConnected,
       accountInfo: state.xledg.accountInfo,
+      assetTotals: state.xledg.assetTotals,
       balanceSheet: state.xledg.balanceSheet,
       action: state.xledg.action,
       baseAmount: state.xledg.baseAmount,
@@ -253,6 +270,9 @@ const mapDispatchToProps = dispatch => {
       },
       getAccountInfo: () => {
          dispatch(ReduxActions.getAccountInfo());
+      },
+      updateTotals: totals => {
+         dispatch(ReduxActions.updateTotals(totals));
       },
       getBalanceSheet: () => {
          dispatch(ReduxActions.getBalanceSheet());

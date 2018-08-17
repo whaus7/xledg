@@ -211,8 +211,7 @@ export default class TradingUI extends Component {
                   style={{
                      opacity: 0.5,
                      borderColor: this.props.action === 'buy' ? COLORS.green : COLORS.red,
-                     width: '100%',
-                     marginRight: 10
+                     width: '100%'
                   }}>
                   {`PLACE ${this.props.action.toUpperCase()} ORDER`}
                </div>

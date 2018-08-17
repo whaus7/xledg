@@ -11,7 +11,10 @@ export default class Balances extends Component {
       super(props);
 
       this.state = {
-         balances: null
+         balances: null,
+         totals: {},
+         xrpUpdated: false,
+         assetsUpdated: []
       };
    }
 
@@ -19,12 +22,41 @@ export default class Balances extends Component {
       this.updateBalances();
    }
 
-   componentWillReceiveProps() {
+   componentWillReceiveProps(nextProps) {
+      // Check for change in XRP balance. Blink the text if there is
+      if (nextProps.accountInfo.xrpBalance !== this.props.accountInfo.xrpBalance) {
+         this.setState({
+            xrpUpdated: true
+         });
+         setTimeout(
+            function() {
+               this.setState({
+                  xrpUpdated: false
+               });
+            }.bind(this),
+            1000
+         );
+      }
+
+      let assetsUpdatedNew = [];
+      // Check for change to issued asset balances. Blink the text if there is
+      for (let key in this.props.assetTotals) {
+         if (this.props.assetTotals[key] !== nextProps.assetTotals[key]) {
+            // TODO
+            assetsUpdatedNew.push(key);
+         }
+      }
+
+      this.setState({
+         assetsUpdated: assetsUpdatedNew
+      });
+
       this.updateBalances();
    }
 
    updateBalances() {
       let groupedAssets = groupBy(this.props.balanceSheet.assets, 'currency');
+      let totals = {};
 
       for (let key in groupedAssets) {
          let total = 0;
@@ -32,12 +64,16 @@ export default class Balances extends Component {
             total += parseFloat(asset.value, 10);
             return true;
          });
-         groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
+         //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
+         totals[key] = CurrencyFormatter.format(total, { code: key });
       }
 
       this.setState({
          balances: groupedAssets
+         //totals: totals
       });
+
+      //this.props.updateTotals(totals);
    }
 
    getIssuerName(counterparty, currency) {
@@ -108,7 +144,7 @@ export default class Balances extends Component {
             {/*XRP balanec*/}
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '5px 0' }}>
                <label>XRP</label>
-               <label>
+               <label className={this.state.xrpUpdated ? 'blinkText' : ''}>
                   <img
                      src={xrpIcon}
                      style={{ maxWidth: 12, maxHeight: 12, marginRight: 1 }}
@@ -127,5 +163,7 @@ export default class Balances extends Component {
 Balances.propTypes = {
    gateways: PropTypes.object,
    accountInfo: PropTypes.object,
-   balanceSheet: PropTypes.object
+   balanceSheet: PropTypes.object,
+   assetTotals: PropTypes.object,
+   updateTotals: PropTypes.func
 };

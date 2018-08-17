@@ -14,6 +14,7 @@ const { Types, Creators } = createActions({
    updateCounterPrice: ['price'],
    updateCounterCurrency: ['currency'],
    updateFromOrder: ['order'],
+   updateTotals: ['totals'],
 
    // Ripple API Actions
    connect: [],
@@ -83,6 +84,7 @@ export const INITIAL_STATE = {
    // Ripple API
    rippleApiConnected: false,
    accountInfo: null,
+   assetTotals: {},
    balanceSheet: null,
    baseAmount: '',
    baseCurrency: {
@@ -178,6 +180,10 @@ export const xledgReducer = (state, action) => {
                ).toFixed(6)
             }
          });
+      case 'UPDATE_TOTALS':
+         return update(state, {
+            assetTotals: { $set: action.totals }
+         });
 
       //return state;
       default:
@@ -250,6 +256,7 @@ export const rippleApiReducer = (state, action) => {
       case 'PREPARE_ORDER_SUCCESS':
          return update(state, {
             preparedOrder: { $set: action.response }
+            //openOrders: { $push: [action.response] }
          });
       case 'PREPARE_ORDER_FAILURE':
          return state;
@@ -284,9 +291,10 @@ export const rippleApiReducer = (state, action) => {
          return state;
       case 'SUBMIT_TX_SUCCESS':
          notification('ORDER SUBMITTED', 'success');
-         console.log('DEBUG REDUX - order submitted successfully!');
+         console.log('DEBUG REDUX - order submitted successfully!!');
          console.log(state);
          console.log(action);
+
          return update(state, {
             signedTx: { $set: null }
          });
@@ -300,20 +308,20 @@ export const rippleApiReducer = (state, action) => {
          // console.log('DEBUG REDUX - TX status success');
          // console.log(state);
          // console.log(action);
-         // let newPendingTxs = [];
+         //let newPendingTxs = [];
 
          // Find our pending transaction and update its status data
-         // state.pendingTxs.map(tx => {
-         //    if (tx.id === action.response.id) {
-         //       tx.status = action.response;
-         //    }
-         //    newPendingTxs.push(tx);
-         // });
+         let newOpenOrders = state.openOrders.filter(tx => {
+            if (tx.id !== action.response.id) {
+               return tx;
+            }
+            //newPendingTxs.push(tx);
+         });
 
-         return state;
-      // return update(state, {
-      //    pendingTxs: { $set: newPendingTxs }
-      // });
+         //return state;
+         return update(state, {
+            openOrders: { $set: newOpenOrders }
+         });
       case 'GET_TX_STATUS_FAILURE':
          return state;
 
@@ -363,6 +371,7 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.UPDATE_COUNTER_PRICE]: xledgReducer,
    [Types.UPDATE_COUNTER_CURRENCY]: xledgReducer,
    [Types.UPDATE_FROM_ORDER]: xledgReducer,
+   [Types.UPDATE_TOTALS]: xledgReducer,
 
    // Ripple API Actions
    [Types.CONNECT]: rippleApiReducer,

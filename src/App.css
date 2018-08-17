@@ -37,6 +37,40 @@ h2 {
   cursor: pointer;
 }
 
+/*LOADING BAR*/
+.loadingBar {
+  position: absolute;
+  top: -1px;
+  display: inline-block;
+  width: 0%;
+  height: 0px;
+  background: #21c2f8;
+  -webkit-transition: width 7s;
+  transition: width 7s;
+}
+.loadingBar.inProgress {
+  /*display: block;*/
+  height: 1px;
+  width: 100%;
+}
+
+/*BLINK UPDATE*/
+.blinkText{
+  /*color: #21c2f8;*/
+  -webkit-animation: flash linear 1s infinite;
+  animation: flash linear 1s infinite;
+}
+@-webkit-keyframes flash {
+  0% { color: #ffffff; }
+  50% { color: #21c2f8; }
+  100% { color: #ffffff; }
+}
+@keyframes flash {
+  0% { color: #ffffff; }
+  50% { color: #21c2f8; }
+  100% { color: #ffffff; }
+}
+
 /*CUSTOM STYLED SCROLL BARS*/
 .customScroll::-webkit-scrollbar {
   width: 3px;
