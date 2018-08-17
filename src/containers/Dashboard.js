@@ -129,6 +129,7 @@ class Dashboard extends Component {
                            gateways={this.props.gateways}
                            accountInfo={this.props.accountInfo}
                            balanceSheet={this.props.balanceSheet}
+                           balances={this.props.balances}
                            assetTotals={this.props.assetTotals}
                            updateTotals={totals => this.props.updateTotals(totals)}
                         />
@@ -244,8 +245,9 @@ const mapStateToProps = state => {
       gateways: state.xledg.gateways,
       rippleApiConnected: state.xledg.rippleApiConnected,
       accountInfo: state.xledg.accountInfo,
-      assetTotals: state.xledg.assetTotals,
       balanceSheet: state.xledg.balanceSheet,
+      balances: state.xledg.balances,
+      assetTotals: state.xledg.assetTotals,
       action: state.xledg.action,
       baseAmount: state.xledg.baseAmount,
       baseCurrency: state.xledg.baseCurrency,

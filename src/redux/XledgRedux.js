@@ -1,8 +1,9 @@
 import { createReducer, createActions } from 'reduxsauce';
 import update from 'immutability-helper';
 import PouchDB from 'pouchdb';
-import { notification } from '../services/helpers';
 PouchDB.plugin(require('pouchdb-upsert'));
+import CurrencyFormatter from 'currency-formatter';
+import { groupBy, notification } from '../services/helpers';
 
 /* ------------- Types and Action Creators ------------- */
 const { Types, Creators } = createActions({
@@ -14,7 +15,8 @@ const { Types, Creators } = createActions({
    updateCounterPrice: ['price'],
    updateCounterCurrency: ['currency'],
    updateFromOrder: ['order'],
-   updateTotals: ['totals'],
+   //updateBalances: ['totals'],
+   //updateTotals: ['totals'],
 
    // Ripple API Actions
    connect: [],
@@ -84,8 +86,9 @@ export const INITIAL_STATE = {
    // Ripple API
    rippleApiConnected: false,
    accountInfo: null,
-   assetTotals: {},
    balanceSheet: null,
+   balances: {},
+   assetTotals: {},
    baseAmount: '',
    baseCurrency: {
       icon: '/icons/xrp.png',
@@ -180,10 +183,10 @@ export const xledgReducer = (state, action) => {
                ).toFixed(6)
             }
          });
-      case 'UPDATE_TOTALS':
-         return update(state, {
-            assetTotals: { $set: action.totals }
-         });
+      // case 'UPDATE_TOTALS':
+      //    return update(state, {
+      //       assetTotals: { $set: action.totals }
+      //    });
 
       //return state;
       default:
@@ -234,8 +237,23 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_BALANCE_SHEET':
          return state;
       case 'GET_BALANCE_SHEET_SUCCESS':
+         let groupedAssets = groupBy(action.response.assets, 'currency');
+         let totals = {};
+
+         for (let key in groupedAssets) {
+            let total = 0;
+            groupedAssets[key].map(asset => {
+               total += parseFloat(asset.value, 10);
+               return true;
+            });
+            //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
+            totals[key] = CurrencyFormatter.format(total, { code: key });
+         }
+
          return update(state, {
-            balanceSheet: { $set: action.response }
+            balanceSheet: { $set: action.response },
+            balances: { $set: groupedAssets },
+            assetTotals: { $set: totals }
          });
       case 'GET_BALANCE_SHEET_FAILURE':
          return state;
@@ -371,7 +389,7 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.UPDATE_COUNTER_PRICE]: xledgReducer,
    [Types.UPDATE_COUNTER_CURRENCY]: xledgReducer,
    [Types.UPDATE_FROM_ORDER]: xledgReducer,
-   [Types.UPDATE_TOTALS]: xledgReducer,
+   //[Types.UPDATE_TOTALS]: xledgReducer,
 
    // Ripple API Actions
    [Types.CONNECT]: rippleApiReducer,

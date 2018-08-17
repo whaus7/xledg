@@ -11,15 +11,13 @@ export default class Balances extends Component {
       super(props);
 
       this.state = {
-         balances: null,
-         totals: {},
          xrpUpdated: false,
          assetsUpdated: []
       };
    }
 
    componentWillMount() {
-      this.updateBalances();
+      //this.updateBalances();
    }
 
    componentWillReceiveProps(nextProps) {
@@ -51,30 +49,28 @@ export default class Balances extends Component {
          assetsUpdated: assetsUpdatedNew
       });
 
-      this.updateBalances();
+      //this.updateBalances();
    }
 
-   updateBalances() {
-      let groupedAssets = groupBy(this.props.balanceSheet.assets, 'currency');
-      let totals = {};
-
-      for (let key in groupedAssets) {
-         let total = 0;
-         groupedAssets[key].map(asset => {
-            total += parseFloat(asset.value, 10);
-            return true;
-         });
-         //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
-         totals[key] = CurrencyFormatter.format(total, { code: key });
-      }
-
-      this.setState({
-         balances: groupedAssets
-         //totals: totals
-      });
-
-      //this.props.updateTotals(totals);
-   }
+   // updateBalances() {
+   //    let groupedAssets = groupBy(this.props.balanceSheet.assets, 'currency');
+   //    let totals = {};
+   //
+   //    for (let key in groupedAssets) {
+   //       let total = 0;
+   //       groupedAssets[key].map(asset => {
+   //          total += parseFloat(asset.value, 10);
+   //          return true;
+   //       });
+   //       //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
+   //       totals[key] = CurrencyFormatter.format(total, { code: key });
+   //    }
+   //
+   //    this.setState({
+   //       balances: groupedAssets,
+   //       assetTotals: totals
+   //    });
+   // }
 
    getIssuerName(counterparty, currency) {
       let name = 'N/A';
