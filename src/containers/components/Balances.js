@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import CurrencyFormatter from 'currency-formatter';
 
-import { groupBy } from '../../services/helpers';
 import xrpIcon from '../../images/xrp-icon.svg';
 
 export default class Balances extends Component {
@@ -11,66 +10,44 @@ export default class Balances extends Component {
       super(props);
 
       this.state = {
-         xrpUpdated: false,
-         assetsUpdated: []
+         assetsUpdated: {}
       };
    }
 
-   componentWillMount() {
-      //this.updateBalances();
-   }
-
    componentWillReceiveProps(nextProps) {
+      let assetsUpdatedNew = { ...this.state.assetsUpdated };
+
       // Check for change in XRP balance. Blink the text if there is
       if (nextProps.accountInfo.xrpBalance !== this.props.accountInfo.xrpBalance) {
-         this.setState({
-            xrpUpdated: true
-         });
+         if (this.props.accountInfo.xrpBalance < nextProps.accountInfo.xrpBalance) {
+            assetsUpdatedNew['XRP'] = 'buy';
+         } else if (this.props.accountInfo.xrpBalance > nextProps.accountInfo.xrpBalance) {
+            assetsUpdatedNew['XRP'] = 'sell';
+         }
+
          setTimeout(
             function() {
                this.setState({
-                  xrpUpdated: false
+                  assetsUpdated: {}
                });
             }.bind(this),
             1000
          );
       }
 
-      let assetsUpdatedNew = [];
       // Check for change to issued asset balances. Blink the text if there is
       for (let key in this.props.assetTotals) {
-         if (this.props.assetTotals[key] !== nextProps.assetTotals[key]) {
-            // TODO
-            assetsUpdatedNew.push(key);
+         if (this.props.assetTotals[key].value < nextProps.assetTotals[key].value) {
+            assetsUpdatedNew[key] = 'buy';
+         } else if (this.props.assetTotals[key].value > nextProps.assetTotals[key].value) {
+            assetsUpdatedNew[key] = 'sell';
          }
       }
 
       this.setState({
          assetsUpdated: assetsUpdatedNew
       });
-
-      //this.updateBalances();
    }
-
-   // updateBalances() {
-   //    let groupedAssets = groupBy(this.props.balanceSheet.assets, 'currency');
-   //    let totals = {};
-   //
-   //    for (let key in groupedAssets) {
-   //       let total = 0;
-   //       groupedAssets[key].map(asset => {
-   //          total += parseFloat(asset.value, 10);
-   //          return true;
-   //       });
-   //       //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
-   //       totals[key] = CurrencyFormatter.format(total, { code: key });
-   //    }
-   //
-   //    this.setState({
-   //       balances: groupedAssets,
-   //       assetTotals: totals
-   //    });
-   // }
 
    getIssuerName(counterparty, currency) {
       let name = 'N/A';
@@ -81,6 +58,18 @@ export default class Balances extends Component {
          return true;
       });
       return name;
+   }
+
+   checkForUpdate(key) {
+      if (key in this.state.assetsUpdated) {
+         if (this.state.assetsUpdated[key] === 'buy') {
+            return 'blinkTextGreen';
+         } else if (this.state.assetsUpdated[key] === 'sell') {
+            return 'blinkTextRed';
+         }
+      } else {
+         return '';
+      }
    }
 
    render() {
@@ -113,7 +102,7 @@ export default class Balances extends Component {
       const Balances = () => {
          let balanceRows = [];
 
-         for (let key in this.state.balances) {
+         for (let key in this.props.assetTotals) {
             balanceRows.push(
                <OverlayTrigger
                   key={`${key}-balance`}
@@ -126,7 +115,9 @@ export default class Balances extends Component {
                   }>
                   <div style={{ display: 'flex', justifyContent: 'space-between', margin: '5px 0' }}>
                      <label>{key}</label>
-                     <label>{this.state.balances[key].total}</label>
+                     <label className={this.checkForUpdate(key)}>
+                        {this.props.assetTotals[key].formatted}
+                     </label>
                   </div>
                </OverlayTrigger>
             );
@@ -140,7 +131,7 @@ export default class Balances extends Component {
             {/*XRP balanec*/}
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '5px 0' }}>
                <label>XRP</label>
-               <label className={this.state.xrpUpdated ? 'blinkText' : ''}>
+               <label className={this.checkForUpdate('XRP')}>
                   <img
                      src={xrpIcon}
                      style={{ maxWidth: 12, maxHeight: 12, marginRight: 1 }}
@@ -160,6 +151,5 @@ Balances.propTypes = {
    gateways: PropTypes.object,
    accountInfo: PropTypes.object,
    balanceSheet: PropTypes.object,
-   assetTotals: PropTypes.object,
-   updateTotals: PropTypes.func
+   assetTotals: PropTypes.object
 };

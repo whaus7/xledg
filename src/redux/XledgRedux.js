@@ -1,9 +1,10 @@
 import { createReducer, createActions } from 'reduxsauce';
 import update from 'immutability-helper';
 import PouchDB from 'pouchdb';
-PouchDB.plugin(require('pouchdb-upsert'));
 import CurrencyFormatter from 'currency-formatter';
 import { groupBy, notification } from '../services/helpers';
+
+PouchDB.plugin(require('pouchdb-upsert'));
 
 /* ------------- Types and Action Creators ------------- */
 const { Types, Creators } = createActions({
@@ -15,8 +16,6 @@ const { Types, Creators } = createActions({
    updateCounterPrice: ['price'],
    updateCounterCurrency: ['currency'],
    updateFromOrder: ['order'],
-   //updateBalances: ['totals'],
-   //updateTotals: ['totals'],
 
    // Ripple API Actions
    connect: [],
@@ -247,7 +246,7 @@ export const rippleApiReducer = (state, action) => {
                return true;
             });
             //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
-            totals[key] = CurrencyFormatter.format(total, { code: key });
+            totals[key] = { formatted: CurrencyFormatter.format(total, { code: key }), value: total };
          }
 
          return update(state, {
@@ -389,7 +388,6 @@ export const reducer = createReducer(INITIAL_STATE, {
    [Types.UPDATE_COUNTER_PRICE]: xledgReducer,
    [Types.UPDATE_COUNTER_CURRENCY]: xledgReducer,
    [Types.UPDATE_FROM_ORDER]: xledgReducer,
-   //[Types.UPDATE_TOTALS]: xledgReducer,
 
    // Ripple API Actions
    [Types.CONNECT]: rippleApiReducer,

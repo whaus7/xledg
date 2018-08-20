@@ -26,34 +26,34 @@ export default class Txs extends Component {
 
          allTxs.map((tx, i) => {
             if (
-               'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf' in tx.outcome.balanceChanges !== 'undefined' &&
-               tx.outcome.balanceChanges.rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf.length === 1
+               //tx.address === 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf' &&
+               'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf' in tx.outcome.orderbookChanges &&
+               tx.outcome.orderbookChanges['rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf'][0].status === 'filled'
             ) {
-               console.log('UNSIGNED TX');
-               console.log(tx);
-            } else {
+               let txChanges = tx.outcome.orderbookChanges['rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf'][0];
+
                completedTxsRows.push(
                   <div key={`completed_txs_${i}`} style={{ margin: '0 0 10px 0', lineHeight: '14px' }}>
                      <div style={{ width: '100%' }}>
                         {/*index debug*/}
-                        {/*{i}.*/}
+                        {i}.
                         <span
                            style={{
-                              color: tx.specification.direction === 'buy' ? COLORS.green : COLORS.red
+                              color: txChanges.direction === 'buy' ? COLORS.green : COLORS.red
                            }}>
-                           {tx.specification.direction.toUpperCase()}
+                           {txChanges.direction.toUpperCase()}
                         </span>{' '}
-                        {parseFloat(tx.specification.quantity.value).toFixed(2)}
-                        {tx.specification.quantity.currency}
+                        {parseFloat(txChanges.quantity.value).toFixed(2)}
+                        {txChanges.quantity.currency}
                      </div>
 
                      <div style={{ display: 'flex', width: '100%' }}>
                         <div style={{ width: 8, marginRight: 7, position: 'relative', top: -1 }}>@</div>
                         <div style={{ width: 100 }}>
-                           {parseFloat(
-                              tx.specification.totalPrice.value / tx.specification.quantity.value
+                           {(
+                              parseFloat(txChanges.totalPrice.value) / parseFloat(txChanges.quantity.value)
                            ).toFixed(6)}{' '}
-                           {tx.specification.totalPrice.currency}
+                           {txChanges.totalPrice.currency}
                         </div>
                      </div>
                   </div>

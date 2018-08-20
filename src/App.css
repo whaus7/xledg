@@ -45,8 +45,8 @@ h2 {
   width: 0%;
   height: 0px;
   background: #21c2f8;
-  -webkit-transition: width 7s;
-  transition: width 7s;
+  -webkit-transition: width 8s;
+  transition: width 8s;
 }
 .loadingBar.inProgress {
   /*display: block;*/
@@ -55,8 +55,7 @@ h2 {
 }
 
 /*BLINK UPDATE*/
-.blinkText{
-  /*color: #21c2f8;*/
+.blinkText {
   -webkit-animation: flash linear 1s infinite;
   animation: flash linear 1s infinite;
 }
@@ -68,6 +67,36 @@ h2 {
 @keyframes flash {
   0% { color: #ffffff; }
   50% { color: #21c2f8; }
+  100% { color: #ffffff; }
+}
+
+.blinkTextGreen {
+  -webkit-animation: flashGreen linear 1s infinite;
+  animation: flashGreen linear 1s infinite;
+}
+@-webkit-keyframes flashGreen {
+  0% { color: #ffffff; }
+  50% { color: #77dd77; }
+  100% { color: #ffffff; }
+}
+@keyframes flashGreen {
+  0% { color: #ffffff; }
+  50% { color: #77dd77; }
+  100% { color: #ffffff; }
+}
+
+.blinkTextRed {
+  -webkit-animation: flashRed linear 1s infinite;
+  animation: flashRed linear 1s infinite;
+}
+@-webkit-keyframes flashRed {
+  0% { color: #ffffff; }
+  50% { color: #ff6161; }
+  100% { color: #ffffff; }
+}
+@keyframes flashRed {
+  0% { color: #ffffff; }
+  50% { color: #ff6161; }
   100% { color: #ffffff; }
 }
 

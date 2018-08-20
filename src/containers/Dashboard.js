@@ -56,7 +56,7 @@ class Dashboard extends Component {
                   showLoading: false
                });
             }.bind(this),
-            7000
+            8000
          );
       }
 
@@ -92,7 +92,18 @@ class Dashboard extends Component {
                   <Logo size={'xs'} margin={'0'} />
                </div>
 
-               <div style={{ alignSelf: 'center' }}>Actions</div>
+               <div style={{ alignSelf: 'center' }}>
+                  {/*TEMP KEY INPUT*/}
+                  <input
+                     placeholder={'for testing'}
+                     onChange={e => {
+                        this.setState({
+                           key: e.target.value
+                        });
+                     }}
+                     value={this.state.key}
+                  />
+               </div>
             </div>
 
             {/*LOADING BAR*/}
@@ -115,6 +126,7 @@ class Dashboard extends Component {
                   style={{
                      width: '15%',
                      height: '100%',
+                     minHeight: '100vh',
                      textAlign: 'left',
                      color: '#ffffff',
                      padding: 15,
@@ -131,7 +143,6 @@ class Dashboard extends Component {
                            balanceSheet={this.props.balanceSheet}
                            balances={this.props.balances}
                            assetTotals={this.props.assetTotals}
-                           updateTotals={totals => this.props.updateTotals(totals)}
                         />
                      ) : (
                         false
@@ -154,19 +165,6 @@ class Dashboard extends Component {
                   ) : (
                      <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
                   )}
-
-                  {/*TEMP KEY INPUT*/}
-                  <div style={{ marginTop: 20 }}>
-                     <input
-                        placeholder={'for testing'}
-                        onChange={e => {
-                           this.setState({
-                              key: e.target.value
-                           });
-                        }}
-                        value={this.state.key}
-                     />
-                  </div>
                </div>
 
                {/*TRADING UI - OFFERS/ASK*/}
@@ -272,9 +270,6 @@ const mapDispatchToProps = dispatch => {
       },
       getAccountInfo: () => {
          dispatch(ReduxActions.getAccountInfo());
-      },
-      updateTotals: totals => {
-         dispatch(ReduxActions.updateTotals(totals));
       },
       getBalanceSheet: () => {
          dispatch(ReduxActions.getBalanceSheet());
