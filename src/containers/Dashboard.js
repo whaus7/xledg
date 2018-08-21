@@ -8,6 +8,7 @@ import TradingUI from './components/TradingUI';
 import OrderBook from './components/OrderBook';
 import Txs from './components/Txs';
 import COLORS from '../services/colors';
+import LineChart from './components/LineChart';
 
 class Dashboard extends Component {
    constructor(props) {
@@ -25,6 +26,9 @@ class Dashboard extends Component {
    componentWillReceiveProps(nextProps) {
       if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
          this.props.getGateways();
+
+         this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+
          this.props.getBalanceSheet();
          this.props.getAccountInfo();
          this.props.updateOrderBook(nextProps.pair);
@@ -167,19 +171,21 @@ class Dashboard extends Component {
                   )}
                </div>
 
-               {/*TRADING UI - OFFERS/ASK*/}
+               {/*CENTER*/}
                <div
                   style={{
                      width: '45%'
-                  }}
-               />
+                  }}>
+                  <LineChart data={this.props.exchangeHistory} />
+               </div>
 
-               {/*ORDER BOOK*/}
+               {/*RIGHT BAR*/}
                <div
                   style={{
                      width: '40%',
                      borderLeft: '1px solid #383939'
                   }}>
+                  {/*TRADING UI - OFFERS/ASK*/}
                   <TradingUI
                      {...this.props}
                      prepareOrder={() =>
@@ -205,6 +211,7 @@ class Dashboard extends Component {
                      }
                   />
 
+                  {/*ORDER BOOK*/}
                   {this.props.orderBook !== null ? (
                      <OrderBook
                         orderBook={this.props.orderBook}
@@ -241,6 +248,7 @@ const mapStateToProps = state => {
       db: state.xledg.db,
       walletStatus: state.xledg.walletStatus,
       gateways: state.xledg.gateways,
+      exchangeHistory: state.xledg.exchangeHistory,
       rippleApiConnected: state.xledg.rippleApiConnected,
       accountInfo: state.xledg.accountInfo,
       balanceSheet: state.xledg.balanceSheet,
@@ -267,6 +275,12 @@ const mapDispatchToProps = dispatch => {
       },
       getGateways: () => {
          dispatch(ReduxActions.getGateways());
+      },
+      getExchangeHistory: (baseCurrency, counterCurrency) => {
+         console.log('dispatch');
+         console.log(baseCurrency);
+         console.log(counterCurrency);
+         dispatch(ReduxActions.getExchangeHistory(baseCurrency, counterCurrency));
       },
       getAccountInfo: () => {
          dispatch(ReduxActions.getAccountInfo());

@@ -65,7 +65,11 @@ const { Types, Creators } = createActions({
    // Data API Actions
    getGateways: [],
    getGatewaysSuccess: ['response'],
-   getGatewaysFailure: ['error']
+   getGatewaysFailure: ['error'],
+
+   getExchangeHistory: ['baseCurrency', 'counterCurrency'],
+   getExchangeHistorySuccess: ['response'],
+   getExchangeHistoryFailure: ['error']
 });
 
 export const ActionTypes = Types;
@@ -81,6 +85,7 @@ export const INITIAL_STATE = {
 
    // Data API
    gateways: null,
+   exchangeHistory: {},
 
    // Ripple API
    rippleApiConnected: false,
@@ -195,6 +200,7 @@ export const xledgReducer = (state, action) => {
 
 export const dataApiReducer = (state, action) => {
    switch (action.type) {
+      // Get all registered gateways
       case 'GET_GATEWAYS':
          return state;
       case 'GET_GATEWAYS_SUCCESS':
@@ -203,6 +209,20 @@ export const dataApiReducer = (state, action) => {
          });
       case 'GET_GATEWAYS_FAILURE':
          return state;
+
+      case 'GET_EXCHANGE_HISTORY':
+         return state;
+      case 'GET_EXCHANGE_HISTORY_SUCCESS':
+         console.log('DEBUG REDUX - exchange history');
+         console.log(state);
+         console.log(action);
+
+         return update(state, {
+            exchangeHistory: { $set: action.response.data }
+         });
+      case 'GET_EXCHANGE_HISTORY_FAILURE':
+         return state;
+
       default:
          return state;
    }
@@ -437,5 +457,10 @@ export const reducer = createReducer(INITIAL_STATE, {
    // Data API Actions
    [Types.GET_GATEWAYS]: dataApiReducer,
    [Types.GET_GATEWAYS_SUCCESS]: dataApiReducer,
-   [Types.GET_GATEWAYS_FAILURE]: dataApiReducer
+   [Types.GET_GATEWAYS_FAILURE]: dataApiReducer,
+
+   // Get Exchange History for Charts
+   [Types.GET_EXCHANGE_HISTORY]: dataApiReducer,
+   [Types.GET_EXCHANGE_HISTORY_SUCCESS]: dataApiReducer,
+   [Types.GET_EXCHANGE_HISTORY_FAILURE]: dataApiReducer
 });

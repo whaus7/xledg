@@ -17,6 +17,33 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       return dataAPI.get(`gateways`, '');
    };
 
+   // var data_url = RIPPLE_DATA_URL + '/v2/exchanges/' +
+   // 	$scope.trading.baseCurrency +
+   // 	($scope.trading.baseIssuer ? '+' + $scope.trading.baseIssuer : '') + '/' +
+   // 	$scope.trading.tradeCurrency +
+   // 	($scope.trading.tradeIssuer ? '+' + $scope.trading.tradeIssuer : '') +
+   // 	'?descending=true&result=tesSUCCESS' +
+   // 	'&interval=' + CHART_INTERVAL +
+   // 	'&limit=' + CHART_LIMIT +
+   // 	((options && options.marker) ? '&marker=' + options.marker : '');
+   const getExchangeHistory = (baseCurrency, counterCurrency) => {
+      console.log('hi??');
+      console.log(baseCurrency);
+      console.log(counterCurrency);
+
+      return dataAPI.get(
+         `/exchanges/${
+            baseCurrency.value === 'XRP'
+               ? baseCurrency.value
+               : baseCurrency.value + '+rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
+         }/${
+            counterCurrency.value === 'XRP'
+               ? counterCurrency.value
+               : counterCurrency.value + '+rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
+         }?descending=true&result=tesSUCCESS&interval=1hour&limit=1000`
+      );
+   };
+
    // RIPPLE API
    const connect = () => {
       return rippleAPI
@@ -140,6 +167,7 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    return {
       // All our Data API & Ripple API functions
       getGateways,
+      getExchangeHistory,
       connect,
       getAccountInfo,
       getBalanceSheet,

@@ -36,6 +36,24 @@ export function* getGateways(api) {
    }
 }
 
+// Get exchange price history for charts
+export function* getExchangeHistory(api, { baseCurrency, counterCurrency }) {
+   const response = yield call(api.getExchangeHistory, baseCurrency, counterCurrency);
+   console.log('getExchangeHistory wtf');
+   console.log(response);
+
+   if (success(response)) {
+      yield put(XledgActions.getExchangeHistorySuccess(response));
+      // notification(
+      //    'success',
+      //    `success`
+      // );
+   } else {
+      notifyError(response);
+      yield put(XledgActions.getExchangeHistoryFailure(response));
+   }
+}
+
 // Connect to Ripple API
 export function* connect(api) {
    const response = yield call(api.connect);

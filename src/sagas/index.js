@@ -7,6 +7,7 @@ import { ActionTypes } from '../redux/XledgRedux';
 // Sagas
 import {
    getGateways,
+   getExchangeHistory,
    connect,
    getBalanceSheet,
    getAccountInfo,
@@ -26,6 +27,7 @@ const xledgAPI = API.apiHaus();
 /* ------------- Connect Types To Sagas ------------- */
 export default function* root() {
    yield all([takeLatest(ActionTypes.GET_GATEWAYS, getGateways, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.GET_EXCHANGE_HISTORY, getExchangeHistory, xledgAPI)]);
    yield all([takeLatest(ActionTypes.CONNECT, connect, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_ACCOUNT_INFO, getAccountInfo, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_BALANCE_SHEET, getBalanceSheet, xledgAPI)]);
