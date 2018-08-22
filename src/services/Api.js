@@ -27,10 +27,6 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    // 	'&limit=' + CHART_LIMIT +
    // 	((options && options.marker) ? '&marker=' + options.marker : '');
    const getExchangeHistory = (baseCurrency, counterCurrency) => {
-      console.log('hi??');
-      console.log(baseCurrency);
-      console.log(counterCurrency);
-
       return dataAPI.get(
          `/exchanges/${
             baseCurrency.value === 'XRP'

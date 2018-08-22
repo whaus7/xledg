@@ -85,7 +85,7 @@ export const INITIAL_STATE = {
 
    // Data API
    gateways: null,
-   exchangeHistory: {},
+   exchangeHistory: null,
 
    // Ripple API
    rippleApiConnected: false,

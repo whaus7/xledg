@@ -173,6 +173,7 @@ class Dashboard extends Component {
 
                {/*CENTER*/}
                <div
+                  id={'centerCol'}
                   style={{
                      width: '45%'
                   }}>

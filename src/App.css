@@ -54,7 +54,16 @@ h2 {
   width: 100%;
 }
 
-/*BLINK UPDATE*/
+/*REACT-VIS CHARTS*/
+.rv-xy-plot__axis__line {
+  opacity: .1 !important;
+}
+
+.rv-xy-plot__axis__tick__line {
+  opacity: .5 !important;
+}
+
+/*BLINK TEXT COLOR*/
 .blinkText {
   -webkit-animation: flash linear 1s infinite;
   animation: flash linear 1s infinite;
