@@ -217,8 +217,12 @@ export const dataApiReducer = (state, action) => {
          console.log(state);
          console.log(action);
 
+         let reversedHistory = update(action.response.data, {
+            exchanges: { $set: action.response.data.exchanges.reverse() }
+         });
+
          return update(state, {
-            exchangeHistory: { $set: action.response.data }
+            exchangeHistory: { $set: reversedHistory }
          });
       case 'GET_EXCHANGE_HISTORY_FAILURE':
          return state;

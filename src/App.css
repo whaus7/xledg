@@ -58,9 +58,11 @@ h2 {
 .rv-xy-plot__axis__line {
   opacity: .1 !important;
 }
-
 .rv-xy-plot__axis__tick__line {
   opacity: .5 !important;
+}
+.rv-crosshair__line {
+  background: #21c2f8 !important;
 }
 
 /*BLINK TEXT COLOR*/

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import 'react-vis/dist/style.css';
 import {
    XYPlot,
@@ -8,7 +9,8 @@ import {
    LineSeries,
    VerticalGridLines,
    HorizontalGridLines,
-   Crosshair
+   Crosshair,
+   MarkSeries
 } from 'react-vis';
 
 export default class LineChart extends Component {
@@ -48,11 +50,11 @@ export default class LineChart extends Component {
    getSeriesData(data) {
       let seriesData = [];
       data.map((d, i) => {
-         seriesData.push({ x: i, y: d.close });
+         seriesData.push({ x: moment(d.close_time).unix() * 1000, y: parseFloat(d.close).toFixed(4) });
       });
 
-      console.log('series data');
-      console.log(seriesData);
+      // console.log('series data');
+      // console.log(seriesData);
 
       this.setState({
          seriesData: seriesData
@@ -80,19 +82,40 @@ export default class LineChart extends Component {
                   color="#21c2f8"
                   style={{ strokeWidth: 1 }}
                />
-               {/*<Crosshair values={this.state.crosshairValues} />*/}
-               <Crosshair values={this.state.crosshairValues}>
-                  <div style={{ background: 'black' }}>
-                     <h3>Values of crosshair:</h3>
-                     <p>
-                        x: {this.state.crosshairValues.length > 0 ? this.state.crosshairValues[0].x : false}
-                     </p>
-                     <p>
-                        y: {this.state.crosshairValues.length > 0 ? this.state.crosshairValues[0].y : false}
-                     </p>
-                     {/*<p>Series 2: {myValues[1].x}</p>*/}
+               <Crosshair style={{ color: 'white' }} values={this.state.crosshairValues}>
+                  <div
+                     style={{
+                        background: '#2c3e5o',
+                        minWidth: 85,
+                        padding: 5,
+                        color: '#ffffff',
+                        fontSize: 12
+                     }}>
+                     <div>
+                        {this.state.crosshairValues.length > 0
+                           ? moment(this.state.crosshairValues[0].x).format('MMM D YYYY')
+                           : false}
+                     </div>
+                     <div>
+                        Price:{' '}
+                        {this.state.crosshairValues.length > 0 ? this.state.crosshairValues[0].y : false}
+                     </div>
                   </div>
                </Crosshair>
+               {this.state.crosshairValues.length > 0 ? (
+                  <MarkSeries
+                     color={'#21c2f8'}
+                     data={[
+                        {
+                           x: this.state.crosshairValues[0].x,
+                           y: this.state.crosshairValues[0].y
+                           //size: 1
+                        }
+                     ]}
+                  />
+               ) : (
+                  false
+               )}
             </XYPlot>
          </div>
       );

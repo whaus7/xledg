@@ -9,6 +9,7 @@
     "docker": "^1.0.0",
     "immutability-helper": "^2.7.1",
     "js-nacl": "^1.2.2",
+    "moment": "^2.22.2",
     "noty": "^3.2.0-beta",
     "pouchdb": "^7.0.0",
     "pouchdb-upsert": "^2.2.0",
