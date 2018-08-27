@@ -7,30 +7,29 @@ export default class Txs extends Component {
    constructor(props) {
       super(props);
 
-      this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
-      this.props.getOrders('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
+      this.props.getTxs(props.publicAddress);
+      this.props.getOrders(props.publicAddress);
 
       setInterval(
          function() {
-            this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
+            this.props.getTxs(props.publicAddress);
          }.bind(this),
          1200000
       );
    }
 
    render() {
-      const { allTxs, openOrders } = this.props;
+      const { publicAddress, allTxs, openOrders } = this.props;
 
       const Txs = () => {
          let completedTxsRows = [];
 
          allTxs.map((tx, i) => {
             if (
-               //tx.address === 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf' &&
-               'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf' in tx.outcome.orderbookChanges &&
-               tx.outcome.orderbookChanges['rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf'][0].status === 'filled'
+               publicAddress in tx.outcome.orderbookChanges &&
+               tx.outcome.orderbookChanges[publicAddress][0].status === 'filled'
             ) {
-               let txChanges = tx.outcome.orderbookChanges['rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf'][0];
+               let txChanges = tx.outcome.orderbookChanges[publicAddress][0];
 
                completedTxsRows.push(
                   <div key={`completed_txs_${i}`} style={{ margin: '0 0 10px 0', lineHeight: '14px' }}>
@@ -181,6 +180,7 @@ export default class Txs extends Component {
 }
 
 Txs.propTypes = {
+   publicAddress: PropTypes.string,
    allTxs: PropTypes.array,
    openOrders: PropTypes.array,
    getTxs: PropTypes.func,

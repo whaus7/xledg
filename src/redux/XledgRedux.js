@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 import PouchDB from 'pouchdb';
 import CurrencyFormatter from 'currency-formatter';
 import { groupBy, notification } from '../services/helpers';
+//import Order from '../containers/components/Order';
 
 PouchDB.plugin(require('pouchdb-upsert'));
 
@@ -22,20 +23,20 @@ const { Types, Creators } = createActions({
    connectSuccess: ['response'],
    connectFailure: ['error'],
 
-   getAccountInfo: [],
+   getAccountInfo: ['address'],
    getAccountInfoSuccess: ['response'],
    getAccountInfoFailure: ['error'],
 
-   getBalanceSheet: [],
+   getBalanceSheet: ['address'],
    getBalanceSheetSuccess: ['response'],
    getBalanceSheetFailure: ['error'],
 
-   updateOrderBook: ['pair'],
+   updateOrderBook: ['address', 'pair'],
    updateOrderBookSuccess: ['response'],
    updateOrderBookFailure: ['error'],
 
    prepareOrder: ['address', 'order', 'options'],
-   prepareOrderSuccess: ['response'],
+   prepareOrderSuccess: ['response', 'order'],
    prepareOrderFailure: ['error'],
 
    cancelOrder: ['address', 'orderCancellation'],
@@ -79,6 +80,7 @@ export default Creators;
 
 export const INITIAL_STATE = {
    // xLedg UI
+   publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
    db: new PouchDB('xledg_db'),
    walletStatus: null,
    action: 'buy',
@@ -112,11 +114,12 @@ export const INITIAL_STATE = {
       },
       counter: {
          currency: 'USD',
-         counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
+         counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B' // Bitstamp
       }
    },
    orderBook: null,
    preparedOrder: null,
+   preparedOrderData: null,
    signedTx: null,
    allTxs: [],
    openOrders: []
@@ -213,9 +216,9 @@ export const dataApiReducer = (state, action) => {
       case 'GET_EXCHANGE_HISTORY':
          return state;
       case 'GET_EXCHANGE_HISTORY_SUCCESS':
-         console.log('DEBUG REDUX - exchange history');
-         console.log(state);
-         console.log(action);
+         // console.log('DEBUG REDUX - exchange history');
+         // console.log(state);
+         // console.log(action);
 
          let reversedHistory = update(action.response.data, {
             exchanges: { $set: action.response.data.exchanges.reverse() }
@@ -296,8 +299,8 @@ export const rippleApiReducer = (state, action) => {
          return state;
       case 'PREPARE_ORDER_SUCCESS':
          return update(state, {
-            preparedOrder: { $set: action.response }
-            //openOrders: { $push: [action.response] }
+            preparedOrder: { $set: action.response },
+            preparedOrderData: { $set: action.order }
          });
       case 'PREPARE_ORDER_FAILURE':
          return state;
@@ -331,13 +334,13 @@ export const rippleApiReducer = (state, action) => {
       case 'SUBMIT':
          return state;
       case 'SUBMIT_TX_SUCCESS':
-         notification('ORDER SUBMITTED', 'success');
-         console.log('DEBUG REDUX - order submitted successfully!!');
-         console.log(state);
-         console.log(action);
+         // console.log('DEBUG REDUX - submit order successfull!');
+         // console.log(state);
+         // console.log(action);
 
          return update(state, {
-            signedTx: { $set: null }
+            signedTx: { $set: null },
+            preparedOrderData: { $set: null }
          });
       case 'SUBMIT_TX_FAILURE':
          return state;
@@ -351,18 +354,17 @@ export const rippleApiReducer = (state, action) => {
          // console.log(action);
          //let newPendingTxs = [];
 
-         // Find our pending transaction and update its status data
-         let newOpenOrders = state.openOrders.filter(tx => {
-            if (tx.id !== action.response.id) {
-               return tx;
-            }
-            //newPendingTxs.push(tx);
-         });
-
-         //return state;
-         return update(state, {
-            openOrders: { $set: newOpenOrders }
-         });
+         return state;
+      // return update(state, {
+      //    openOrders: {
+      //       $set: state.openOrders.filter(tx => {
+      //          if (tx.id !== action.response.id) {
+      //             return tx;
+      //          }
+      //          //newPendingTxs.push(tx);
+      //       })
+      //    }
+      // });
       case 'GET_TX_STATUS_FAILURE':
          return state;
 
@@ -370,11 +372,10 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_TXS':
          return state;
       case 'GET_TXS_SUCCESS':
-         console.log('DEBUG REDUX - all TXs success');
-         console.log(state);
-         console.log(action);
+         // console.log('DEBUG REDUX - all TXs success');
+         // console.log(state);
+         // console.log(action);
 
-         //   return state;
          return update(state, {
             allTxs: { $set: action.response }
          });

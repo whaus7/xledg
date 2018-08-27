@@ -19,6 +19,8 @@ export default class OrderBook extends Component {
          let orderRows = [];
 
          props.orders.map((order, i) => {
+            // console.log('order obj');
+            // console.log(order);
             orderRows.push(
                <Order
                   key={`${props.type}_${i}`}

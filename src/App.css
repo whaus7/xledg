@@ -55,6 +55,9 @@ h2 {
 }
 
 /*REACT-VIS CHARTS*/
+#priceChart .rv-xy-plot {
+  height: 220px !important;
+}
 .rv-xy-plot__axis__line {
   opacity: .1 !important;
 }
@@ -367,7 +370,8 @@ h2 {
   opacity: .6;
 }
 .noty_theme__sunset.noty_type__success {
-  background-color: #21c2f8;
+  background: #202020;
+  border: 1px solid #21c2f8;
   color: #fff;
 }
 

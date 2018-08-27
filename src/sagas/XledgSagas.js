@@ -39,8 +39,6 @@ export function* getGateways(api) {
 // Get exchange price history for charts
 export function* getExchangeHistory(api, { baseCurrency, counterCurrency }) {
    const response = yield call(api.getExchangeHistory, baseCurrency, counterCurrency);
-   console.log('getExchangeHistory wtf');
-   console.log(response);
 
    if (success(response)) {
       yield put(XledgActions.getExchangeHistorySuccess(response));
@@ -69,8 +67,8 @@ export function* connect(api) {
 }
 
 // Get the current accounts account info (XRP balance)
-export function* getAccountInfo(api) {
-   const response = yield call(api.getAccountInfo);
+export function* getAccountInfo(api, { address }) {
+   const response = yield call(api.getAccountInfo, address);
 
    if ('message' in response) {
       notifyError(response);
@@ -81,8 +79,8 @@ export function* getAccountInfo(api) {
 }
 
 // Get the current accounts balance sheet
-export function* getBalanceSheet(api) {
-   const response = yield call(api.getBalanceSheet);
+export function* getBalanceSheet(api, { address }) {
+   const response = yield call(api.getBalanceSheet, address);
 
    if ('message' in response) {
       notifyError(response);
@@ -93,8 +91,8 @@ export function* getBalanceSheet(api) {
 }
 
 // Get the current order book for the selected pair
-export function* updateOrderBook(api, { pair }) {
-   const response = yield call(api.updateOrderBook, pair);
+export function* updateOrderBook(api, { address, pair }) {
+   const response = yield call(api.updateOrderBook, address, pair);
 
    if ('message' in response) {
       notifyError(response);
@@ -112,7 +110,7 @@ export function* prepareOrder(api, { address, order, instructions }) {
       notifyError(response);
       yield put(XledgActions.prepareOrderFailure(response));
    } else {
-      yield put(XledgActions.prepareOrderSuccess(response));
+      yield put(XledgActions.prepareOrderSuccess(response, order));
    }
 }
 

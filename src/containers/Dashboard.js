@@ -9,6 +9,8 @@ import OrderBook from './components/OrderBook';
 import Txs from './components/Txs';
 import COLORS from '../services/colors';
 import LineChart from './components/LineChart';
+import { notification } from '../services/helpers';
+import Order from './components/Order';
 
 class Dashboard extends Component {
    constructor(props) {
@@ -29,17 +31,29 @@ class Dashboard extends Component {
 
          this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
 
-         this.props.getBalanceSheet();
-         this.props.getAccountInfo();
-         this.props.updateOrderBook(nextProps.pair);
+         this.props.getBalanceSheet(nextProps.publicAddress);
+         this.props.getAccountInfo(nextProps.publicAddress);
+         this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
       }
 
-      // Sign the currently prepared transaction/order
+      // Sign the prepared transaction/order
       if (nextProps.preparedOrder !== null) {
+         console.log('prepared order');
+         console.log(nextProps.preparedOrder);
+
+         notification(
+            `ORDER SUBMITTED    ${parseFloat(nextProps.preparedOrderData.quantity.value).toFixed(2)} ${
+               nextProps.preparedOrderData.quantity.currency
+            } @ 
+            ${parseFloat(nextProps.preparedOrderData.totalPrice.value).toFixed(6)} ${
+               nextProps.preparedOrderData.totalPrice.currency
+            }`,
+            'success'
+         );
          this.props.signTx(nextProps.preparedOrder.txJSON, this.state.key);
       }
 
-      // Submit the currently signed transaction/order
+      // Submit the signed transaction/order
       if (nextProps.signedTx !== null) {
          this.props.submitTx(nextProps.signedTx.signedTransaction);
       }
@@ -51,10 +65,11 @@ class Dashboard extends Component {
          });
          setTimeout(
             function() {
-               this.props.getTxs('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
-               this.props.getOrders('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf');
-               this.props.getBalanceSheet();
-               this.props.getAccountInfo();
+               this.props.getTxs(nextProps.publicAddress);
+               this.props.getOrders(nextProps.publicAddress);
+               this.props.getBalanceSheet(nextProps.publicAddress);
+               this.props.getAccountInfo(nextProps.publicAddress);
+               this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
 
                this.setState({
                   showLoading: false
@@ -70,6 +85,7 @@ class Dashboard extends Component {
          nextProps.counterCurrency.value !== this.props.counterCurrency.value
       ) {
          this.props.updateOrderBook(nextProps.pair);
+         this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
       }
    }
 
@@ -155,13 +171,14 @@ class Dashboard extends Component {
 
                   {this.props.rippleApiConnected > 0 ? (
                      <Txs
+                        publicAddress={this.props.publicAddress}
                         allTxs={this.props.allTxs}
                         openOrders={this.props.openOrders}
                         getTxs={address => this.props.getTxs(address)}
                         getOrders={address => this.props.getOrders(address, { limit: 10 })}
                         cancelOrder={tx => {
                            console.log(tx);
-                           this.props.cancelOrder('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', {
+                           this.props.cancelOrder(this.props.publicAddress, {
                               orderSequence: tx.properties.sequence
                            });
                         }}
@@ -177,7 +194,11 @@ class Dashboard extends Component {
                   style={{
                      width: '45%'
                   }}>
-                  <LineChart data={this.props.exchangeHistory} />
+                  <LineChart
+                     data={this.props.exchangeHistory}
+                     baseCurrency={this.props.baseCurrency}
+                     counterCurrency={this.props.counterCurrency}
+                  />
                </div>
 
                {/*RIGHT BAR*/}
@@ -191,7 +212,7 @@ class Dashboard extends Component {
                      {...this.props}
                      prepareOrder={() =>
                         this.props.prepareOrder(
-                           'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+                           this.props.publicAddress,
                            {
                               direction: this.props.action,
                               quantity: {
@@ -199,7 +220,7 @@ class Dashboard extends Component {
                                  value: baseAmount
                               },
                               totalPrice: {
-                                 counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
+                                 counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
                                  currency: counterCurrency.value,
                                  value: counterPrice
                               }
@@ -246,6 +267,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => {
    return {
+      publicAddress: state.xledg.publicAddress,
       db: state.xledg.db,
       walletStatus: state.xledg.walletStatus,
       gateways: state.xledg.gateways,
@@ -263,6 +285,7 @@ const mapStateToProps = state => {
       pair: state.xledg.pair,
       orderBook: state.xledg.orderBook,
       preparedOrder: state.xledg.preparedOrder,
+      preparedOrderData: state.xledg.preparedOrderData,
       signedTx: state.xledg.signedTx,
       allTxs: state.xledg.allTxs,
       openOrders: state.xledg.openOrders
@@ -278,16 +301,13 @@ const mapDispatchToProps = dispatch => {
          dispatch(ReduxActions.getGateways());
       },
       getExchangeHistory: (baseCurrency, counterCurrency) => {
-         console.log('dispatch');
-         console.log(baseCurrency);
-         console.log(counterCurrency);
          dispatch(ReduxActions.getExchangeHistory(baseCurrency, counterCurrency));
       },
-      getAccountInfo: () => {
-         dispatch(ReduxActions.getAccountInfo());
+      getAccountInfo: address => {
+         dispatch(ReduxActions.getAccountInfo(address));
       },
-      getBalanceSheet: () => {
-         dispatch(ReduxActions.getBalanceSheet());
+      getBalanceSheet: address => {
+         dispatch(ReduxActions.getBalanceSheet(address));
       },
       updateAction: action => {
          dispatch(ReduxActions.updateAction(action));
@@ -307,8 +327,8 @@ const mapDispatchToProps = dispatch => {
       updateCounterCurrency: currency => {
          dispatch(ReduxActions.updateCounterCurrency(currency));
       },
-      updateOrderBook: pair => {
-         dispatch(ReduxActions.updateOrderBook(pair));
+      updateOrderBook: (address, pair) => {
+         dispatch(ReduxActions.updateOrderBook(address, pair));
       },
       prepareOrder: (address, order, instructions) => {
          dispatch(ReduxActions.prepareOrder(address, order, instructions));

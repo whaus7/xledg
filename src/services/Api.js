@@ -36,7 +36,7 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
             counterCurrency.value === 'XRP'
                ? counterCurrency.value
                : counterCurrency.value + '+rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'
-         }?descending=true&result=tesSUCCESS&interval=1hour&limit=1000`
+         }?descending=true&result=tesSUCCESS&interval=1day&limit=1000`
       );
    };
 
@@ -52,9 +52,9 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
          });
    };
 
-   const getAccountInfo = () => {
+   const getAccountInfo = address => {
       return rippleAPI
-         .getAccountInfo('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf')
+         .getAccountInfo(address)
          .then(accountInfo => {
             return accountInfo;
          })
@@ -63,9 +63,9 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
          });
    };
 
-   const getBalanceSheet = () => {
+   const getBalanceSheet = address => {
       return rippleAPI
-         .getBalanceSheet('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf')
+         .getBalanceSheet(address)
          .then(balanceSheet => {
             return balanceSheet;
          })
@@ -74,9 +74,9 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
          });
    };
 
-   const updateOrderBook = pair => {
+   const updateOrderBook = (address, pair) => {
       return rippleAPI
-         .getOrderbook('rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf', pair, {
+         .getOrderbook(address, pair, {
             limit: 50
          })
          .then(orderBook => {

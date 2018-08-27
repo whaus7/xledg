@@ -7,8 +7,8 @@ export function notification(msg, type) {
       theme: 'sunset',
       type: type,
       layout: 'top',
-      timeout: 7000,
-      progressBar: false
+      timeout: 8000,
+      progressBar: true
    }).show();
 }
 
