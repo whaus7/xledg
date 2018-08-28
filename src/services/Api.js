@@ -17,15 +17,6 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       return dataAPI.get(`gateways`, '');
    };
 
-   // var data_url = RIPPLE_DATA_URL + '/v2/exchanges/' +
-   // 	$scope.trading.baseCurrency +
-   // 	($scope.trading.baseIssuer ? '+' + $scope.trading.baseIssuer : '') + '/' +
-   // 	$scope.trading.tradeCurrency +
-   // 	($scope.trading.tradeIssuer ? '+' + $scope.trading.tradeIssuer : '') +
-   // 	'?descending=true&result=tesSUCCESS' +
-   // 	'&interval=' + CHART_INTERVAL +
-   // 	'&limit=' + CHART_LIMIT +
-   // 	((options && options.marker) ? '&marker=' + options.marker : '');
    const getExchangeHistory = (baseCurrency, counterCurrency) => {
       return dataAPI.get(
          `/exchanges/${

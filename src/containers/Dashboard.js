@@ -42,9 +42,9 @@ class Dashboard extends Component {
          console.log(nextProps.preparedOrder);
 
          notification(
-            `ORDER SUBMITTED    ${parseFloat(nextProps.preparedOrderData.quantity.value).toFixed(2)} ${
-               nextProps.preparedOrderData.quantity.currency
-            } @ 
+            `<span style="color: #21c2f8; margin-right: 20px">ORDER SUBMITTED</span>${parseFloat(
+               nextProps.preparedOrderData.quantity.value
+            ).toFixed(2)} ${nextProps.preparedOrderData.quantity.currency} @ 
             ${parseFloat(nextProps.preparedOrderData.totalPrice.value).toFixed(6)} ${
                nextProps.preparedOrderData.totalPrice.currency
             }`,

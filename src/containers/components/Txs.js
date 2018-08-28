@@ -35,7 +35,7 @@ export default class Txs extends Component {
                   <div key={`completed_txs_${i}`} style={{ margin: '0 0 10px 0', lineHeight: '14px' }}>
                      <div style={{ width: '100%' }}>
                         {/*index debug*/}
-                        {i}.
+                        {/*{i}.*/}
                         <span
                            style={{
                               color: txChanges.direction === 'buy' ? COLORS.green : COLORS.red

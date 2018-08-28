@@ -40,7 +40,7 @@ export default class OrderBook extends Component {
                display: 'flex',
                color: COLORS.white,
                padding: 15,
-               fontSize: 12
+               fontSize: 11
                //flexDirection: this.props.action === 'buy' ? 'row' : 'row-reverse'
             }}>
             <div

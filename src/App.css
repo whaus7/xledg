@@ -210,7 +210,7 @@ h2 {
 #noty_layout__top {
   top: 0;
   width: 100%;
-  display: flex;
+  display: grid;
   justify-content: center;
 }
 .noty_progressbar {
@@ -355,7 +355,8 @@ h2 {
   color: #fff;
 }
 .noty_theme__sunset.noty_type__error {
-  background-color: #EF476F;
+  background: #202020;
+  border: 1px solid #ff6161;
   color: #fff;
 }
 .noty_progressbar {

@@ -3,6 +3,7 @@ import XledgActions from '../redux/XledgRedux';
 //import { notification } from '../services/helpers';
 
 const notifyError = response => {
+   console.log('ERROR');
    console.log(response);
 };
 
@@ -142,7 +143,7 @@ export function* signTx(api, { txJSON, key }) {
 export function* submitTx(api, { signedTx }) {
    const response = yield call(api.submitTx, signedTx);
 
-   if ('message' in response) {
+   if ('resultMessage' in response) {
       notifyError(response);
       yield put(XledgActions.submitTxFailure(response));
    } else {

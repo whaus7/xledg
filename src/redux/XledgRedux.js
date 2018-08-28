@@ -334,15 +334,35 @@ export const rippleApiReducer = (state, action) => {
       case 'SUBMIT':
          return state;
       case 'SUBMIT_TX_SUCCESS':
-         // console.log('DEBUG REDUX - submit order successfull!');
-         // console.log(state);
-         // console.log(action);
+         console.log('DEBUG REDUX - submit order SUCCESS');
+         console.log(state);
+         console.log(action);
+
+         // switch (action.response.resultCode) {
+         //    case 'tecUNFUNDED_OFFER':
+         //       notification(
+         //          `<span style="margin-right: 20px">ERROR</span>${action.response.resultMessage}`,
+         //          'error'
+         //       );
+         //       break;
+         // }
 
          return update(state, {
             signedTx: { $set: null },
             preparedOrderData: { $set: null }
          });
       case 'SUBMIT_TX_FAILURE':
+         console.log('DEBUG REDUX - submit order FAILURE');
+         console.log(state);
+         console.log(action);
+
+         if ('resultMessage' in action.error) {
+            notification(
+               `<span style="color: #ff6161; margin-right: 20px">ERROR</span>${action.error.resultMessage}`,
+               'error'
+            );
+         }
+
          return state;
 
       // GET TRANSACTION STATUS
@@ -372,9 +392,9 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_TXS':
          return state;
       case 'GET_TXS_SUCCESS':
-         // console.log('DEBUG REDUX - all TXs success');
-         // console.log(state);
-         // console.log(action);
+         console.log('DEBUG REDUX - all TXs success');
+         console.log(state);
+         console.log(action);
 
          return update(state, {
             allTxs: { $set: action.response }
