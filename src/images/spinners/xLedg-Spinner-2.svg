@@ -1,0 +1,8 @@
+<svg class="lds-dash-ring" width="200px"  height="200px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;"><g transform="rotate(21.5991 50 50)">
+  <animateTransform attributeName="transform" type="rotate" values="0 50 50;120 50 50" keyTimes="0;1" dur="10s" repeatCount="indefinite"></animateTransform><circle cx="50" cy="50" r="32" stroke="#21c2f8" fill="none" stroke-dasharray="33.510321638291124 201.06192982974676" stroke-linecap="round" stroke-width="1" transform="rotate(0 50 50)">
+  <animate attributeName="stroke" values="#21c2f8;#21c2f8" keyTimes="0;1" dur="10s" repeatCount="indefinite"></animate>
+</circle><circle cx="50" cy="50" r="32" stroke="#21c2f8" fill="none" stroke-dasharray="33.510321638291124 201.06192982974676" stroke-linecap="round" stroke-width="1" transform="rotate(120 50 50)">
+  <animate attributeName="stroke" values="#21c2f8;#21c2f8" keyTimes="0;1" dur="10s" repeatCount="indefinite"></animate>
+</circle><circle cx="50" cy="50" r="32" stroke="#21c2f8" fill="none" stroke-dasharray="33.510321638291124 201.06192982974676" stroke-linecap="round" stroke-width="1" transform="rotate(240 50 50)">
+  <animate attributeName="stroke" values="#21c2f8;#21c2f8" keyTimes="0;1" dur="10s" repeatCount="indefinite"></animate>
+</circle></g></svg>

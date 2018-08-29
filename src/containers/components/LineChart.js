@@ -95,7 +95,7 @@ export default class LineChart extends Component {
       return (
          <div
             style={{
-               padding: 10
+               padding: '18px 10px 10px 10px'
             }}>
             {/*PRICE CHART*/}
             <div style={{ textAlign: 'center' }}>

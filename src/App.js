@@ -8,6 +8,7 @@ import LockScreen from './containers/LockedScreen';
 import HomeScreen from './containers/HomeScreen';
 import Password from './containers/Password';
 import Dashboard from './containers/Dashboard';
+import HardwareConnection from './containers/HardwareConnection';
 
 class App extends Component {
    render() {
@@ -24,6 +25,7 @@ class App extends Component {
                   <Route path="/locked" component={LockScreen} />
                   <Route path="/password" component={Password} />
                   <Route path="/dashboard" component={Dashboard} />
+                  <Route path="/connect" component={HardwareConnection} />
                </div>
             </Router>
          </Provider>

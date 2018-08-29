@@ -18,6 +18,12 @@ h2 {
   letter-spacing: 0.1em;
   margin: 0 0 10px 0;
 }
+.centerAbsolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 /*GLOBAL COMPONENTS*/
 .btn {
@@ -66,6 +72,22 @@ h2 {
 }
 .rv-crosshair__line {
   background: #21c2f8 !important;
+}
+
+/*HARDWARE CONNECTION SCREEN*/
+.pulsingCircle {
+  -webkit-animation: circlePulse ease-in 1s infinite;
+  animation: circlePulse ease-in 1s infinite;
+}
+@-webkit-keyframes circlePulse {
+  0% { width: 200px; height: 200px }
+  50% { width: 220px; height: 220px }
+  100% { width: 200px; height: 200px }
+}
+@keyframes circlePulse {
+  0% { width: 200px; height: 200px }
+  50% { width: 220px; height: 220px }
+  100% { width: 200px; height: 200px }
 }
 
 /*BLINK TEXT COLOR*/
