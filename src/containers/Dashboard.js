@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import ReduxActions from '../redux/XledgRedux';
+
 import Logo from './components/Logo';
+import xrpIcon from '../images/xrp-icon.svg';
+import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
 import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
 import OrderBook from './components/OrderBook';
 import Txs from './components/Txs';
 import COLORS from '../services/colors';
 import LineChart from './components/LineChart';
+import { Motion, spring } from 'react-motion';
 import { notification } from '../services/helpers';
-import Order from './components/Order';
 
 class Dashboard extends Component {
    constructor(props) {
@@ -18,7 +20,9 @@ class Dashboard extends Component {
 
       this.state = {
          key: '', // for testing,
-         showLoading: false
+         showLoading: false,
+         connected: false,
+         connectionScreen: true
       };
 
       // Connect to Ripple API
@@ -92,173 +96,264 @@ class Dashboard extends Component {
    render() {
       const { baseCurrency, baseAmount, counterCurrency, counterPrice } = this.props;
 
+      const springConfig = { stiffness: 70, damping: 30 };
+
       return (
-         // DASHBOARD
-         <div>
-            {/*HEADER*/}
-            <div
-               id={'header'}
-               style={{
-                  display: 'flex',
-                  width: '100%',
-                  background: '#202020',
-                  justifyContent: 'space-between',
-                  boxSizing: 'border-box',
-                  padding: 15,
-                  borderBottom: '1px solid #383939'
-               }}>
-               {/*LOGO*/}
-               <div>
-                  <Logo size={'xs'} margin={'0'} />
-               </div>
-
-               <div style={{ alignSelf: 'center' }}>
-                  {/*TEMP KEY INPUT*/}
-                  <input
-                     placeholder={'for testing'}
-                     onChange={e => {
-                        this.setState({
-                           key: e.target.value
-                        });
-                     }}
-                     value={this.state.key}
-                  />
-               </div>
-            </div>
-
-            {/*LOADING BAR*/}
-            <div style={{ position: 'relative' }}>
-               <div className={`loadingBar ${this.state.showLoading ? 'inProgress' : ''}`} />
-            </div>
-
-            {/*BODY*/}
-            <div
-               id={'body'}
-               style={{
-                  display: 'flex',
-                  width: '100%',
-                  background: '#202020',
-                  justifyContent: 'space-between',
-                  boxSizing: 'border-box'
-               }}>
-               {/*BALANCES*/}
+         <div style={{ height: this.state.connectionScreen ? '100vh' : 'auto', overflow: 'hidden' }}>
+            {/*CONNECTION SCREEN*/}
+            {this.state.connectionScreen ? (
                <div
+                  className={this.state.connected ? 'fadeBackground' : ''}
                   style={{
-                     width: '15%',
-                     height: '100%',
-                     minHeight: '100vh',
-                     textAlign: 'left',
-                     color: '#ffffff',
-                     padding: 15,
-                     borderRight: '1px solid #383939'
+                     position: 'absolute',
+                     display: 'flex',
+                     height: '100vh',
+                     width: '100%',
+                     justifyContent: 'center',
+                     textAlign: 'center',
+                     background: 'rgb(32, 32, 32, 1)',
+                     color: COLORS.white,
+                     zIndex: 1
                   }}>
-                  <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
-                     <h2>BALANCES</h2>
-                     {this.props.gateways !== null &&
-                     this.props.balanceSheet !== null &&
-                     this.props.accountInfo !== null ? (
-                        <Balances
-                           gateways={this.props.gateways}
-                           accountInfo={this.props.accountInfo}
-                           balanceSheet={this.props.balanceSheet}
-                           balances={this.props.balances}
-                           assetTotals={this.props.assetTotals}
+                  {/*Hardware Ledger Connection Screen*/}
+                  <Motion
+                     defaultStyle={{
+                        width: 600,
+                        height: 600,
+                        opacity: 1
+                     }}
+                     style={{
+                        width: spring(this.state.connected ? 4000 : 600, springConfig),
+                        height: spring(this.state.connected ? 4000 : 600, springConfig)
+                     }}>
+                     {value => (
+                        <div
+                           style={{
+                              width: value.width,
+                              height: value.height,
+                              alignSelf: 'center'
+                           }}>
+                           <img
+                              src={spinner1}
+                              style={{ width: value.width, height: value.height }}
+                              alt={'xLedg - Hardware Connection Screen'}
+                           />
+
+                           {/*<img*/}
+                           {/*className={'centerAbsolute'}*/}
+                           {/*src={spinner2}*/}
+                           {/*style={{ width: 600, height: 600 }}*/}
+                           {/*alt={'xLedg - Hardware Connection Screen'}*/}
+                           {/*/>*/}
+                           <img
+                              onClick={() => {
+                                 this.setState({
+                                    connected: true
+                                 });
+
+                                 setTimeout(
+                                    function() {
+                                       this.setState({
+                                          connectionScreen: false
+                                       });
+                                    }.bind(this),
+                                    1000
+                                 );
+                              }}
+                              className={`centerAbsolute fadeOut ${this.state.connected ? 'fade' : false}`}
+                              src={xrpIcon}
+                              style={{
+                                 width: 180,
+                                 height: 180
+                              }}
+                              alt={'xLedg - XRPL Decentralized Exchange'}
+                           />
+
+                           <div
+                              style={{ color: '#202020', fontSize: 12, marginTop: 220 }}
+                              className={`centerAbsolute blinkTextWhite fadeOut ${
+                                 this.state.connected ? 'fade' : false
+                              }`}>
+                              Waiting For Cold Connection...
+                           </div>
+                        </div>
+                     )}
+                  </Motion>
+               </div>
+            ) : (
+               false
+            )}
+
+            {/*DASHBOARD*/}
+            <div>
+               {/*HEADER*/}
+               <div
+                  id={'header'}
+                  style={{
+                     display: 'flex',
+                     width: '100%',
+                     background: '#202020',
+                     justifyContent: 'space-between',
+                     boxSizing: 'border-box',
+                     padding: 15,
+                     borderBottom: '1px solid #383939'
+                  }}>
+                  {/*LOGO*/}
+                  <div>
+                     <Logo size={'xs'} margin={'0'} />
+                  </div>
+
+                  <div style={{ alignSelf: 'center' }}>
+                     {/*TEMP KEY INPUT*/}
+                     <input
+                        placeholder={'for testing'}
+                        onChange={e => {
+                           this.setState({
+                              key: e.target.value
+                           });
+                        }}
+                        value={this.state.key}
+                     />
+                  </div>
+               </div>
+               {/*LOADING BAR*/}
+               <div style={{ position: 'relative' }}>
+                  <div className={`loadingBar ${this.state.showLoading ? 'inProgress' : ''}`} />
+               </div>
+               {/*BODY*/}
+               <div
+                  id={'body'}
+                  style={{
+                     display: 'flex',
+                     width: '100%',
+                     background: '#202020',
+                     justifyContent: 'space-between',
+                     boxSizing: 'border-box'
+                  }}>
+                  {/*BALANCES*/}
+                  <div
+                     style={{
+                        width: '15%',
+                        height: '100%',
+                        minHeight: '100vh',
+                        textAlign: 'left',
+                        color: '#ffffff',
+                        padding: 15,
+                        borderRight: '1px solid #383939'
+                     }}>
+                     <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
+                        <h2>BALANCES</h2>
+                        {this.props.gateways !== null &&
+                        this.props.balanceSheet !== null &&
+                        this.props.accountInfo !== null ? (
+                           <Balances
+                              gateways={this.props.gateways}
+                              accountInfo={this.props.accountInfo}
+                              balanceSheet={this.props.balanceSheet}
+                              balances={this.props.balances}
+                              assetTotals={this.props.assetTotals}
+                           />
+                        ) : (
+                           false
+                        )}
+                     </div>
+
+                     {this.props.rippleApiConnected > 0 ? (
+                        <Txs
+                           publicAddress={this.props.publicAddress}
+                           allTxs={this.props.allTxs}
+                           openOrders={this.props.openOrders}
+                           getTxs={address => this.props.getTxs(address)}
+                           getOrders={address => this.props.getOrders(address, { limit: 10 })}
+                           cancelOrder={tx => {
+                              console.log(tx);
+                              this.props.cancelOrder(this.props.publicAddress, {
+                                 orderSequence: tx.properties.sequence
+                              });
+                           }}
                         />
                      ) : (
-                        false
+                        <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
                      )}
                   </div>
 
-                  {this.props.rippleApiConnected > 0 ? (
-                     <Txs
-                        publicAddress={this.props.publicAddress}
-                        allTxs={this.props.allTxs}
-                        openOrders={this.props.openOrders}
-                        getTxs={address => this.props.getTxs(address)}
-                        getOrders={address => this.props.getOrders(address, { limit: 10 })}
-                        cancelOrder={tx => {
-                           console.log(tx);
-                           this.props.cancelOrder(this.props.publicAddress, {
-                              orderSequence: tx.properties.sequence
-                           });
-                        }}
+                  {/*CENTER*/}
+                  <div
+                     id={'centerCol'}
+                     style={{
+                        width: '45%'
+                     }}>
+                     <LineChart
+                        data={this.props.exchangeHistory}
+                        baseCurrency={this.props.baseCurrency}
+                        counterCurrency={this.props.counterCurrency}
                      />
-                  ) : (
-                     <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
-                  )}
-               </div>
+                  </div>
 
-               {/*CENTER*/}
-               <div
-                  id={'centerCol'}
-                  style={{
-                     width: '45%'
-                  }}>
-                  <LineChart
-                     data={this.props.exchangeHistory}
-                     baseCurrency={this.props.baseCurrency}
-                     counterCurrency={this.props.counterCurrency}
-                  />
-               </div>
-
-               {/*RIGHT BAR*/}
-               <div
-                  style={{
-                     width: '40%',
-                     borderLeft: '1px solid #383939'
-                  }}>
-                  {/*TRADING UI - OFFERS/ASK*/}
-                  <TradingUI
-                     {...this.props}
-                     prepareOrder={() =>
-                        this.props.prepareOrder(
-                           this.props.publicAddress,
-                           {
-                              direction: this.props.action,
-                              quantity: {
-                                 currency: baseCurrency.value,
-                                 value: baseAmount
+                  {/*RIGHT BAR*/}
+                  <div
+                     style={{
+                        width: '40%',
+                        borderLeft: '1px solid #383939'
+                     }}>
+                     {/*TRADING UI - OFFERS/ASK*/}
+                     <TradingUI
+                        {...this.props}
+                        prepareOrder={() =>
+                           this.props.prepareOrder(
+                              this.props.publicAddress,
+                              {
+                                 direction: this.props.action,
+                                 quantity: {
+                                    currency: baseCurrency.value,
+                                    value: baseAmount
+                                 },
+                                 totalPrice: {
+                                    counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
+                                    currency: counterCurrency.value,
+                                    value: counterPrice
+                                 }
                               },
-                              totalPrice: {
-                                 counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
-                                 currency: counterCurrency.value,
-                                 value: counterPrice
+                              {
+                                 maxFee: 500,
+                                 maxLedgerVersion: 100
                               }
-                           },
-                           {
-                              maxFee: 500,
-                              maxLedgerVersion: 100
-                           }
-                        )
-                     }
-                  />
-
-                  {/*ORDER BOOK*/}
-                  {this.props.orderBook !== null ? (
-                     <OrderBook
-                        orderBook={this.props.orderBook}
-                        action={this.props.action}
-                        updateFromOrder={order => this.props.updateFromOrder(order)}
-                        titleTextAlign={'center'}
-                        height={200}
+                           )
+                        }
                      />
-                  ) : (
-                     <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
-                        <div
-                           style={{ width: '100%', textAlign: 'center', alignSelf: 'center', fontSize: 12 }}>
-                           Select a Trading Pair to View Order Book
-                        </div>
-                     </div>
-                  )}
-               </div>
 
-               {/*RIGHT BAR*/}
-               {/*<div*/}
-               {/*style={{*/}
-               {/*width: '15%'*/}
-               {/*}}>*/}
-               {/*RIGHT BAR*/}
-               {/*</div>*/}
+                     {/*ORDER BOOK*/}
+                     {this.props.orderBook !== null ? (
+                        <OrderBook
+                           orderBook={this.props.orderBook}
+                           action={this.props.action}
+                           updateFromOrder={order => this.props.updateFromOrder(order)}
+                           titleTextAlign={'center'}
+                           height={200}
+                        />
+                     ) : (
+                        <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
+                           <div
+                              style={{
+                                 width: '100%',
+                                 textAlign: 'center',
+                                 alignSelf: 'center',
+                                 fontSize: 12
+                              }}>
+                              Select a Trading Pair to View Order Book
+                           </div>
+                        </div>
+                     )}
+                  </div>
+
+                  {/*RIGHT BAR*/}
+                  {/*<div*/}
+                  {/*style={{*/}
+                  {/*width: '15%'*/}
+                  {/*}}>*/}
+                  {/*RIGHT BAR*/}
+                  {/*</div>*/}
+               </div>
             </div>
          </div>
       );

@@ -1,7 +1,7 @@
 /*COLOR PALETTE*/
 const COLORS = {
-   mocha: '#202020',
-   slate: '#2c3e5o',
+   dark: '#202020',
+   slate: '#2c3e50',
    aqua: '#21c2f8',
    grey: '#bdc3c7',
    white: '#ffffff',

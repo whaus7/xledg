@@ -106,7 +106,7 @@ export default class LineChart extends Component {
                   </span>
                </h2>
             </div>
-            <div id={'priceChart'}>
+            <div id={'priceChart'} style={{ marginBottom: 15 }}>
                <XYPlot
                   height={250}
                   width={this.state.width}

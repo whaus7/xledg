@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { notification } from '../services/helpers';
+import { Motion, spring } from 'react-motion';
 
 import ReduxActions from '../redux/XledgRedux';
 import Logo from './components/Logo';
@@ -15,12 +16,14 @@ class HardwareConnection extends Component {
    constructor(props) {
       super(props);
 
-      let that = this;
-
-      this.state = {};
+      this.state = {
+         connected: false
+      };
    }
 
    render() {
+      const springConfig = { stiffness: 120, damping: 30 };
+
       return (
          <div
             style={{
@@ -28,37 +31,64 @@ class HardwareConnection extends Component {
                height: '100vh',
                justifyContent: 'center',
                textAlign: 'center',
-               background: COLORS.mocha,
+               background: COLORS.dark,
                color: COLORS.white
             }}>
             {/*Hardware Ledger Connection Screen*/}
-            <div
-               //className={'pulsingCircle'}
-               style={{
+            <Motion
+               defaultStyle={{
                   width: 600,
                   height: 600,
-                  //borderRadius: 9999,
-                  //background: '#ffffff',
-                  alignSelf: 'center'
+                  opacity: 1
+               }}
+               style={{
+                  width: spring(this.state.connected ? 4000 : 600, springConfig),
+                  height: spring(this.state.connected ? 4000 : 600, springConfig)
                }}>
-               <img
-                  src={spinner1}
-                  style={{ width: 600, height: 600 }}
-                  alt={'xLedg - Hardware Connection Screen'}
-               />
-               {/*<img*/}
-               {/*className={'centerAbsolute'}*/}
-               {/*src={spinner2}*/}
-               {/*style={{ width: 600, height: 600 }}*/}
-               {/*alt={'xLedg - Hardware Connection Screen'}*/}
-               {/*/>*/}
-               <img
-                  className={'centerAbsolute'}
-                  src={xrpIcon}
-                  style={{ width: 180, height: 180 }}
-                  alt={'xLedg - XRPL Decentralized Exchange'}
-               />
-            </div>
+               {value => (
+                  <div
+                     style={{
+                        width: value.width,
+                        height: value.height,
+                        alignSelf: 'center'
+                     }}>
+                     <img
+                        src={spinner1}
+                        style={{ width: value.width, height: value.height }}
+                        alt={'xLedg - Hardware Connection Screen'}
+                     />
+
+                     {/*<img*/}
+                     {/*className={'centerAbsolute'}*/}
+                     {/*src={spinner2}*/}
+                     {/*style={{ width: 600, height: 600 }}*/}
+                     {/*alt={'xLedg - Hardware Connection Screen'}*/}
+                     {/*/>*/}
+                     <img
+                        onClick={() => {
+                           this.setState({
+                              connected: true
+                           });
+                        }}
+                        className={`centerAbsolute fadeOut ${this.state.connected ? 'fade' : false}`}
+                        src={xrpIcon}
+                        style={{
+                           width: 180,
+                           height: 180
+                        }}
+                        alt={'xLedg - XRPL Decentralized Exchange'}
+                     />
+
+                     <div
+                        style={{ color: '#202020', fontSize: 12, marginTop: 220 }}
+                        className={`centerAbsolute blinkTextWhite fadeOut ${
+                           this.state.connected ? 'fade' : false
+                        }`}>
+                        Waiting For Cold Connection...
+                     </div>
+                  </div>
+               )}
+            </Motion>
          </div>
       );
    }

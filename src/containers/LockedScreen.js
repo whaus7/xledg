@@ -183,7 +183,7 @@ class LockScreen extends Component {
                height: '100vh',
                justifyContent: 'center',
                textAlign: 'center',
-               background: COLORS.mocha
+               background: COLORS.dark
             }}>
             <div style={{ maxWidth: 300 }}>
                {/*TITLE*/}
