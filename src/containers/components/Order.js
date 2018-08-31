@@ -9,7 +9,7 @@ export default class Order extends Component {
       return (
          <div
             className={'orderRow'}
-            style={{ display: 'flex', margin: '2px 0' }}
+            style={{ display: 'flex', margin: '1px 0' }}
             onClick={() => this.props.updateFromOrder(order)}>
             <div style={{ width: 75, marginRight: 7, textAlign: 'right' }}>
                {Numeral(parseFloat(order.specification.quantity.value)).format('0,0.00')}

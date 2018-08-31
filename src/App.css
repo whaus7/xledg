@@ -39,7 +39,7 @@ h2 {
   font-size: 14px;
   font-weight: 300;
   padding: 5px 10px;
-  border: 2px solid #ffffff;
+  border: 1px solid #ffffff;
   border-radius: 3px;
   background: #202020;
   color: #f3f7f8;
@@ -171,12 +171,12 @@ h2 {
 
 /*REACT SELECT*/
 .Select-control {
-  border: 2px solid rgba(255, 255, 255, 0.5) !important;
-  background: #202020 !important ;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  background: #202020 !important;
   color: #f3f7f8 !important;
 }
 .Select-control:hover {
-  border: 2px solid rgba(255, 255, 255, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 1) !important;
   cursor: pointer;
   opacity: 1;
 }
@@ -229,10 +229,6 @@ h2 {
 }
 .pinBtn:hover {
   border-color: #21c2f8 !important;
-  cursor: pointer;
-}
-.btn:hover {
-  opacity: 1 !important;
   cursor: pointer;
 }
 

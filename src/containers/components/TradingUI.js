@@ -112,7 +112,7 @@ export default class TradingUI extends Component {
                   onClick={() => {
                      this.props.updateAction('buy');
                   }}
-                  className={'btn'}
+                  className={'btn btnHover'}
                   style={{
                      borderColor: this.props.action === 'buy' ? COLORS.green : COLORS.white,
                      opacity: this.props.action === 'buy' ? 1 : 0.5,
@@ -125,7 +125,7 @@ export default class TradingUI extends Component {
                   onClick={() => {
                      this.props.updateAction('sell');
                   }}
-                  className={'btn'}
+                  className={'btn btnHover'}
                   style={{
                      borderColor: this.props.action === 'sell' ? COLORS.red : COLORS.white,
                      opacity: this.props.action === 'sell' ? 1 : 0.5,

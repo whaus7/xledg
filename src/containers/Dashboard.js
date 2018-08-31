@@ -2,9 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReduxActions from '../redux/XledgRedux';
 
+import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
 import Logo from './components/Logo';
 import xrpIcon from '../images/xrp-icon.svg';
-import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
+
+import piggyBankIcon from '../images/icons/piggy-bank.svg';
+import keyIcon from '../images/icons/key.svg';
+import lockIcon from '../images/icons/lock.svg';
+import walletIcon from '../images/icons/pendrive.svg';
+import innovationIcon from '../images/icons/innovation.svg';
+
 import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
 import OrderBook from './components/OrderBook';
@@ -14,9 +21,19 @@ import LineChart from './components/LineChart';
 import { Motion, spring } from 'react-motion';
 import { notification } from '../services/helpers';
 
+const Snap = require(`imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js`);
+
 class Dashboard extends Component {
    constructor(props) {
       super(props);
+
+      let s = Snap('24in', '12in');
+      Snap.load(lockIcon, function(f) {
+         let g = f.select('g');
+         s.append(g);
+      });
+
+      console.log(s);
 
       this.state = {
          key: '', // for testing,
@@ -120,11 +137,12 @@ class Dashboard extends Component {
                      defaultStyle={{
                         width: 600,
                         height: 600,
-                        opacity: 1
+                        slideDown: 230
                      }}
                      style={{
-                        width: spring(this.state.connected ? 4000 : 600, springConfig),
-                        height: spring(this.state.connected ? 4000 : 600, springConfig)
+                        width: spring(this.state.connected ? 4600 : 600, springConfig),
+                        height: spring(this.state.connected ? 4600 : 600, springConfig),
+                        slideDown: spring(this.state.connected ? 900 : 230, springConfig)
                      }}>
                      {value => (
                         <div
@@ -146,6 +164,71 @@ class Dashboard extends Component {
                            {/*alt={'xLedg - Hardware Connection Screen'}*/}
                            {/*/>*/}
                            <img
+                              className={`centerAbsolute fadeOut ${this.state.connected ? 'fade' : false}`}
+                              src={xrpIcon}
+                              style={{
+                                 width: 180,
+                                 height: 180
+                              }}
+                              alt={'xLedg - XRPL Decentralized Exchange'}
+                           />
+
+                           <div
+                              style={{
+                                 position: 'absolute',
+                                 right: 0,
+                                 top: 0,
+                                 height: '100vh',
+                                 width: 85
+                              }}>
+                              <div className={'centerAbsolute'}>
+                                 <img
+                                    src={walletIcon}
+                                    style={{
+                                       width: 50,
+                                       height: 50,
+                                       opacity: 0.5,
+                                       marginBottom: 10
+                                    }}
+                                    alt={'xLedg - Hold Your Private Keys'}
+                                 />
+
+                                 <img
+                                    src={innovationIcon}
+                                    style={{
+                                       width: 50,
+                                       height: 50,
+                                       opacity: 0.5
+                                    }}
+                                    alt={'xLedg - Hold Your Private Keys'}
+                                 />
+
+                                 <img
+                                    src={walletIcon}
+                                    style={{
+                                       width: 50,
+                                       height: 50,
+                                       opacity: 0.5,
+                                       marginTop: 10
+                                    }}
+                                    alt={'xLedg - Hold Your Private Keys'}
+                                 />
+                              </div>
+                           </div>
+
+                           <div
+                              style={{ color: '#202020', fontSize: 12, marginTop: -220 }}
+                              className={`centerAbsolute blinkTextWhite fadeOut ${
+                                 this.state.connected ? 'fade' : false
+                              }`}>
+                              Waiting For Cold Connection...
+                           </div>
+
+                           <div
+                              style={{ marginTop: value.slideDown, opacity: 0.5 }}
+                              className={`centerAbsolute btn btnHover fadeOut ${
+                                 this.state.connected ? 'fade' : false
+                              }`}
                               onClick={() => {
                                  this.setState({
                                     connected: true
@@ -159,22 +242,8 @@ class Dashboard extends Component {
                                     }.bind(this),
                                     1000
                                  );
-                              }}
-                              className={`centerAbsolute fadeOut ${this.state.connected ? 'fade' : false}`}
-                              src={xrpIcon}
-                              style={{
-                                 width: 180,
-                                 height: 180
-                              }}
-                              alt={'xLedg - XRPL Decentralized Exchange'}
-                           />
-
-                           <div
-                              style={{ color: '#202020', fontSize: 12, marginTop: 220 }}
-                              className={`centerAbsolute blinkTextWhite fadeOut ${
-                                 this.state.connected ? 'fade' : false
-                              }`}>
-                              Waiting For Cold Connection...
+                              }}>
+                              JUST BROWSING
                            </div>
                         </div>
                      )}
@@ -329,7 +398,7 @@ class Dashboard extends Component {
                            action={this.props.action}
                            updateFromOrder={order => this.props.updateFromOrder(order)}
                            titleTextAlign={'center'}
-                           height={200}
+                           height={300}
                         />
                      ) : (
                         <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
@@ -345,14 +414,6 @@ class Dashboard extends Component {
                         </div>
                      )}
                   </div>
-
-                  {/*RIGHT BAR*/}
-                  {/*<div*/}
-                  {/*style={{*/}
-                  {/*width: '15%'*/}
-                  {/*}}>*/}
-                  {/*RIGHT BAR*/}
-                  {/*</div>*/}
                </div>
             </div>
          </div>
