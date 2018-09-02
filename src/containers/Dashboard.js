@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReduxActions from '../redux/XledgRedux';
 
+import Transport from '@ledgerhq/hw-transport-u2f';
+import Api from '@ledgerhq/hw-app-xrp';
+
 import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
 import Logo from './components/Logo';
 import xrpIcon from '../images/xrp-icon.svg';
-import infoIcon from '../images/icons/info.svg';
-import oneIcon from '../images/number_icons/1.svg';
-import twoIcon from '../images/number_icons/2.svg';
-import threeIcon from '../images/number_icons/3.svg';
-import fourIcon from '../images/number_icons/4.svg';
-import fiveIcon from '../images/number_icons/5.svg';
 
 import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
@@ -21,24 +18,27 @@ import LineChart from './components/LineChart';
 import { Motion, spring } from 'react-motion';
 import { notification } from '../services/helpers';
 import InfoMenu from './components/InfoMenu';
+import Instructions from './components/Instructions';
 
-const instructions = [
-   { id: 1, text: 'Use a compatible browser and plug-in your Ledger wallet', icon: oneIcon },
-   { id: 2, text: 'Unlock your Ledger wallet & open the XRP app', icon: twoIcon },
-   { id: 3, text: "Go to 'Settings' and enable 'Browser support'", icon: fourIcon },
-   { id: 4, text: "Click 'Fetch Wallet Address' to begin", icon: fiveIcon }
-];
+let _ledgerAPI = null;
 
 class Dashboard extends Component {
    constructor(props) {
       super(props);
 
+      Transport.create(360000).then(transport => {
+         transport.setDebugMode(false);
+         transport.setExchangeTimeout(720000);
+         _ledgerAPI = new Api(transport);
+         console.log('ledger API');
+         console.log(_ledgerAPI);
+      });
+
       this.state = {
          key: '', // for testing,
          showLoading: false,
          connected: false,
-         connectionScreen: true,
-         instructionsHovered: false
+         connectionScreen: true
       };
 
       // Connect to Ripple API
@@ -205,66 +205,11 @@ class Dashboard extends Component {
                      )}
                   </Motion>
 
-                  {/*INSTRUCTIONS*/}
-                  <div
-                     style={{
-                        position: 'absolute',
-                        left: 105,
-                        top: 0,
-                        height: '100vh',
-                        width: 75
-                     }}>
-                     <div
-                        onMouseEnter={() =>
-                           this.setState({
-                              instructionsHovered: true
-                           })
-                        }
-                        onMouseLeave={() =>
-                           this.setState({
-                              instructionsHovered: false
-                           })
-                        }
-                        className={`centerAbsolute fadeIn ${
-                           this.state.instructionsHovered !== false ? 'fade' : false
-                        }`}
-                        style={{ width: 250, fontSize: 14 }}>
-                        <div
-                           style={{
-                              textAlign: 'left',
-                              fontSize: 12,
-                              cursor: this.state.instructionsHovered !== false ? 'help' : 'default'
-                           }}>
-                           <div style={{ textAlign: 'center', marginBottom: 10 }}>
-                              <img
-                                 src={infoIcon}
-                                 style={{
-                                    width: 40,
-                                    height: 40
-                                 }}
-                              />
-                           </div>
-                           <div style={{ textAlign: 'center', marginBottom: 10 }}>
-                              <h2>INSTRUCTIONS</h2>
-                           </div>
-
-                           {instructions.map((item, i) => {
-                              return (
-                                 <div
-                                    key={`xLedg_instructions_${i}`}
-                                    style={{ display: 'flex', marginBottom: 8 }}>
-                                    <div style={{ minWidth: 32, alignSelf: 'center' }}>
-                                       <img src={item.icon} width={20} height={20} />
-                                    </div>
-                                    <div>{item.text}</div>
-                                 </div>
-                              );
-                           })}
-                        </div>
-                     </div>
+                  {/*INSTRUCTIONS & INFO MENU*/}
+                  <div className={`fadeOut ${this.state.connected ? 'fade' : false}`}>
+                     <InfoMenu />
+                     <Instructions />
                   </div>
-
-                  <InfoMenu />
                </div>
             ) : (
                false

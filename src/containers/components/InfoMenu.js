@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Motion, spring } from 'react-motion';
 
 import xrpIcon from '../../images/xrp-icon.svg';
 import codeIcon from '../../images/icons/code.svg';
 import walletIcon from '../../images/icons/wallet.svg';
-import lockIcon from '../../images/icons/lock.svg';
 
 const infoItems = [
    {
@@ -13,7 +11,7 @@ const infoItems = [
       svg: xrpIcon,
       text: (
          <div>
-            <p>The XRP ledger is also a built in exchange, also known as a (DEX) decentralized exchange</p>
+            <p>The XRP ledger is also a built in exchange, known as a (DEX) decentralized exchange</p>
             <p>
                Anything of value can be traded between parties for less than a cent. xLedg is just an
                interface to the XRP ledger
@@ -32,18 +30,16 @@ const infoItems = [
          </div>
       )
    },
-   // {
-   //    id: 'lock',
-   //    svg: lockIcon,
-   //    text: 'Trade securely directly from your cold wallet'
-   // },
    {
       id: 'code',
       svg: codeIcon,
       text: (
          <div>
             <p>Trading directly on a decentralized exchanged provides the highest level of security</p>
-            <p>The only outgoing connections xLedg makes is trusted APIs: XRP Ledger & Ledger Hardware</p>
+            <p>
+               The only outgoing connections xLedg establishes are with two industry trusted APIs: XRP Ledger
+               & Ledger Hardware
+            </p>
          </div>
       )
    }
@@ -59,8 +55,6 @@ export default class InfoMenu extends Component {
    }
 
    render() {
-      const { order } = this.props;
-
       const springConfig = { stiffness: 150, damping: 10 };
 
       return (
@@ -146,7 +140,3 @@ export default class InfoMenu extends Component {
       );
    }
 }
-
-InfoMenu.propTypes = {
-   order: PropTypes.object
-};

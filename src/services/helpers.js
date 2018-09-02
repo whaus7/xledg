@@ -38,6 +38,20 @@ export const groupBy = (items, key) =>
       {}
    );
 
+// A simple sorting function for sorting a JS array by number
+export function sortArray(data, prop, asc) {
+   data.sort(function(a, b) {
+      let d1 = a[prop];
+      let d2 = b[prop];
+      if (asc) {
+         return d1 - d2;
+      } else {
+         return d2 - d1;
+      }
+   });
+   return data;
+}
+
 export function importAll(r) {
    let images = {};
    r.keys().map((item, index) => {

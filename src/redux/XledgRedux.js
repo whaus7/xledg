@@ -392,9 +392,9 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_TXS':
          return state;
       case 'GET_TXS_SUCCESS':
-         console.log('DEBUG REDUX - all TXs success');
-         console.log(state);
-         console.log(action);
+         // console.log('DEBUG REDUX - all TXs success');
+         // console.log(state);
+         // console.log(action);
 
          return update(state, {
             allTxs: { $set: action.response }
@@ -406,9 +406,9 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_ORDERS':
          return state;
       case 'GET_ORDERS_SUCCESS':
-         console.log('DEBUG REDUX - all open orders success');
-         console.log(state);
-         console.log(action);
+         // console.log('DEBUG REDUX - all open orders success');
+         // console.log(state);
+         // console.log(action);
 
          //   return state;
          return update(state, {
