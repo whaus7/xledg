@@ -65,7 +65,7 @@ export default class Instructions extends Component {
                      />
                   </div>
                   <div style={{ textAlign: 'center', marginBottom: 10 }}>
-                     <h2>INSTRUCTIONS</h2>
+                     <h2 style={{ color: '#21c2f8' }}>INSTRUCTIONS</h2>
                   </div>
 
                   {this.state.instructions.map((item, i) => {

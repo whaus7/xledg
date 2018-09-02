@@ -5,6 +5,11 @@ body {
 }
 p {
   font-size: 12px;
+  margin-bottom: 20px;
+}
+p.border {
+  padding-left: 15px;
+  border-left: 1px solid #21c2f8;
 }
 label {
   font-size: 13px;
@@ -15,7 +20,7 @@ h2 {
   color: #ffffff;
   font-size: 12px;
   font-weight: 400;
-  letter-spacing: 0.1em;
+  /*letter-spacing: 0.05em;*/
   margin: 0 0 10px 0;
 }
 .centerAbsolute {
