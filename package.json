@@ -8,7 +8,6 @@
     "currency-formatter": "^1.4.3",
     "docker": "^1.0.0",
     "immutability-helper": "^2.7.1",
-    "imports-loader": "^0.8.0",
     "js-nacl": "^1.2.2",
     "moment": "^2.22.2",
     "noty": "^3.2.0-beta",
@@ -29,8 +28,7 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-saga": "^0.16.0",
     "reduxsauce": "^1.0.0",
-    "ripple-lib": "^1.0.0-beta.2",
-    "snapsvg": "^0.5.1"
+    "ripple-lib": "^1.0.0-beta.2"
   },
   "scripts": {
     "start": "react-scripts start",

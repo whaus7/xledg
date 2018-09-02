@@ -5,12 +5,12 @@ import ReduxActions from '../redux/XledgRedux';
 import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
 import Logo from './components/Logo';
 import xrpIcon from '../images/xrp-icon.svg';
-
-import piggyBankIcon from '../images/icons/piggy-bank.svg';
-import keyIcon from '../images/icons/key.svg';
-import lockIcon from '../images/icons/lock.svg';
-import walletIcon from '../images/icons/pendrive.svg';
-import innovationIcon from '../images/icons/innovation.svg';
+import infoIcon from '../images/icons/info.svg';
+import oneIcon from '../images/number_icons/1.svg';
+import twoIcon from '../images/number_icons/2.svg';
+import threeIcon from '../images/number_icons/3.svg';
+import fourIcon from '../images/number_icons/4.svg';
+import fiveIcon from '../images/number_icons/5.svg';
 
 import Balances from './components/Balances';
 import TradingUI from './components/TradingUI';
@@ -20,26 +20,25 @@ import COLORS from '../services/colors';
 import LineChart from './components/LineChart';
 import { Motion, spring } from 'react-motion';
 import { notification } from '../services/helpers';
+import InfoMenu from './components/InfoMenu';
 
-const Snap = require(`imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js`);
+const instructions = [
+   { id: 1, text: 'Use a compatible browser and plug-in your Ledger wallet', icon: oneIcon },
+   { id: 2, text: 'Unlock your Ledger wallet & open the XRP app', icon: twoIcon },
+   { id: 3, text: "Go to 'Settings' and enable 'Browser support'", icon: fourIcon },
+   { id: 4, text: "Click 'Fetch Wallet Address' to begin", icon: fiveIcon }
+];
 
 class Dashboard extends Component {
    constructor(props) {
       super(props);
 
-      let s = Snap('24in', '12in');
-      Snap.load(lockIcon, function(f) {
-         let g = f.select('g');
-         s.append(g);
-      });
-
-      console.log(s);
-
       this.state = {
          key: '', // for testing,
          showLoading: false,
          connected: false,
-         connectionScreen: true
+         connectionScreen: true,
+         instructionsHovered: false
       };
 
       // Connect to Ripple API
@@ -174,49 +173,6 @@ class Dashboard extends Component {
                            />
 
                            <div
-                              style={{
-                                 position: 'absolute',
-                                 right: 0,
-                                 top: 0,
-                                 height: '100vh',
-                                 width: 85
-                              }}>
-                              <div className={'centerAbsolute'}>
-                                 <img
-                                    src={walletIcon}
-                                    style={{
-                                       width: 50,
-                                       height: 50,
-                                       opacity: 0.5,
-                                       marginBottom: 10
-                                    }}
-                                    alt={'xLedg - Hold Your Private Keys'}
-                                 />
-
-                                 <img
-                                    src={innovationIcon}
-                                    style={{
-                                       width: 50,
-                                       height: 50,
-                                       opacity: 0.5
-                                    }}
-                                    alt={'xLedg - Hold Your Private Keys'}
-                                 />
-
-                                 <img
-                                    src={walletIcon}
-                                    style={{
-                                       width: 50,
-                                       height: 50,
-                                       opacity: 0.5,
-                                       marginTop: 10
-                                    }}
-                                    alt={'xLedg - Hold Your Private Keys'}
-                                 />
-                              </div>
-                           </div>
-
-                           <div
                               style={{ color: '#202020', fontSize: 12, marginTop: -220 }}
                               className={`centerAbsolute blinkTextWhite fadeOut ${
                                  this.state.connected ? 'fade' : false
@@ -248,6 +204,67 @@ class Dashboard extends Component {
                         </div>
                      )}
                   </Motion>
+
+                  {/*INSTRUCTIONS*/}
+                  <div
+                     style={{
+                        position: 'absolute',
+                        left: 105,
+                        top: 0,
+                        height: '100vh',
+                        width: 75
+                     }}>
+                     <div
+                        onMouseEnter={() =>
+                           this.setState({
+                              instructionsHovered: true
+                           })
+                        }
+                        onMouseLeave={() =>
+                           this.setState({
+                              instructionsHovered: false
+                           })
+                        }
+                        className={`centerAbsolute fadeIn ${
+                           this.state.instructionsHovered !== false ? 'fade' : false
+                        }`}
+                        style={{ width: 250, fontSize: 14 }}>
+                        <div
+                           style={{
+                              textAlign: 'left',
+                              fontSize: 12,
+                              cursor: this.state.instructionsHovered !== false ? 'help' : 'default'
+                           }}>
+                           <div style={{ textAlign: 'center', marginBottom: 10 }}>
+                              <img
+                                 src={infoIcon}
+                                 style={{
+                                    width: 40,
+                                    height: 40
+                                 }}
+                              />
+                           </div>
+                           <div style={{ textAlign: 'center', marginBottom: 10 }}>
+                              <h2>INSTRUCTIONS</h2>
+                           </div>
+
+                           {instructions.map((item, i) => {
+                              return (
+                                 <div
+                                    key={`xLedg_instructions_${i}`}
+                                    style={{ display: 'flex', marginBottom: 8 }}>
+                                    <div style={{ minWidth: 32, alignSelf: 'center' }}>
+                                       <img src={item.icon} width={20} height={20} />
+                                    </div>
+                                    <div>{item.text}</div>
+                                 </div>
+                              );
+                           })}
+                        </div>
+                     </div>
+                  </div>
+
+                  <InfoMenu />
                </div>
             ) : (
                false

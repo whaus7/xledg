@@ -32,6 +32,14 @@ h2 {
 .fadeOut.fade {
   opacity: 0;
 }
+.fadeIn {
+  opacity: .5;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
+}
+.fadeIn.fade {
+  opacity: 1;
+}
 
 /*GLOBAL COMPONENTS*/
 .btn {
