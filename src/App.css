@@ -161,15 +161,25 @@ h2 {
   animation: flashWhite linear 2s infinite;
 }
 @-webkit-keyframes flashWhite {
-  0% { color: #202020; }
-  50% { color: #ffffff; }
-  100% { color: #202020; }
+  0% { opacity: 1; }
+  50% { opacity: .3; }
+  100% { opacity: 1; }
 }
 @keyframes flashWhite {
-  0% { color: #202020; }
-  50% { color: #ffffff; }
-  100% { color: #202020; }
+  0% { opacity: 1; }
+  50% { opacity: .3; }
+  100% { opacity: 1; }
 }
+/*@-webkit-keyframes flashWhite {*/
+  /*0% { color: #202020; }*/
+  /*50% { color: #ffffff; }*/
+  /*100% { color: #202020; }*/
+/*}*/
+/*@keyframes flashWhite {*/
+  /*0% { color: #202020; }*/
+  /*50% { color: #ffffff; }*/
+  /*100% { color: #202020; }*/
+/*}*/
 
 /*CUSTOM STYLED SCROLL BARS*/
 .customScroll::-webkit-scrollbar {

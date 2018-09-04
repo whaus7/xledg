@@ -18,7 +18,9 @@ import {
    submitTx,
    getTxStatus,
    getTxs,
-   getOrders
+   getOrders,
+   openTransport,
+   getWalletAddress
 } from './XledgSagas';
 
 // API
@@ -39,4 +41,6 @@ export default function* root() {
    yield all([takeLatest(ActionTypes.GET_TX_STATUS, getTxStatus, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_TXS, getTxs, xledgAPI)]);
    yield all([takeLatest(ActionTypes.GET_ORDERS, getOrders, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.OPEN_TRANSPORT, openTransport, xledgAPI)]);
+   yield all([takeLatest(ActionTypes.GET_WALLET_ADDRESS, getWalletAddress, xledgAPI)]);
 }

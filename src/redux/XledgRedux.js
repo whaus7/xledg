@@ -70,7 +70,16 @@ const { Types, Creators } = createActions({
 
    getExchangeHistory: ['baseCurrency', 'counterCurrency'],
    getExchangeHistorySuccess: ['response'],
-   getExchangeHistoryFailure: ['error']
+   getExchangeHistoryFailure: ['error'],
+
+   // Ledger API Actions
+   openTransport: [],
+   openTransportSuccess: ['response'],
+   openTransportFailure: ['error'],
+
+   getWalletAddress: [],
+   getWalletAddressSuccess: ['response'],
+   getWalletAddressFailure: ['error']
 });
 
 export const ActionTypes = Types;
@@ -80,7 +89,8 @@ export default Creators;
 
 export const INITIAL_STATE = {
    // xLedg UI
-   publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+   //publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+   publicAddress: null,
    db: new PouchDB('xledg_db'),
    walletStatus: null,
    action: 'buy',
@@ -122,7 +132,11 @@ export const INITIAL_STATE = {
    preparedOrderData: null,
    signedTx: null,
    allTxs: [],
-   openOrders: []
+   openOrders: [],
+
+   // Ledger Hardware API
+   bip32Path: "44'/144'/0'/0/0",
+   transportOpen: false
 };
 
 /* ------------- Reducers ------------- */
@@ -253,6 +267,10 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_ACCOUNT_INFO':
          return state;
       case 'GET_ACCOUNT_INFO_SUCCESS':
+         console.log('DEBUG REDUX - get account info successfull!');
+         console.log(state);
+         console.log(action);
+
          return update(state, {
             accountInfo: { $set: action.response }
          });
@@ -263,6 +281,10 @@ export const rippleApiReducer = (state, action) => {
       case 'GET_BALANCE_SHEET':
          return state;
       case 'GET_BALANCE_SHEET_SUCCESS':
+         console.log('DEBUG REDUX - get balance sheet successfull!');
+         console.log(state);
+         console.log(action);
+
          let groupedAssets = groupBy(action.response.assets, 'currency');
          let totals = {};
 
@@ -422,6 +444,40 @@ export const rippleApiReducer = (state, action) => {
    }
 };
 
+export const ledgerApiReducer = (state, action) => {
+   switch (action.type) {
+      case 'OPEN_TRANSPORT':
+         return state;
+      case 'OPEN_TRANSPORT_SUCCESS':
+         // console.log('DEBUG REDUX - open transport success');
+         // console.log(state);
+         // console.log(action);
+
+         return update(state, {
+            transportOpen: { $set: true }
+         });
+      case 'OPEN_TRANSPORT_FAILURE':
+         return state;
+
+      case 'GET_WALLET_ADDRESS':
+         return state;
+      case 'GET_WALLET_ADDRESS_SUCCESS':
+         console.log('DEBUG REDUX - get wallet address success');
+         console.log(state);
+         console.log(action);
+
+         //return state;
+         return update(state, {
+            publicAddress: { $set: action.response.address }
+         });
+      case 'GET_WALLET_ADDRESS_FAILURE':
+         return state;
+
+      default:
+         return state;
+   }
+};
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -487,5 +543,14 @@ export const reducer = createReducer(INITIAL_STATE, {
    // Get Exchange History for Charts
    [Types.GET_EXCHANGE_HISTORY]: dataApiReducer,
    [Types.GET_EXCHANGE_HISTORY_SUCCESS]: dataApiReducer,
-   [Types.GET_EXCHANGE_HISTORY_FAILURE]: dataApiReducer
+   [Types.GET_EXCHANGE_HISTORY_FAILURE]: dataApiReducer,
+
+   // Ledger Hardware API Actions
+   [Types.OPEN_TRANSPORT]: ledgerApiReducer,
+   [Types.OPEN_TRANSPORT_SUCCESS]: ledgerApiReducer,
+   [Types.OPEN_TRANSPORT_FAILURE]: ledgerApiReducer,
+
+   [Types.GET_WALLET_ADDRESS]: ledgerApiReducer,
+   [Types.GET_WALLET_ADDRESS_SUCCESS]: ledgerApiReducer,
+   [Types.GET_WALLET_ADDRESS_FAILURE]: ledgerApiReducer
 });

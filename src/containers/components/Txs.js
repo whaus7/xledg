@@ -72,7 +72,11 @@ export default class Txs extends Component {
                         overflowY: 'scroll',
                         overflowX: 'hidden'
                      }}>
-                     {completedTxsRows}
+                     {completedTxsRows.length === 0 ? (
+                        <div style={{ color: COLORS.grey, fontSize: 11 }}>No Transactions Found</div>
+                     ) : (
+                        completedTxsRows
+                     )}
                   </div>
                </div>
             </div>

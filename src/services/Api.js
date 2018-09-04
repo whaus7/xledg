@@ -1,5 +1,9 @@
 import apisauce from 'apisauce';
+import Transport from '@ledgerhq/hw-transport-u2f';
+import Api from '@ledgerhq/hw-app-xrp';
+
 const RippleAPI = require('ripple-lib').RippleAPI;
+let LedgerAPI = null;
 
 // Will haus and manage both the dataAPI and rippleAPI objects
 const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'wss://s2.ripple.com') => {
@@ -11,6 +15,30 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    const rippleAPI = new RippleAPI({
       server: rippleApiBaseURL // Public rippled server hosted by Ripple, Inc.
    });
+
+   // Ledger API
+   const openTransport = () => {
+      return Transport.create(360000)
+         .then(transport => {
+            transport.setDebugMode(false);
+            transport.setExchangeTimeout(720000);
+            LedgerAPI = new Api(transport);
+            return 'success';
+         })
+         .catch(() => {
+            console.log('Error: U2F not supported');
+         });
+   };
+
+   const getWalletAddress = () => {
+      return LedgerAPI.getAddress("44'/144'/0'/0/0", true, false, false)
+         .then(result => {
+            return result;
+         })
+         .catch(() => {
+            console.log('Failed to get wallet address');
+         });
+   };
 
    // DATA API
    const getGateways = () => {
@@ -65,6 +93,8 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
          });
    };
 
+   // Returns open orders for the specified account.
+   // Open orders are orders that have not yet been fully executed and are still in the order book.
    const updateOrderBook = (address, pair) => {
       return rippleAPI
          .getOrderbook(address, pair, {
@@ -165,7 +195,9 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       submitTx,
       getTxStatus,
       getTxs,
-      getOrders
+      getOrders,
+      openTransport,
+      getWalletAddress
    };
 };
 

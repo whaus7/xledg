@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReduxActions from '../redux/XledgRedux';
 
-import Transport from '@ledgerhq/hw-transport-u2f';
-import Api from '@ledgerhq/hw-app-xrp';
-
 import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
 import Logo from './components/Logo';
 import xrpIcon from '../images/xrp-icon.svg';
@@ -20,25 +17,19 @@ import { notification } from '../services/helpers';
 import InfoMenu from './components/InfoMenu';
 import Instructions from './components/Instructions';
 
-let _ledgerAPI = null;
-
 class Dashboard extends Component {
    constructor(props) {
       super(props);
 
-      Transport.create(360000).then(transport => {
-         transport.setDebugMode(false);
-         transport.setExchangeTimeout(720000);
-         _ledgerAPI = new Api(transport);
-         console.log('ledger API');
-         console.log(_ledgerAPI);
-      });
+      this.props.openTransport();
 
       this.state = {
          key: '', // for testing,
          showLoading: false,
+         initialized: false,
          connected: false,
-         connectionScreen: true
+         connectionScreen: true,
+         initBtnHovered: false
       };
 
       // Connect to Ripple API
@@ -46,14 +37,28 @@ class Dashboard extends Component {
    }
 
    componentWillReceiveProps(nextProps) {
+      // if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
+      //    this.props.getGateways();
+      //    this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+      //
+      //    this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+      //    this.props.getBalanceSheet(nextProps.publicAddress);
+      //    this.props.getAccountInfo(nextProps.publicAddress);
+      // }
+
       if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
          this.props.getGateways();
-
          this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+      }
 
+      if (
+         nextProps.rippleApiConnected &&
+         this.props.publicAddress === null &&
+         nextProps.publicAddress !== null
+      ) {
+         this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
          this.props.getBalanceSheet(nextProps.publicAddress);
          this.props.getAccountInfo(nextProps.publicAddress);
-         this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
       }
 
       // Sign the prepared transaction/order
@@ -61,15 +66,17 @@ class Dashboard extends Component {
          console.log('prepared order');
          console.log(nextProps.preparedOrder);
 
-         notification(
-            `<span style="color: #21c2f8; margin-right: 20px">ORDER SUBMITTED</span>${parseFloat(
-               nextProps.preparedOrderData.quantity.value
-            ).toFixed(2)} ${nextProps.preparedOrderData.quantity.currency} @ 
+         if (nextProps.preparedOrderData !== null) {
+            notification(
+               `<span style="color: #21c2f8; margin-right: 20px">ORDER SUBMITTED</span>${parseFloat(
+                  nextProps.preparedOrderData.quantity.value
+               ).toFixed(2)} ${nextProps.preparedOrderData.quantity.currency} FOR 
             ${parseFloat(nextProps.preparedOrderData.totalPrice.value).toFixed(6)} ${
-               nextProps.preparedOrderData.totalPrice.currency
-            }`,
-            'success'
-         );
+                  nextProps.preparedOrderData.totalPrice.currency
+               }`,
+               'success'
+            );
+         }
          this.props.signTx(nextProps.preparedOrder.txJSON, this.state.key);
       }
 
@@ -90,6 +97,7 @@ class Dashboard extends Component {
                this.props.getBalanceSheet(nextProps.publicAddress);
                this.props.getAccountInfo(nextProps.publicAddress);
                this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+               this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
 
                this.setState({
                   showLoading: false
@@ -104,8 +112,23 @@ class Dashboard extends Component {
          nextProps.baseCurrency.value !== this.props.baseCurrency.value ||
          nextProps.counterCurrency.value !== this.props.counterCurrency.value
       ) {
-         this.props.updateOrderBook(nextProps.pair);
          this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+      }
+
+      // Initialize the Ledger hardware wallet connection
+      if (nextProps.publicAddress !== null) {
+         this.setState({
+            connected: true
+         });
+
+         setTimeout(
+            function() {
+               this.setState({
+                  connectionScreen: false
+               });
+            }.bind(this),
+            1000
+         );
       }
    }
 
@@ -134,25 +157,35 @@ class Dashboard extends Component {
                   {/*Hardware Ledger Connection Screen*/}
                   <Motion
                      defaultStyle={{
-                        width: 600,
-                        height: 600,
-                        slideDown: 230
+                        spinnerSize: 600,
+                        iconSize: 180,
+                        slideDown: 230,
+                        slideUp: -230,
+                        slideWaitingTextUp: -180
                      }}
                      style={{
-                        width: spring(this.state.connected ? 4600 : 600, springConfig),
-                        height: spring(this.state.connected ? 4600 : 600, springConfig),
-                        slideDown: spring(this.state.connected ? 900 : 230, springConfig)
+                        spinnerSize: spring(
+                           this.state.connected ? 4600 : this.state.initialized ? 450 : 600,
+                           springConfig
+                        ),
+                        iconSize: spring(
+                           this.state.connected ? 0 : this.state.initialized ? 135 : 180,
+                           springConfig
+                        ),
+                        slideDown: spring(this.state.connected ? 900 : 230, springConfig),
+                        slideUp: spring(this.state.connected ? -900 : -230, springConfig),
+                        slideWaitingTextUp: spring(this.state.connected ? -900 : -180, springConfig)
                      }}>
                      {value => (
                         <div
                            style={{
-                              width: value.width,
-                              height: value.height,
+                              width: value.spinnerSize,
+                              height: value.spinnerSize,
                               alignSelf: 'center'
                            }}>
                            <img
                               src={spinner1}
-                              style={{ width: value.width, height: value.height }}
+                              style={{ width: value.spinnerSize, height: value.spinnerSize }}
                               alt={'xLedg - Hardware Connection Screen'}
                            />
 
@@ -166,18 +199,57 @@ class Dashboard extends Component {
                               className={`centerAbsolute fadeOut ${this.state.connected ? 'fade' : false}`}
                               src={xrpIcon}
                               style={{
-                                 width: 180,
-                                 height: 180
+                                 width: value.iconSize,
+                                 height: value.iconSize
                               }}
                               alt={'xLedg - XRPL Decentralized Exchange'}
                            />
 
+                           {this.state.initialized ? (
+                              <div
+                                 style={{
+                                    color: '#ffffff',
+                                    fontSize: 12,
+                                    marginTop: value.slideWaitingTextUp
+                                 }}
+                                 className={`centerAbsolute blinkTextWhite`}>
+                                 Waiting for cold connection...<br />Confirm prompt on your Ledger wallet
+                              </div>
+                           ) : (
+                              false
+                           )}
+
                            <div
-                              style={{ color: '#202020', fontSize: 12, marginTop: -220 }}
-                              className={`centerAbsolute blinkTextWhite fadeOut ${
-                                 this.state.connected ? 'fade' : false
-                              }`}>
-                              Waiting For Cold Connection...
+                              onMouseEnter={() => {
+                                 this.setState({
+                                    initBtnHovered: true
+                                 });
+                              }}
+                              onMouseLeave={() => {
+                                 this.setState({
+                                    initBtnHovered: false
+                                 });
+                              }}
+                              style={{
+                                 marginTop: value.slideUp,
+                                 borderColor:
+                                    this.state.initBtnHovered || this.state.initialized
+                                       ? '#21c2f8'
+                                       : '#ffffff'
+                              }}
+                              className={`centerAbsolute ${
+                                 this.state.initBtnHovered
+                                    ? false
+                                    : this.state.initialized ? false : 'blinkTextWhite'
+                              } btn btnHover fadeOut ${this.state.connected ? 'fade' : false}`}
+                              onClick={() => {
+                                 this.setState({
+                                    initialized: true
+                                 });
+
+                                 this.props.getWalletAddress();
+                              }}>
+                              INITIALIZE COLD CONNECTION
                            </div>
 
                            <div
@@ -275,7 +347,7 @@ class Dashboard extends Component {
                      <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
                         <h2>BALANCES</h2>
                         {this.props.gateways !== null &&
-                        this.props.balanceSheet !== null &&
+                        //this.props.balanceSheet !== null &&
                         this.props.accountInfo !== null ? (
                            <Balances
                               gateways={this.props.gateways}
@@ -289,7 +361,7 @@ class Dashboard extends Component {
                         )}
                      </div>
 
-                     {this.props.rippleApiConnected > 0 ? (
+                     {this.props.rippleApiConnected > 0 && this.props.publicAddress !== null ? (
                         <Txs
                            publicAddress={this.props.publicAddress}
                            allTxs={this.props.allTxs}
@@ -342,7 +414,7 @@ class Dashboard extends Component {
                                  totalPrice: {
                                     counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
                                     currency: counterCurrency.value,
-                                    value: counterPrice
+                                    value: (counterPrice * baseAmount).toString()
                                  }
                               },
                               {
@@ -406,7 +478,8 @@ const mapStateToProps = state => {
       preparedOrderData: state.xledg.preparedOrderData,
       signedTx: state.xledg.signedTx,
       allTxs: state.xledg.allTxs,
-      openOrders: state.xledg.openOrders
+      openOrders: state.xledg.openOrders,
+      transportOpen: state.xledg.transportOpen
    };
 };
 
@@ -468,6 +541,12 @@ const mapDispatchToProps = dispatch => {
       },
       getOrders: (address, options) => {
          dispatch(ReduxActions.getOrders(address, options));
+      },
+      openTransport: () => {
+         dispatch(ReduxActions.openTransport());
+      },
+      getWalletAddress: () => {
+         dispatch(ReduxActions.getWalletAddress());
       }
    };
 };

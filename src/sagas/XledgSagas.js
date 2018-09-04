@@ -8,7 +8,7 @@ const notifyError = response => {
 };
 
 const success = response => {
-   // CakePHP send OK 200 if unhandled error, so need to check for success
+   // OK 200 if unhandled error, so need to check for success
    if (response.status === 200 && typeof response.data === 'string') {
       let failure =
          !response.ok ||
@@ -27,10 +27,6 @@ export function* getGateways(api) {
 
    if (success(response)) {
       yield put(XledgActions.getGatewaysSuccess(response));
-      // notification(
-      //    'success',
-      //    `success`
-      // );
    } else {
       notifyError(response);
       yield put(XledgActions.getGatewaysFailure(response));
@@ -142,12 +138,14 @@ export function* signTx(api, { txJSON, key }) {
 // Submit a signed transaction
 export function* submitTx(api, { signedTx }) {
    const response = yield call(api.submitTx, signedTx);
+   console.log('submit TX response');
+   console.log(response);
 
-   if ('resultMessage' in response) {
+   if (response.resultCode === 'tesSUCCESS') {
+      yield put(XledgActions.submitTxSuccess(response));
+   } else {
       notifyError(response);
       yield put(XledgActions.submitTxFailure(response));
-   } else {
-      yield put(XledgActions.submitTxSuccess(response));
    }
 }
 
@@ -185,5 +183,29 @@ export function* getOrders(api, { address, options }) {
       yield put(XledgActions.getOrdersFailure(response));
    } else {
       yield put(XledgActions.getOrdersSuccess(response));
+   }
+}
+
+// Open Transport connection with Ledger Hardware API
+export function* openTransport(api) {
+   const response = yield call(api.openTransport);
+
+   if (response === 'success') {
+      yield put(XledgActions.openTransportSuccess(response));
+   } else {
+      notifyError(response);
+      yield put(XledgActions.openTransportFailure(response));
+   }
+}
+
+// Open Transport connection with Ledger Hardware API
+export function* getWalletAddress(api) {
+   const response = yield call(api.getWalletAddress);
+
+   if (typeof response !== 'undefined' && 'address' in response) {
+      yield put(XledgActions.getWalletAddressSuccess(response));
+   } else {
+      notifyError(response);
+      yield put(XledgActions.getWalletAddressFailure(response));
    }
 }
