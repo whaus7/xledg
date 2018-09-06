@@ -30,6 +30,8 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-saga": "^0.16.0",
     "reduxsauce": "^1.0.0",
+    "ripple-address-codec": "^2.0.1",
+    "ripple-binary-codec": "^0.1.14",
     "ripple-lib": "^1.0.0-beta.2"
   },
   "scripts": {

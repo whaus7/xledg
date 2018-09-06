@@ -7,8 +7,8 @@ import threeIcon from '../../images/number_icons/3.svg';
 import fourIcon from '../../images/number_icons/4.svg';
 
 const instructions = [
-   { id: 1, text: 'Use Google Chrome browser and plug-in your Ledger wallet', icon: oneIcon },
-   { id: 2, text: 'Unlock your Ledger wallet & open the XRP app', icon: twoIcon },
+   { id: 1, text: 'Connect your Ledger Wallet', icon: oneIcon },
+   { id: 2, text: 'Unlock your Ledger Wallet & open the XRP App', icon: twoIcon },
    { id: 3, text: "Go to 'Settings' and enable 'Browser support'", icon: threeIcon },
    { id: 4, text: "Click 'Initialize Cold Connection' to begin", icon: fourIcon }
 ];

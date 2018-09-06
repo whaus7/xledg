@@ -215,12 +215,15 @@ h2 {
 }
 .Select-menu-outer {
   max-height: 200px !important;
+  border-color: #21c2f8 !important;
 }
 .Select-menu {
   max-height: 198px !important;
 }
 .Select-option {
-  padding: 3px 8px;
+  padding: 6px 8px !important;
+  background: #202020 !important;
+  color: #ffffff !important;
 }
 
 /*ORDER BOOK*/

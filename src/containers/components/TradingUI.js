@@ -45,7 +45,7 @@ export default class TradingUI extends Component {
                   <div style={{ display: 'flex' }}>
                      <div style={{ alignSelf: 'center', marginRight: 10, height: 20 }}>
                         <img
-                           src={CURRENCY_ICONS_BLACK[`${this.props.option.value}.svg`]}
+                           src={CURRENCY_ICONS_WHITE[`${this.props.option.value}.svg`]}
                            style={{ maxWidth: 20, maxHeight: 20 }}
                            alt={`${this.props.option.value} Icon`}
                         />
@@ -213,7 +213,9 @@ export default class TradingUI extends Component {
                      borderColor: this.props.action === 'buy' ? COLORS.green : COLORS.red,
                      width: '100%'
                   }}>
-                  {`PLACE ${this.props.action.toUpperCase()} ORDER`}
+                  {this.props.prepareOrder === null
+                     ? `CONFIRM ORDER USING LEDGER WALLET`
+                     : `PLACE ${this.props.action.toUpperCase()} ORDER`}
                </div>
             </div>
          </MuiThemeProvider>

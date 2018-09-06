@@ -30,6 +30,7 @@ class Dashboard extends Component {
          connected: false,
          connectionScreen: true,
          initBtnHovered: false
+         //pendingSignature: false
       };
 
       // Connect to Ripple API
@@ -37,29 +38,29 @@ class Dashboard extends Component {
    }
 
    componentWillReceiveProps(nextProps) {
-      // if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
-      //    this.props.getGateways();
-      //    this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
-      //
-      //    this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
-      //    this.props.getBalanceSheet(nextProps.publicAddress);
-      //    this.props.getAccountInfo(nextProps.publicAddress);
-      // }
-
       if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
          this.props.getGateways();
          this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
-      }
 
-      if (
-         nextProps.rippleApiConnected &&
-         this.props.publicAddress === null &&
-         nextProps.publicAddress !== null
-      ) {
          this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
          this.props.getBalanceSheet(nextProps.publicAddress);
          this.props.getAccountInfo(nextProps.publicAddress);
       }
+
+      // if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
+      //    this.props.getGateways();
+      //    this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+      // }
+      //
+      // if (
+      //    nextProps.rippleApiConnected &&
+      //    this.props.publicAddress === null &&
+      //    nextProps.publicAddress !== null
+      // ) {
+      //    this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+      //    this.props.getBalanceSheet(nextProps.publicAddress);
+      //    this.props.getAccountInfo(nextProps.publicAddress);
+      // }
 
       // Sign the prepared transaction/order
       if (nextProps.preparedOrder !== null) {
@@ -77,7 +78,11 @@ class Dashboard extends Component {
                'success'
             );
          }
-         this.props.signTx(nextProps.preparedOrder.txJSON, this.state.key);
+
+         // this.setState({
+         // pendingSignature: true
+         // })
+         //this.props.signTx(nextProps.preparedOrder.txJSON, this.state.key);
       }
 
       // Submit the signed transaction/order
