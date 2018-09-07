@@ -1,6 +1,8 @@
 import apisauce from 'apisauce';
 import Transport from '@ledgerhq/hw-transport-u2f';
 import Api from '@ledgerhq/hw-app-xrp';
+import { encode, decode } from 'ripple-binary-codec';
+import { notification } from './helpers';
 
 const RippleAPI = require('ripple-lib').RippleAPI;
 let LedgerAPI = null;
@@ -131,7 +133,29 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    };
 
    const signTx = (txJSON, key) => {
-      return rippleAPI.sign(txJSON, key);
+      let unsignedTx = JSON.parse(txJSON);
+      unsignedTx.SigningPubKey = key;
+      let unsignedTxHex = encode(unsignedTx);
+
+      console.log('wtf..');
+      console.log(unsignedTxHex);
+      console.log(LedgerAPI);
+
+      return LedgerAPI.signTransaction("44'/144'/0'/0/0", unsignedTxHex)
+         .then(signedTx => {
+            let txJSON = decode(unsignedTxHex);
+            txJSON.TxnSignature = signedTx.toUpperCase();
+            let txHex = encode(txJSON);
+
+            console.log('here?');
+            console.log(txHex);
+
+            return txHex.toUpperCase();
+         })
+         .catch(error => {
+            console.log(error);
+            notification('The order was declined or an error has occurred', 'error');
+         });
    };
 
    const submitTx = signedTx => {

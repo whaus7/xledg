@@ -207,13 +207,16 @@ export default class TradingUI extends Component {
                   onClick={() => {
                      this.props.prepareOrder();
                   }}
-                  className={'btn btnHover'}
+                  className={`btn btnHover ${this.props.preparedOrder !== null ? 'blinkTextWhite' : false}`}
                   style={{
                      opacity: 0.5,
-                     borderColor: this.props.action === 'buy' ? COLORS.green : COLORS.red,
+                     borderColor:
+                        this.props.preparedOrder !== null
+                           ? COLORS.aqua
+                           : this.props.action === 'buy' ? COLORS.green : COLORS.red,
                      width: '100%'
                   }}>
-                  {this.props.prepareOrder === null
+                  {this.props.preparedOrder !== null
                      ? `CONFIRM ORDER USING LEDGER WALLET`
                      : `PLACE ${this.props.action.toUpperCase()} ORDER`}
                </div>

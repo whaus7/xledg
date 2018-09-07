@@ -38,29 +38,29 @@ class Dashboard extends Component {
    }
 
    componentWillReceiveProps(nextProps) {
-      if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
-         this.props.getGateways();
-         this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
-
-         this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
-         this.props.getBalanceSheet(nextProps.publicAddress);
-         this.props.getAccountInfo(nextProps.publicAddress);
-      }
-
       // if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
       //    this.props.getGateways();
       //    this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
-      // }
       //
-      // if (
-      //    nextProps.rippleApiConnected &&
-      //    this.props.publicAddress === null &&
-      //    nextProps.publicAddress !== null
-      // ) {
       //    this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
       //    this.props.getBalanceSheet(nextProps.publicAddress);
       //    this.props.getAccountInfo(nextProps.publicAddress);
       // }
+
+      if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
+         this.props.getGateways();
+         this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+      }
+
+      if (
+         nextProps.rippleApiConnected &&
+         this.props.publicAddress === null &&
+         nextProps.publicAddress !== null
+      ) {
+         this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+         this.props.getBalanceSheet(nextProps.publicAddress);
+         this.props.getAccountInfo(nextProps.publicAddress);
+      }
 
       // Sign the prepared transaction/order
       if (nextProps.preparedOrder !== null) {
@@ -69,7 +69,7 @@ class Dashboard extends Component {
 
          if (nextProps.preparedOrderData !== null) {
             notification(
-               `<span style="color: #21c2f8; margin-right: 20px">ORDER SUBMITTED</span>${parseFloat(
+               `<span style="color: #21c2f8; margin-right: 20px">ORDER CREATED</span>${parseFloat(
                   nextProps.preparedOrderData.quantity.value
                ).toFixed(2)} ${nextProps.preparedOrderData.quantity.currency} FOR 
             ${parseFloat(nextProps.preparedOrderData.totalPrice.value).toFixed(6)} ${
@@ -82,7 +82,7 @@ class Dashboard extends Component {
          // this.setState({
          // pendingSignature: true
          // })
-         //this.props.signTx(nextProps.preparedOrder.txJSON, this.state.key);
+         this.props.signTx(nextProps.preparedOrder.txJSON, nextProps.publicKey);
       }
 
       // Submit the signed transaction/order
@@ -236,7 +236,8 @@ class Dashboard extends Component {
                                  });
                               }}
                               style={{
-                                 marginTop: value.slideUp,
+                                 //marginTop: value.slideUp,
+                                 marginTop: 0,
                                  borderColor:
                                     this.state.initBtnHovered || this.state.initialized
                                        ? '#21c2f8'
@@ -463,6 +464,7 @@ class Dashboard extends Component {
 const mapStateToProps = state => {
    return {
       publicAddress: state.xledg.publicAddress,
+      publicKey: state.xledg.publicKey,
       db: state.xledg.db,
       walletStatus: state.xledg.walletStatus,
       gateways: state.xledg.gateways,

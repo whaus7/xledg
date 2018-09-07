@@ -89,8 +89,9 @@ export default Creators;
 
 export const INITIAL_STATE = {
    // xLedg UI
-   publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
-   //publicAddress: null,
+   //publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+   publicAddress: null,
+   publicKey: null,
    db: new PouchDB('xledg_db'),
    walletStatus: null,
    action: 'buy',
@@ -320,6 +321,10 @@ export const rippleApiReducer = (state, action) => {
       case 'PREPARE_ORDER':
          return state;
       case 'PREPARE_ORDER_SUCCESS':
+         console.log('DEBUG REDUX - prepare order successfull!');
+         console.log(state);
+         console.log(action);
+
          return update(state, {
             preparedOrder: { $set: action.response },
             preparedOrderData: { $set: action.order }
@@ -468,7 +473,8 @@ export const ledgerApiReducer = (state, action) => {
 
          //return state;
          return update(state, {
-            publicAddress: { $set: action.response.address }
+            publicAddress: { $set: action.response.address },
+            publicKey: { $set: action.response.publicKey.toUpperCase() }
          });
       case 'GET_WALLET_ADDRESS_FAILURE':
          return state;
