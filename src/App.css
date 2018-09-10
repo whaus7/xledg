@@ -1,6 +1,6 @@
 body {
   font-family: 'Heebo', sans-serif;
-  letter-spacing: 0.05em;
+  /*letter-spacing: 0.05em;*/
   font-weight: 100;
 }
 p {
@@ -20,7 +20,7 @@ h2 {
   color: #ffffff;
   font-size: 12px;
   font-weight: 400;
-  /*letter-spacing: 0.05em;*/
+  letter-spacing: 0.05em;
   margin: 0 0 10px 0;
 }
 .centerAbsolute {
@@ -203,6 +203,14 @@ h2 {
   cursor: pointer;
   opacity: 1;
 }
+.Select-input {
+  padding-left: 8px !important;
+}
+.Select-input > input {
+  color: #ffffff;
+  font-weight: 100 !important;
+  caret-color: #ffffff;
+}
 .Select--single > .Select-control .Select-value {
   color: #ffffff !important;
 }
@@ -224,6 +232,17 @@ h2 {
   padding: 6px 8px !important;
   background: #202020 !important;
   color: #ffffff !important;
+}
+.Select-option:hover {
+  background: #383939 !important;
+  color: #21c2f8 !important;
+}
+.Select-clear {
+  position: relative;
+  top: -2px;
+}
+.Select-arrow {
+  top: -1px;
 }
 
 /*ORDER BOOK*/

@@ -89,8 +89,8 @@ export default Creators;
 
 export const INITIAL_STATE = {
    // xLedg UI
-   //publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
-   publicAddress: null,
+   publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+   //publicAddress: null,
    publicKey: null,
    db: new PouchDB('xledg_db'),
    walletStatus: null,
@@ -158,37 +158,63 @@ export const xledgReducer = (state, action) => {
             baseAmount: { $set: action.amount }
          });
       case 'UPDATE_BASE_CURRENCY':
-         let base = {
-            currency: action.currency.value
-         };
-         if (action.currency.value !== 'XRP') {
-            //base.counterparty = action.currency.counterparty;
-            // TODO need counterparty selection in UI
-            base.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
-         }
+         if (action.currency === null) {
+            return update(state, {
+               baseCurrency: {
+                  icon: { $set: null },
+                  label: { $set: null },
+                  value: { $set: null }
+               },
+               pair: { base: { $set: null } },
+               orderBook: { $set: null },
+               exchangeHistory: { $set: null }
+            });
+         } else {
+            let base = {
+               currency: action.currency.value
+            };
+            if (action.currency.value !== 'XRP') {
+               //base.counterparty = action.currency.counterparty;
+               // TODO need counterparty selection in UI
+               base.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
+            }
 
-         return update(state, {
-            baseCurrency: { $set: action.currency },
-            pair: { base: { $set: base } }
-         });
+            return update(state, {
+               baseCurrency: { $set: action.currency },
+               pair: { base: { $set: base } }
+            });
+         }
       case 'UPDATE_COUNTER_PRICE':
          return update(state, {
             counterPrice: { $set: action.price }
          });
       case 'UPDATE_COUNTER_CURRENCY':
-         let counter = {
-            currency: action.currency.value
-         };
-         if (action.currency.value !== 'XRP') {
-            //counter.counterparty = action.currency.counterparty;
-            // TODO need counterparty selection in UI
-            counter.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
-         }
+         if (action.currency === null) {
+            return update(state, {
+               counterCurrency: {
+                  icon: { $set: null },
+                  label: { $set: null },
+                  value: { $set: null }
+               },
+               pair: { counter: { $set: null } },
+               orderBook: { $set: null },
+               exchangeHistory: { $set: null }
+            });
+         } else {
+            let counter = {
+               currency: action.currency.value
+            };
+            if (action.currency.value !== 'XRP') {
+               //counter.counterparty = action.currency.counterparty;
+               // TODO need counterparty selection in UI
+               counter.counterparty = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
+            }
 
-         return update(state, {
-            counterCurrency: { $set: action.currency },
-            pair: { counter: { $set: counter } }
-         });
+            return update(state, {
+               counterCurrency: { $set: action.currency },
+               pair: { counter: { $set: counter } }
+            });
+         }
       case 'UPDATE_FROM_ORDER':
          console.log('DEBUG REDUX - update from order');
          console.log(state);
@@ -222,6 +248,10 @@ export const dataApiReducer = (state, action) => {
       case 'GET_GATEWAYS':
          return state;
       case 'GET_GATEWAYS_SUCCESS':
+         console.log('DEBUG REDUX - get gateways success');
+         console.log(state);
+         console.log(action);
+
          return update(state, {
             gateways: { $set: action.response.data }
          });
@@ -286,21 +316,25 @@ export const rippleApiReducer = (state, action) => {
          console.log(state);
          console.log(action);
 
-         let groupedAssets = groupBy(action.response.assets, 'currency');
+         let groupedAssets = {};
          let totals = {};
 
-         for (let key in groupedAssets) {
-            let total = 0;
-            groupedAssets[key].map(asset => {
-               total += parseFloat(asset.value, 10);
-               return true;
-            });
-            //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
-            totals[key] = { formatted: CurrencyFormatter.format(total, { code: key }), value: total };
+         if ('assets' in action.response) {
+            groupedAssets = groupBy(action.response.assets, 'currency');
+
+            for (let key in groupedAssets) {
+               let total = 0;
+               groupedAssets[key].map(asset => {
+                  total += parseFloat(asset.value, 10);
+                  return true;
+               });
+               //groupedAssets[key].total = CurrencyFormatter.format(total, { code: key });
+               totals[key] = { formatted: CurrencyFormatter.format(total, { code: key }), value: total };
+            }
          }
 
          return update(state, {
-            balanceSheet: { $set: action.response },
+            balanceSheet: { $set: 'assets' in action.response ? action.response : {} },
             balances: { $set: groupedAssets },
             assetTotals: { $set: totals }
          });
@@ -352,6 +386,7 @@ export const rippleApiReducer = (state, action) => {
       case 'SIGN_TX_SUCCESS':
          return update(state, {
             signedTx: { $set: action.response },
+            //signedTx: { $set: { signedTransaction: action.response } },
             preparedOrder: { $set: null }
          });
       case 'SIGN_TX_FAILURE':

@@ -98,16 +98,35 @@ export default class LineChart extends Component {
                padding: '18px 10px 10px 10px'
             }}>
             {/*PRICE CHART*/}
-            <div style={{ textAlign: 'center' }}>
-               <h2 style={{ position: 'absolute', display: 'inline-flex', marginTop: -7, marginLeft: -23 }}>
-                  <span style={{ opacity: 0.5, marginRight: 5 }}>PRICE</span>
-                  <span style={{ color: COLORS.aqua }}>
-                     {this.props.baseCurrency.value}/{this.props.counterCurrency.value}
-                  </span>
-               </h2>
-            </div>
+            {this.props.data !== null && this.props.data.exchanges.length > 0 ? (
+               <div style={{ textAlign: 'center' }}>
+                  <h2
+                     style={{ position: 'absolute', display: 'inline-flex', marginTop: -7, marginLeft: -23 }}>
+                     <span style={{ opacity: 0.5, marginRight: 5 }}>PRICE</span>
+                     <span style={{ color: COLORS.aqua }}>
+                        {this.props.baseCurrency.value}/{this.props.counterCurrency.value}
+                     </span>
+                  </h2>
+               </div>
+            ) : (
+               <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
+                  <div
+                     style={{
+                        width: '100%',
+                        textAlign: 'center',
+                        alignSelf: 'center',
+                        fontSize: 12
+                     }}>
+                     Select a Trading Pair to View Price & Volume History
+                  </div>
+               </div>
+            )}
             <div id={'priceChart'} style={{ marginBottom: 15 }}>
                <XYPlot
+                  style={{
+                     display:
+                        this.props.data !== null && this.props.data.exchanges.length > 0 ? 'block' : 'none'
+                  }}
                   height={250}
                   width={this.state.width}
                   yDomain={[0, this.state.highestPrice]}
@@ -169,13 +188,21 @@ export default class LineChart extends Component {
             </div>
 
             {/*VOLUME CHART*/}
-            <div style={{ textAlign: 'center' }}>
-               <h2 style={{ position: 'absolute', display: 'inline-flex', opacity: 0.5, marginTop: -7 }}>
-                  VOLUME
-               </h2>
-            </div>
+            {this.props.data !== null && this.props.data.exchanges.length > 0 ? (
+               <div style={{ textAlign: 'center' }}>
+                  <h2 style={{ position: 'absolute', display: 'inline-flex', opacity: 0.5, marginTop: -7 }}>
+                     VOLUME
+                  </h2>
+               </div>
+            ) : (
+               false
+            )}
             <div id={'volumeChart'}>
                <XYPlot
+                  style={{
+                     display:
+                        this.props.data !== null && this.props.data.exchanges.length > 0 ? 'block' : 'none'
+                  }}
                   height={150}
                   width={this.state.width}
                   yDomain={[0, this.state.highestVolume]}

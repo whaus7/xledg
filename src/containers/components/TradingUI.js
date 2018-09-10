@@ -15,6 +15,8 @@ const CURRENCY_ICONS_WHITE = importAll(
    require.context('../../images/currency_icons/white', false, /\.(svg)$/)
 );
 
+console.log(CURRENCY_ICONS_WHITE);
+
 export default class TradingUI extends Component {
    render() {
       // OPTION - REACT-SELECT
@@ -58,7 +60,8 @@ export default class TradingUI extends Component {
                            alignSelf: 'center'
                         }}>
                         <span>{this.props.option.value}</span>
-                        <span style={{ color: COLORS.grey }}> - {this.props.option.label}</span>
+                        {/*<span style={{ color: COLORS.grey }}> - {this.props.option.label}</span>*/}
+                        <span> - {this.props.option.label}</span>
                      </div>
                   </div>
                </div>
@@ -156,9 +159,11 @@ export default class TradingUI extends Component {
 
                   <Select
                      onChange={val => {
+                        console.log('select val');
+                        console.log(val);
                         this.props.updateBaseCurrency(val);
                      }}
-                     value={this.props.baseCurrency}
+                     value={this.props.baseCurrency.value === null ? null : this.props.baseCurrency}
                      optionComponent={CurrencyOption}
                      options={MAJOR_CURRENCIES}
                      placeholder={'Currency'}
@@ -193,7 +198,7 @@ export default class TradingUI extends Component {
                      onChange={val => {
                         this.props.updateCounterCurrency(val);
                      }}
-                     value={this.props.counterCurrency}
+                     value={this.props.counterCurrency.value === null ? null : this.props.counterCurrency}
                      optionComponent={CurrencyOption}
                      options={MAJOR_CURRENCIES}
                      placeholder={'Currency'}

@@ -100,7 +100,7 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    const updateOrderBook = (address, pair) => {
       return rippleAPI
          .getOrderbook(address, pair, {
-            limit: 50
+            limit: 100
          })
          .then(orderBook => {
             return orderBook;
@@ -133,11 +133,15 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    };
 
    const signTx = (txJSON, key) => {
+      console.log('SIGN DATA');
+      console.log(txJSON);
+
       let unsignedTx = JSON.parse(txJSON);
-      unsignedTx.SigningPubKey = key;
+      //unsignedTx.SigningPubKey = key;
       let unsignedTxHex = encode(unsignedTx);
 
       console.log('wtf..');
+      console.log(unsignedTx);
       console.log(unsignedTxHex);
       console.log(LedgerAPI);
 

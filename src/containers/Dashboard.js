@@ -38,46 +38,56 @@ class Dashboard extends Component {
    }
 
    componentWillReceiveProps(nextProps) {
-      // if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
-      //    this.props.getGateways();
-      //    this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
-      //
-      //    this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
-      //    this.props.getBalanceSheet(nextProps.publicAddress);
-      //    this.props.getAccountInfo(nextProps.publicAddress);
-      // }
-
       if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
          this.props.getGateways();
-         this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
-      }
 
-      if (
-         nextProps.rippleApiConnected &&
-         this.props.publicAddress === null &&
-         nextProps.publicAddress !== null
-      ) {
-         this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+         if (nextProps.baseCurrency.value !== null && nextProps.counterCurrency.value !== null) {
+            this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+         }
+
+         if (nextProps.pair.base !== null && nextProps.pair.counter !== null) {
+            this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+         }
+
          this.props.getBalanceSheet(nextProps.publicAddress);
          this.props.getAccountInfo(nextProps.publicAddress);
       }
+
+      // if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
+      //    this.props.getGateways();
+      //    if (nextProps.baseCurrency.value !== null && nextProps.counterCurrency.value !== null) {
+      //       this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+      //    }
+      // }
+      //
+      // if (
+      //    nextProps.rippleApiConnected &&
+      //    this.props.publicAddress === null &&
+      //    nextProps.publicAddress !== null
+      // ) {
+      //    if (nextProps.pair.base !== null && nextProps.pair.counter !== null) {
+      //       this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+      //    }
+      //    this.props.getBalanceSheet(nextProps.publicAddress);
+      //    this.props.getAccountInfo(nextProps.publicAddress);
+      // }
 
       // Sign the prepared transaction/order
       if (nextProps.preparedOrder !== null) {
          console.log('prepared order');
          console.log(nextProps.preparedOrder);
 
-         if (nextProps.preparedOrderData !== null) {
-            notification(
-               `<span style="color: #21c2f8; margin-right: 20px">ORDER CREATED</span>${parseFloat(
-                  nextProps.preparedOrderData.quantity.value
-               ).toFixed(2)} ${nextProps.preparedOrderData.quantity.currency} FOR 
-            ${parseFloat(nextProps.preparedOrderData.totalPrice.value).toFixed(6)} ${
-                  nextProps.preparedOrderData.totalPrice.currency
-               }`,
-               'success'
-            );
-         }
+         // if (nextProps.preparedOrderData !== null) {
+         //    notification(
+         //       `<span style="color: #21c2f8; margin-right: 20px">ORDER CREATED</span>${parseFloat(
+         //          nextProps.preparedOrderData.quantity.value
+         //       ).toFixed(2)} ${nextProps.preparedOrderData.quantity.currency} FOR
+         //    ${parseFloat(nextProps.preparedOrderData.totalPrice.value).toFixed(6)} ${
+         //          nextProps.preparedOrderData.totalPrice.currency
+         //       }`,
+         //       'success'
+         //    );
+         // }
 
          // this.setState({
          // pendingSignature: true
@@ -87,7 +97,8 @@ class Dashboard extends Component {
 
       // Submit the signed transaction/order
       if (nextProps.signedTx !== null) {
-         this.props.submitTx(nextProps.signedTx.signedTransaction);
+         //this.props.submitTx(nextProps.signedTx.signedTransaction);
+         this.props.submitTx(nextProps.signedTx);
       }
 
       // Update the transaction list when a order is submitted
@@ -101,8 +112,14 @@ class Dashboard extends Component {
                this.props.getOrders(nextProps.publicAddress);
                this.props.getBalanceSheet(nextProps.publicAddress);
                this.props.getAccountInfo(nextProps.publicAddress);
-               this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
-               this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+
+               if (nextProps.baseCurrency.value !== null && nextProps.counterCurrency.value !== null) {
+                  this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
+               }
+
+               if (nextProps.pair.base !== null && nextProps.pair.counter !== null) {
+                  this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+               }
 
                this.setState({
                   showLoading: false
@@ -117,6 +134,9 @@ class Dashboard extends Component {
          nextProps.baseCurrency.value !== this.props.baseCurrency.value ||
          nextProps.counterCurrency.value !== this.props.counterCurrency.value
       ) {
+         if (nextProps.pair.base !== null && nextProps.pair.counter !== null) {
+            this.props.updateOrderBook(nextProps.publicAddress, nextProps.pair);
+         }
          this.props.getExchangeHistory(nextProps.baseCurrency, nextProps.counterCurrency);
       }
 
@@ -399,6 +419,12 @@ class Dashboard extends Component {
                      />
                   </div>
 
+                  {/*<LineChart*/}
+                  {/*data={this.props.exchangeHistory}*/}
+                  {/*baseCurrency={this.props.baseCurrency}*/}
+                  {/*counterCurrency={this.props.counterCurrency}*/}
+                  {/*/>*/}
+
                   {/*RIGHT BAR*/}
                   <div
                      style={{
@@ -422,13 +448,38 @@ class Dashboard extends Component {
                                     currency: counterCurrency.value,
                                     value: (counterPrice * baseAmount).toString()
                                  }
-                              },
-                              {
-                                 maxFee: 500,
-                                 maxLedgerVersion: 100
                               }
+                              // {
+                              //    maxFee: 500,
+                              //    maxLedgerVersion: 100
+                              // }
                            )
                         }
+                        // prepareOrder={() =>
+                        //    this.props.prepareOrder(
+                        //       this.props.publicAddress,
+                        //       {
+                        //          source: {
+                        //             address: this.props.publicAddress,
+                        //             maxAmount: {
+                        //                value: '1',
+                        //                currency: 'XRP'
+                        //             }
+                        //          },
+                        //          destination: {
+                        //             address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+                        //             amount: {
+                        //                value: '1',
+                        //                currency: 'XRP'
+                        //             }
+                        //          }
+                        //       }
+                        //       // {
+                        //       //    maxFee: 500,
+                        //       //    maxLedgerVersion: 100
+                        //       // }
+                        //    )
+                        // }
                      />
 
                      {/*ORDER BOOK*/}

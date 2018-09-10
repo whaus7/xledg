@@ -18,9 +18,20 @@ export default class OrderBook extends Component {
       const Orders = props => {
          let orderRows = [];
 
-         props.orders.map((order, i) => {
-            // console.log('order obj');
-            // console.log(order);
+         //console.log(props.orders);
+
+         // Sort the order book by best offers/asks
+         let sortedOrders = props.orders.sort(function(a, b) {
+            let d1 = a.specification.totalPrice.value / a.specification.quantity.value;
+            let d2 = b.specification.totalPrice.value / b.specification.quantity.value;
+            if (props.type === 'asks') {
+               return d1 - d2;
+            } else {
+               return d2 - d1;
+            }
+         });
+
+         sortedOrders.map((order, i) => {
             orderRows.push(
                <Order
                   key={`${props.type}_${i}`}

@@ -126,6 +126,7 @@ export function* cancelOrder(api, { address, orderCancellation }) {
 // Sign a transaction
 export function* signTx(api, { txJSON, key }) {
    const response = yield call(api.signTx, txJSON, key);
+   console.log('sign response saga');
    console.log(response);
 
    if ('message' in response) {
