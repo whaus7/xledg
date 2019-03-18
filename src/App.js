@@ -15,7 +15,7 @@ class App extends Component {
          <Provider store={store}>
             <Router>
                <div>
-                  <Route exact path="/" component={HomeScreen} />
+                  <Route exact path="/" component={Dashboard} />
                   <Route path="/locked" component={LockScreen} />
                   <Route path="/password" component={Password} />
                   <Route path="/dashboard" component={Dashboard} />

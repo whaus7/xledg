@@ -256,8 +256,8 @@ class Dashboard extends Component {
                                  });
                               }}
                               style={{
-                                 //marginTop: value.slideUp,
-                                 marginTop: 0,
+                                 marginTop: value.slideUp,
+                                 //marginTop: 0,
                                  borderColor:
                                     this.state.initBtnHovered || this.state.initialized
                                        ? '#21c2f8'
