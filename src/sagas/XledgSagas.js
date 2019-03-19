@@ -129,12 +129,14 @@ export function* signTx(api, { txJSON, key }) {
    console.log('sign response saga');
    console.log(response);
 
-   if ('message' in response) {
-      notifyError(response);
-      yield put(XledgActions.signTxFailure(response));
-   } else {
-      yield put(XledgActions.signTxSuccess(response));
-   }
+   yield put(XledgActions.signTxSuccess(response));
+
+   // if ('message' in response) {
+   //    notifyError(response);
+   //    yield put(XledgActions.signTxFailure(response));
+   // } else {
+   //    yield put(XledgActions.signTxSuccess(response));
+   // }
 }
 
 // Submit a signed transaction

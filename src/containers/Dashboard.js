@@ -38,6 +38,7 @@ class Dashboard extends Component {
    }
 
    componentWillReceiveProps(nextProps) {
+      // TEST WALLET - TEST
       if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
          this.props.getGateways();
 
@@ -53,6 +54,7 @@ class Dashboard extends Component {
          this.props.getAccountInfo(nextProps.publicAddress);
       }
 
+      // LEDGER WALLET - PROD
       // if (nextProps.rippleApiConnected && !this.props.rippleApiConnected) {
       //    this.props.getGateways();
       //    if (nextProps.baseCurrency.value !== null && nextProps.counterCurrency.value !== null) {
@@ -256,8 +258,8 @@ class Dashboard extends Component {
                                  });
                               }}
                               style={{
-                                 //marginTop: value.slideUp,
-                                 marginTop: 0,
+                                 marginTop: value.slideUp,
+                                 //marginTop: 0,
                                  borderColor:
                                     this.state.initBtnHovered || this.state.initialized
                                        ? '#21c2f8'
@@ -434,19 +436,44 @@ class Dashboard extends Component {
                      {/*TRADING UI - OFFERS/ASK*/}
                      <TradingUI
                         {...this.props}
+                        // prepareOrder={() =>
+                        //    this.props.prepareOrder(
+                        //       this.props.publicAddress,
+                        //       {
+                        //          direction: this.props.action,
+                        //          quantity: {
+                        //             currency: baseCurrency.value,
+                        //             value: baseAmount
+                        //          },
+                        //          totalPrice: {
+                        //             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
+                        //             currency: counterCurrency.value,
+                        //             value: (counterPrice * baseAmount).toString()
+                        //          }
+                        //       }
+                        //       {
+                        //          maxFee: 500,
+                        //          maxLedgerVersion: 100
+                        //       }
+                        //    )
+                        // }
                         prepareOrder={() =>
                            this.props.prepareOrder(
                               this.props.publicAddress,
                               {
-                                 direction: this.props.action,
-                                 quantity: {
-                                    currency: baseCurrency.value,
-                                    value: baseAmount
+                                 source: {
+                                    address: this.props.publicAddress,
+                                    maxAmount: {
+                                       value: '1',
+                                       currency: 'XRP'
+                                    }
                                  },
-                                 totalPrice: {
-                                    counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
-                                    currency: counterCurrency.value,
-                                    value: (counterPrice * baseAmount).toString()
+                                 destination: {
+                                    address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+                                    amount: {
+                                       value: '1',
+                                       currency: 'XRP'
+                                    }
                                  }
                               }
                               // {
@@ -455,31 +482,6 @@ class Dashboard extends Component {
                               // }
                            )
                         }
-                        // prepareOrder={() =>
-                        //    this.props.prepareOrder(
-                        //       this.props.publicAddress,
-                        //       {
-                        //          source: {
-                        //             address: this.props.publicAddress,
-                        //             maxAmount: {
-                        //                value: '1',
-                        //                currency: 'XRP'
-                        //             }
-                        //          },
-                        //          destination: {
-                        //             address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
-                        //             amount: {
-                        //                value: '1',
-                        //                currency: 'XRP'
-                        //             }
-                        //          }
-                        //       }
-                        //       // {
-                        //       //    maxFee: 500,
-                        //       //    maxLedgerVersion: 100
-                        //       // }
-                        //    )
-                        // }
                      />
 
                      {/*ORDER BOOK*/}
