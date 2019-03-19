@@ -32,11 +32,12 @@
     "reduxsauce": "^1.0.0",
     "ripple-address-codec": "^2.0.1",
     "ripple-binary-codec": "^0.1.14",
-    "ripple-lib": "^1.0.0"
+    "ripple-lib": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "aws s3 sync build/ s3://www.xledg.com",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

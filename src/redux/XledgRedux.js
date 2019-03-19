@@ -89,8 +89,8 @@ export default Creators;
 
 export const INITIAL_STATE = {
    // xLedg UI
-   publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
-   //publicAddress: null,
+   //publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+   publicAddress: null,
    publicKey: null,
    db: new PouchDB('xledg_db'),
    walletStatus: null,
