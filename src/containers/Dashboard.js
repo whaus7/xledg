@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReduxActions from '../redux/XledgRedux';
 
+import { Row, Col } from 'antd';
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+
 import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
 import Logo from './components/Logo';
 import xrpIcon from '../images/xrp-icon.svg';
@@ -165,7 +168,15 @@ class Dashboard extends Component {
       const springConfig = { stiffness: 70, damping: 30 };
 
       return (
-         <div style={{ height: this.state.connectionScreen ? '100vh' : 'auto', overflow: 'hidden' }}>
+         <div
+            style={{
+               position: 'absolute',
+               height: '100vh',
+               width: '100%',
+               background: '#202020',
+               //height: this.state.connectionScreen ? '100vh' : 'auto',
+               overflow: 'hidden'
+            }}>
             {/*CONNECTION SCREEN*/}
             {this.state.connectionScreen ? (
                <div
@@ -315,64 +326,35 @@ class Dashboard extends Component {
                false
             )}
 
-            {/*DASHBOARD*/}
-            <div>
-               {/*HEADER*/}
-               <div
-                  id={'header'}
-                  style={{
-                     display: 'flex',
-                     width: '100%',
-                     background: '#202020',
-                     justifyContent: 'space-between',
-                     boxSizing: 'border-box',
-                     padding: 15,
-                     borderBottom: '1px solid #383939'
-                  }}>
-                  {/*LOGO*/}
-                  <div>
-                     <Logo size={'xs'} margin={'0'} />
-                  </div>
+            {/*HEADER*/}
+            <Row
+               style={{
+                  padding: 15,
+                  borderBottom: '1px solid #383939'
+               }}>
+               <Col span={12}>
+                  <Logo size={'xs'} margin={'0'} />
+               </Col>
+               <Col span={12}>
+                  {/*TEMP KEY INPUT*/}
+                  <input
+                     placeholder={'for testing'}
+                     onChange={e => {
+                        this.setState({
+                           key: e.target.value
+                        });
+                     }}
+                     value={this.state.key}
+                  />
+               </Col>
+            </Row>
 
-                  <div style={{ alignSelf: 'center' }}>
-                     {/*TEMP KEY INPUT*/}
-                     <input
-                        placeholder={'for testing'}
-                        onChange={e => {
-                           this.setState({
-                              key: e.target.value
-                           });
-                        }}
-                        value={this.state.key}
-                     />
-                  </div>
-               </div>
-               {/*LOADING BAR*/}
-               <div style={{ position: 'relative' }}>
-                  <div className={`loadingBar ${this.state.showLoading ? 'inProgress' : ''}`} />
-               </div>
-               {/*BODY*/}
-               <div
-                  id={'body'}
-                  style={{
-                     display: 'flex',
-                     width: '100%',
-                     background: '#202020',
-                     justifyContent: 'space-between',
-                     boxSizing: 'border-box'
-                  }}>
-                  {/*BALANCES*/}
-                  <div
-                     style={{
-                        width: '15%',
-                        height: '100%',
-                        minHeight: '100vh',
-                        textAlign: 'left',
-                        color: '#ffffff',
-                        padding: 15,
-                        borderRight: '1px solid #383939'
-                     }}>
-                     <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
+            {/*MAIN*/}
+            <Row>
+               <Col span={5}>
+                  <Row style={{ overflowY: 'auto' }}>
+                     {/*BALANCES*/}
+                     <Row style={{ color: '#ffffff', padding: 15 }}>
                         <h2>BALANCES</h2>
                         {this.props.gateways !== null &&
                         //this.props.balanceSheet !== null &&
@@ -387,8 +369,95 @@ class Dashboard extends Component {
                         ) : (
                            false
                         )}
-                     </div>
+                     </Row>
 
+                     {/*TRADING UI - OFFERS/ASK*/}
+                     <Row>
+                        <TradingUI
+                           {...this.props}
+                           // prepareOrder={() =>
+                           //    this.props.prepareOrder(
+                           //       this.props.publicAddress,
+                           //       {
+                           //          direction: this.props.action,
+                           //          quantity: {
+                           //             currency: baseCurrency.value,
+                           //             value: baseAmount
+                           //          },
+                           //          totalPrice: {
+                           //             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
+                           //             currency: counterCurrency.value,
+                           //             value: (counterPrice * baseAmount).toString()
+                           //          }
+                           //       }
+                           //       {
+                           //          maxFee: 500,
+                           //          maxLedgerVersion: 100
+                           //       }
+                           //    )
+                           // }
+                           prepareOrder={() =>
+                              this.props.prepareOrder(
+                                 this.props.publicAddress,
+                                 {
+                                    source: {
+                                       address: this.props.publicAddress,
+                                       maxAmount: {
+                                          value: '1',
+                                          currency: 'XRP'
+                                       }
+                                    },
+                                    destination: {
+                                       address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+                                       amount: {
+                                          value: '1',
+                                          currency: 'XRP'
+                                       }
+                                    }
+                                 }
+                                 // {
+                                 //    maxFee: 500,
+                                 //    maxLedgerVersion: 100
+                                 // }
+                              )
+                           }
+                        />
+                     </Row>
+                  </Row>
+               </Col>
+               <Col span={5}>
+                  {/*ORDER BOOK*/}
+                  {this.props.orderBook !== null ? (
+                     <OrderBook
+                        orderBook={this.props.orderBook}
+                        action={this.props.action}
+                        updateFromOrder={order => this.props.updateFromOrder(order)}
+                        titleTextAlign={'center'}
+                        height={300}
+                     />
+                  ) : (
+                     <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
+                        <div
+                           style={{
+                              width: '100%',
+                              textAlign: 'center',
+                              alignSelf: 'center',
+                              fontSize: 12
+                           }}>
+                           Select a Trading Pair to View Order Book
+                        </div>
+                     </div>
+                  )}
+               </Col>
+               <Col id={'centerCol'} span={9}>
+                  <Row>
+                     <LineChart
+                        data={this.props.exchangeHistory}
+                        baseCurrency={baseCurrency}
+                        counterCurrency={this.props.counterCurrency}
+                     />
+                  </Row>
+                  <Row>
                      {this.props.rippleApiConnected > 0 && this.props.publicAddress !== null ? (
                         <Txs
                            publicAddress={this.props.publicAddress}
@@ -406,109 +475,10 @@ class Dashboard extends Component {
                      ) : (
                         <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
                      )}
-                  </div>
-
-                  {/*CENTER*/}
-                  <div
-                     id={'centerCol'}
-                     style={{
-                        width: '45%'
-                     }}>
-                     <LineChart
-                        data={this.props.exchangeHistory}
-                        baseCurrency={this.props.baseCurrency}
-                        counterCurrency={this.props.counterCurrency}
-                     />
-                  </div>
-
-                  {/*<LineChart*/}
-                  {/*data={this.props.exchangeHistory}*/}
-                  {/*baseCurrency={this.props.baseCurrency}*/}
-                  {/*counterCurrency={this.props.counterCurrency}*/}
-                  {/*/>*/}
-
-                  {/*RIGHT BAR*/}
-                  <div
-                     style={{
-                        width: '40%',
-                        borderLeft: '1px solid #383939'
-                     }}>
-                     {/*TRADING UI - OFFERS/ASK*/}
-                     <TradingUI
-                        {...this.props}
-                        // prepareOrder={() =>
-                        //    this.props.prepareOrder(
-                        //       this.props.publicAddress,
-                        //       {
-                        //          direction: this.props.action,
-                        //          quantity: {
-                        //             currency: baseCurrency.value,
-                        //             value: baseAmount
-                        //          },
-                        //          totalPrice: {
-                        //             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
-                        //             currency: counterCurrency.value,
-                        //             value: (counterPrice * baseAmount).toString()
-                        //          }
-                        //       }
-                        //       {
-                        //          maxFee: 500,
-                        //          maxLedgerVersion: 100
-                        //       }
-                        //    )
-                        // }
-                        prepareOrder={() =>
-                           this.props.prepareOrder(
-                              this.props.publicAddress,
-                              {
-                                 source: {
-                                    address: this.props.publicAddress,
-                                    maxAmount: {
-                                       value: '1',
-                                       currency: 'XRP'
-                                    }
-                                 },
-                                 destination: {
-                                    address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
-                                    amount: {
-                                       value: '1',
-                                       currency: 'XRP'
-                                    }
-                                 }
-                              }
-                              // {
-                              //    maxFee: 500,
-                              //    maxLedgerVersion: 100
-                              // }
-                           )
-                        }
-                     />
-
-                     {/*ORDER BOOK*/}
-                     {this.props.orderBook !== null ? (
-                        <OrderBook
-                           orderBook={this.props.orderBook}
-                           action={this.props.action}
-                           updateFromOrder={order => this.props.updateFromOrder(order)}
-                           titleTextAlign={'center'}
-                           height={300}
-                        />
-                     ) : (
-                        <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
-                           <div
-                              style={{
-                                 width: '100%',
-                                 textAlign: 'center',
-                                 alignSelf: 'center',
-                                 fontSize: 12
-                              }}>
-                              Select a Trading Pair to View Order Book
-                           </div>
-                        </div>
-                     )}
-                  </div>
-               </div>
-            </div>
+                  </Row>
+               </Col>
+               <Col span={5}>Trade History</Col>
+            </Row>
          </div>
       );
    }

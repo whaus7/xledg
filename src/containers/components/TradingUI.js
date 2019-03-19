@@ -139,8 +139,9 @@ export default class TradingUI extends Component {
             </div>
 
             {/*OFFER (BASE) CONTAINER*/}
-            <div style={{ display: 'flex', padding: '0 15px 15px 15px' }}>
-               <div style={{ width: '100%', paddingRight: 15 }}>
+            {/*<div style={{ display: 'flex', padding: '0 15px 15px 15px' }}>*/}
+            <div style={{ padding: '0 15px 15px 15px' }}>
+               <div style={{ width: '100%', marginBottom: 5 }}>
                   <TextField
                      style={{
                         width: '100%',
@@ -172,12 +173,12 @@ export default class TradingUI extends Component {
                </div>
 
                {/*@ SIGN*/}
-               <div style={{ alignSelf: 'center', fontSize: 30, fontWeight: 100, color: COLORS.white }}>
-                  @
-               </div>
+               {/*<div style={{ textAlign: 'center', fontSize: 14, fontWeight: 100, color: COLORS.white }}>*/}
+               {/*@*/}
+               {/*</div>*/}
 
                {/*ASK (COUNTER) CONTAINER*/}
-               <div style={{ width: '100%', paddingLeft: 15 }}>
+               <div style={{ width: '100%' }}>
                   <TextField
                      style={{
                         width: '100%',

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { Row, Col } from 'antd';
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+
 import { updateInput } from '../../services/helpers';
 import COLORS from '../../services/colors';
 import Order from './Order';
@@ -48,13 +51,13 @@ export default class OrderBook extends Component {
       return (
          <div
             style={{
-               display: 'flex',
+               //display: 'flex',
                color: COLORS.white,
                padding: 15,
                fontSize: 11
                //flexDirection: this.props.action === 'buy' ? 'row' : 'row-reverse'
             }}>
-            <div
+            <Row
                style={{
                   width: '100%'
                }}>
@@ -76,8 +79,9 @@ export default class OrderBook extends Component {
                   }}>
                   <Orders orders={orderBook.asks} type={'asks'} />
                </div>
-            </div>
-            <div
+            </Row>
+            <Row>Spread</Row>
+            <Row
                style={{
                   width: '100%'
                }}>
@@ -99,7 +103,7 @@ export default class OrderBook extends Component {
                   }}>
                   <Orders orders={orderBook.bids} type={'bids'} />
                </div>
-            </div>
+            </Row>
          </div>
       );
    }

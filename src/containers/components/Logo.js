@@ -38,7 +38,7 @@ export default class Logo extends Component {
          <div
             style={{
                display: 'flex',
-               justifyContent: 'center',
+               //justifyContent: 'center',
                margin: this.props.margin
             }}>
             <img
