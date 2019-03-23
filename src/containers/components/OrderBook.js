@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import { Row, Col } from 'antd';
@@ -12,7 +13,16 @@ export default class OrderBook extends Component {
    constructor(props) {
       super(props);
 
+      this.orderBookWrap = React.createRef();
+
       this.updateInput = updateInput.bind(this);
+   }
+
+   componentWillMount() {
+      // TODO how to set scroll position..
+      // if (this.orderBookWrap !== null) {
+      //    this.orderBookWrap.scrollTop = 1000;
+      // }
    }
 
    render() {
@@ -50,8 +60,14 @@ export default class OrderBook extends Component {
 
       return (
          <div
+            id={'orderBookWrap'}
+            ref={this.orderBookWrap}
+            className={'noScrollBar'}
             style={{
+               //scrollSnapAlign: 'center',
                //display: 'flex',
+               height: this.props.winH,
+               overflowY: 'auto',
                color: COLORS.white,
                padding: 15,
                fontSize: 11
@@ -61,21 +77,21 @@ export default class OrderBook extends Component {
                style={{
                   width: '100%'
                }}>
-               <h2
-                  style={{
-                     color: this.props.action === 'buy' ? COLORS.red : COLORS.white,
-                     opacity: this.props.action === 'buy' ? 1 : 0.5,
-                     textAlign: titleTextAlign
-                  }}>
-                  OFFERS TO SELL
-               </h2>
+               {/*<h2*/}
+               {/*style={{*/}
+               {/*color: this.props.action === 'buy' ? COLORS.red : COLORS.white,*/}
+               {/*opacity: this.props.action === 'buy' ? 1 : 0.5,*/}
+               {/*textAlign: titleTextAlign*/}
+               {/*}}>*/}
+               {/*OFFERS TO SELL*/}
+               {/*</h2>*/}
                <div
-                  className={'customScroll'}
+                  //className={'customScroll'}
                   style={{
-                     maxHeight: height,
-                     overflowY: 'scroll',
-                     overflowX: 'hidden',
-                     opacity: this.props.action === 'buy' ? 1 : 0.5
+                     maxHeight: height
+                     // overflowY: 'scroll',
+                     // overflowX: 'hidden',
+                     //opacity: this.props.action === 'buy' ? 1 : 0.5
                   }}>
                   <Orders orders={orderBook.asks} type={'asks'} />
                </div>
@@ -85,21 +101,21 @@ export default class OrderBook extends Component {
                style={{
                   width: '100%'
                }}>
-               <h2
-                  style={{
-                     color: this.props.action === 'sell' ? COLORS.green : COLORS.white,
-                     opacity: this.props.action === 'sell' ? 1 : 0.5,
-                     textAlign: titleTextAlign
-                  }}>
-                  OFFERS TO BUY
-               </h2>
+               {/*<h2*/}
+               {/*style={{*/}
+               {/*color: this.props.action === 'sell' ? COLORS.green : COLORS.white,*/}
+               {/*opacity: this.props.action === 'sell' ? 1 : 0.5,*/}
+               {/*textAlign: titleTextAlign*/}
+               {/*}}>*/}
+               {/*OFFERS TO BUY*/}
+               {/*</h2>*/}
                <div
-                  className={'customScroll'}
+                  //className={'customScroll'}
                   style={{
-                     maxHeight: height,
-                     overflowY: 'scroll',
-                     overflowX: 'hidden',
-                     opacity: this.props.action === 'sell' ? 1 : 0.5
+                     maxHeight: height
+                     // overflowY: 'scroll',
+                     // overflowX: 'hidden',
+                     //opacity: this.props.action === 'sell' ? 1 : 0.5
                   }}>
                   <Orders orders={orderBook.bids} type={'bids'} />
                </div>

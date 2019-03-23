@@ -1,3 +1,7 @@
+:root {
+  --dark-main: '#1c2428';
+}
+
 body {
   font-family: 'Heebo', sans-serif;
   /*letter-spacing: 0.05em;*/
@@ -22,6 +26,15 @@ h2 {
   font-weight: 400;
   letter-spacing: 0.05em;
   margin: 0 0 10px 0;
+}
+.noScrollBar {
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+.noScrollBar::-webkit-scrollbar { /* WebKit */
+  width: 0;
+  height: 0;
 }
 .centerAbsolute {
   position: absolute;
@@ -54,7 +67,7 @@ h2 {
   padding: 5px 10px;
   border: 1px solid #ffffff;
   border-radius: 3px;
-  background: #202020;
+  background: var(--dark-main);
   color: #f3f7f8;
   text-decoration: none;
   text-align: center;
@@ -186,16 +199,16 @@ h2 {
   width: 3px;
 }
 .customScroll::-webkit-scrollbar-track {
-  background-color: #202020;
+  background-color: var(--dark-main);
 }
 .customScroll::-webkit-scrollbar-thumb {
-  background-color: #21c2f8;
+  background-color: var(--dark-main);
 }
 
 /*REACT SELECT*/
 .Select-control {
   border: 1px solid rgba(255, 255, 255, 0.5) !important;
-  background: #202020 !important;
+  background: var(--dark-main) !important;
   color: #f3f7f8 !important;
 }
 .Select-control:hover {
@@ -230,7 +243,8 @@ h2 {
 }
 .Select-option {
   padding: 6px 8px !important;
-  background: #202020 !important;
+  /*background: var(--dark-main) !important;*/
+  background: #1c2428 !important;
   color: #ffffff !important;
 }
 .Select-option:hover {
@@ -266,7 +280,7 @@ h2 {
   height: 65px;
   border: 2px solid #ffffff;
   border-radius: 45px;
-  background: #202020;
+  background: var(--dark-main);
   color: #f3f7f8;
   display: flex;
   align-items: center;
@@ -440,7 +454,7 @@ h2 {
   color: #fff;
 }
 .noty_theme__sunset.noty_type__error {
-  background: #202020;
+  background: var(--dark-main);
   border: 1px solid #ff6161;
   color: #fff;
 }
@@ -456,7 +470,7 @@ h2 {
   opacity: .6;
 }
 .noty_theme__sunset.noty_type__success {
-  background: #202020;
+  background: var(--dark-main);
   border: 1px solid #21c2f8;
   color: #fff;
 }

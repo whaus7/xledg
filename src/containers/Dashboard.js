@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import ReduxActions from '../redux/XledgRedux';
 
@@ -19,6 +19,7 @@ import { Motion, spring } from 'react-motion';
 import { notification } from '../services/helpers';
 import InfoMenu from './components/InfoMenu';
 import Instructions from './components/Instructions';
+import Title from './ui/Title';
 
 class Dashboard extends Component {
    constructor(props) {
@@ -163,7 +164,28 @@ class Dashboard extends Component {
    }
 
    render() {
-      const { baseCurrency, baseAmount, counterCurrency, counterPrice } = this.props;
+      //const [winH, updateWidth] = useState(window.innerHeight);
+      let winH = window.innerHeight;
+      console.log('winH');
+      console.log(window.innerHeight);
+
+      const {
+         action,
+         baseCurrency,
+         baseAmount,
+         counterCurrency,
+         counterPrice,
+         orderBook,
+         gateways,
+         exchangeHistory,
+         accountInfo,
+         balanceSheet,
+         balances,
+         assetTotals,
+         rippleApiConnected,
+         publicAddress,
+         allTxs
+      } = this.props;
 
       const springConfig = { stiffness: 70, damping: 30 };
 
@@ -171,9 +193,10 @@ class Dashboard extends Component {
          <div
             style={{
                position: 'absolute',
-               height: '100vh',
+               height: winH,
                width: '100%',
                background: '#202020',
+               //#1c2428
                //height: this.state.connectionScreen ? '100vh' : 'auto',
                overflow: 'hidden'
             }}>
@@ -350,21 +373,23 @@ class Dashboard extends Component {
             </Row>
 
             {/*MAIN*/}
-            <Row>
+            <Row gutter={3}>
                <Col span={5}>
-                  <Row style={{ overflowY: 'auto' }}>
+                  <Row
+                     className={'noScrollBar'}
+                     style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
                      {/*BALANCES*/}
+                     <Title text={'Wallet Balance'} />
                      <Row style={{ color: '#ffffff', padding: 15 }}>
-                        <h2>BALANCES</h2>
-                        {this.props.gateways !== null &&
+                        {gateways !== null &&
                         //this.props.balanceSheet !== null &&
-                        this.props.accountInfo !== null ? (
+                        accountInfo !== null ? (
                            <Balances
-                              gateways={this.props.gateways}
-                              accountInfo={this.props.accountInfo}
-                              balanceSheet={this.props.balanceSheet}
-                              balances={this.props.balances}
-                              assetTotals={this.props.assetTotals}
+                              gateways={gateways}
+                              accountInfo={accountInfo}
+                              balanceSheet={balanceSheet}
+                              balances={balances}
+                              assetTotals={assetTotals}
                            />
                         ) : (
                            false
@@ -427,13 +452,15 @@ class Dashboard extends Component {
                </Col>
                <Col span={5}>
                   {/*ORDER BOOK*/}
-                  {this.props.orderBook !== null ? (
+                  <Title text={'Order Book'} />
+                  {orderBook !== null ? (
                      <OrderBook
-                        orderBook={this.props.orderBook}
-                        action={this.props.action}
+                        winH={winH}
+                        orderBook={orderBook}
+                        action={action}
                         updateFromOrder={order => this.props.updateFromOrder(order)}
                         titleTextAlign={'center'}
-                        height={300}
+                        height={1000}
                      />
                   ) : (
                      <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
@@ -450,24 +477,26 @@ class Dashboard extends Component {
                   )}
                </Col>
                <Col id={'centerCol'} span={9}>
+                  <Title text={`${baseCurrency.value}/${counterCurrency.value}`} />
                   <Row>
                      <LineChart
-                        data={this.props.exchangeHistory}
+                        data={exchangeHistory}
                         baseCurrency={baseCurrency}
-                        counterCurrency={this.props.counterCurrency}
+                        counterCurrency={counterCurrency}
                      />
                   </Row>
                   <Row>
-                     {this.props.rippleApiConnected > 0 && this.props.publicAddress !== null ? (
+                     <Title text={`Open Orders`} />
+                     {rippleApiConnected > 0 && publicAddress !== null ? (
                         <Txs
-                           publicAddress={this.props.publicAddress}
-                           allTxs={this.props.allTxs}
+                           publicAddress={publicAddress}
+                           allTxs={allTxs}
                            openOrders={this.props.openOrders}
                            getTxs={address => this.props.getTxs(address)}
                            getOrders={address => this.props.getOrders(address, { limit: 10 })}
                            cancelOrder={tx => {
                               console.log(tx);
-                              this.props.cancelOrder(this.props.publicAddress, {
+                              this.props.cancelOrder(publicAddress, {
                                  orderSequence: tx.properties.sequence
                               });
                            }}
