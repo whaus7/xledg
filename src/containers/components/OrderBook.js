@@ -60,6 +60,7 @@ export default class OrderBook extends Component {
             orderRows.push(
                <Order
                   type={props.type}
+                  category={'book'}
                   key={`${props.type}_${i}`}
                   order={order}
                   updateFromOrder={order => this.props.updateFromOrder(order)}
@@ -100,8 +101,8 @@ export default class OrderBook extends Component {
                </div>
             </Row>
 
-            <Row style={{ textAlign: 'center', padding: '5px 0' }}>
-               Spread - {Numeral(this.bestAsk - this.bestBid).format('0.0000')}
+            <Row style={{ textAlign: 'center', padding: '5px 0', opacity: 0.5 }}>
+               Spread {Numeral(this.bestAsk - this.bestBid).format('0.0000')}
             </Row>
 
             <Row

@@ -502,6 +502,8 @@ class Dashboard extends Component {
                                  publicAddress={publicAddress}
                                  allTxs={allTxs}
                                  openOrders={this.props.openOrders}
+                                 baseCurrency={baseCurrency}
+                                 counterCurrency={counterCurrency}
                                  getTxs={address => this.props.getTxs(address)}
                                  getOrders={address => this.props.getOrders(address, { limit: 10 })}
                                  cancelOrder={tx => {

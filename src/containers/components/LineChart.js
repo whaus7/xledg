@@ -141,7 +141,7 @@ export default class LineChart extends Component {
                      <div
                         style={{
                            background: '#2c3e5o',
-                           minWidth: 85,
+                           minWidth: 125,
                            padding: 5,
                            color: '#ffffff',
                            fontSize: 12
@@ -204,7 +204,7 @@ export default class LineChart extends Component {
                      <div
                         style={{
                            background: '#2c3e5o',
-                           minWidth: 75,
+                           minWidth: 125,
                            padding: 5,
                            color: '#ffffff',
                            fontSize: 12

@@ -16,15 +16,19 @@ export default class Order extends Component {
    }
 
    render() {
-      const { order, type } = this.props;
+      const { order, type, category } = this.props;
 
       let orderQuantity = order.specification.quantity;
 
       return (
          <div
             className={'orderRow'}
-            style={{ display: 'flex', margin: '1px 0' }}
-            onClick={() => this.props.updateFromOrder(order)}>
+            style={{ display: 'flex', width: '100%', margin: '1px 0' }}
+            onClick={() => {
+               if (category === 'book') {
+                  this.props.updateFromOrder(order);
+               }
+            }}>
             {/*AMOUNT BAR*/}
             <div style={{ width: '20%' }}>
                <div

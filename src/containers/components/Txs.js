@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import COLORS from '../../services/colors';
 import Title from '../ui/Title';
+import Order from './Order';
 
 export default class Txs extends Component {
    constructor(props) {
@@ -20,7 +21,7 @@ export default class Txs extends Component {
    }
 
    render() {
-      const { publicAddress, allTxs, openOrders } = this.props;
+      const { publicAddress, allTxs, openOrders, baseCurrency, counterCurrency } = this.props;
 
       const Txs = () => {
          let completedTxsRows = [];
@@ -31,6 +32,15 @@ export default class Txs extends Component {
                tx.outcome.orderbookChanges[publicAddress][0].status === 'filled'
             ) {
                let txChanges = tx.outcome.orderbookChanges[publicAddress][0];
+
+               // completedTxsRows.push(
+               //    <Order
+               //       type={'asks'}
+               //       key={`filled_order_${i}`}
+               //       order={txChanges}
+               //       //updateFromOrder={order => this.props.updateFromOrder(order)}
+               //    />
+               // );
 
                completedTxsRows.push(
                   <div key={`completed_txs_${i}`} style={{ margin: '0 0 10px 0', lineHeight: '14px' }}>
@@ -91,48 +101,54 @@ export default class Txs extends Component {
             openOrdersRows.push(
                <div
                   key={`pending_txs_${i}`}
-                  className={'btnHover'}
+                  //className={'btnHover'}
                   style={{
                      display: 'flex',
                      justifyContent: 'space-between',
-                     margin: '0 0 10px 0',
-                     opacity: 0.5
+                     margin: '0 0 10px 0'
                   }}
                   onClick={() => this.props.cancelOrder(tx)}>
+                  <Order
+                     type={'asks'}
+                     category={'open'}
+                     key={`open_order_${i}`}
+                     order={tx}
+                     //updateFromOrder={order => this.props.updateFromOrder(order)}
+                  />
                   {/*ORDER*/}
-                  <div style={{ lineHeight: '14px' }}>
-                     <div style={{ width: '100%' }}>
-                        {/*index debug*/}
-                        {/*{i}.*/}
-                        <span
-                           style={{
-                              color: tx.specification.direction === 'buy' ? COLORS.green : COLORS.red
-                           }}>
-                           {tx.specification.direction.toUpperCase()}
-                        </span>{' '}
-                        {parseFloat(tx.specification.quantity.value).toFixed(2)}
-                        {tx.specification.quantity.currency}
-                     </div>
+                  {/*<div style={{ lineHeight: '14px' }}>*/}
+                  {/*<div style={{ width: '100%' }}>*/}
+                  {/*/!*index debug*!/*/}
+                  {/*/!*{i}.*!/*/}
+                  {/*<span*/}
+                  {/*style={{*/}
+                  {/*color: tx.specification.direction === 'buy' ? COLORS.green : COLORS.red*/}
+                  {/*}}>*/}
+                  {/*{tx.specification.direction.toUpperCase()}*/}
+                  {/*</span>{' '}*/}
+                  {/*{parseFloat(tx.specification.quantity.value).toFixed(2)}*/}
+                  {/*{tx.specification.quantity.currency}*/}
+                  {/*</div>*/}
 
-                     <div style={{ display: 'flex', width: '100%' }}>
-                        <div style={{ width: 8, marginRight: 7, position: 'relative', top: -1 }}>@</div>
-                        <div style={{ width: 100 }}>
-                           {parseFloat(
-                              tx.specification.totalPrice.value / tx.specification.quantity.value
-                           ).toFixed(6)}{' '}
-                           {tx.specification.totalPrice.currency}
-                        </div>
-                     </div>
-                  </div>
-                  {/*CANCEL ICON*/}
-                  <div
-                     className={'btnHover'}
-                     style={{
-                        fontSize: 16,
-                        padding: '0 5px'
-                     }}>
-                     x
-                  </div>
+                  {/*<div style={{ display: 'flex', width: '100%' }}>*/}
+                  {/*<div style={{ width: 8, marginRight: 7, position: 'relative', top: -1 }}>@</div>*/}
+                  {/*<div style={{ width: 100 }}>*/}
+                  {/*{parseFloat(*/}
+                  {/*tx.specification.totalPrice.value / tx.specification.quantity.value*/}
+                  {/*).toFixed(6)}{' '}*/}
+                  {/*{tx.specification.totalPrice.currency}*/}
+                  {/*</div>*/}
+                  {/*</div>*/}
+                  {/*</div>*/}
+                  {/*/!*CANCEL ICON*!/*/}
+                  {/*<div*/}
+                  {/*className={'btnHover'}*/}
+                  {/*style={{*/}
+                  {/*fontSize: 16,*/}
+                  {/*padding: '0 5px'*/}
+                  {/*}}>*/}
+                  {/*x*/}
+                  {/*</div>*/}
                </div>
             );
             return true;
@@ -140,7 +156,7 @@ export default class Txs extends Component {
 
          return (
             <div>
-               <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
+               <div style={{ marginBottom: 20 }}>
                   {/*<h2>OPEN ORDERS</h2>*/}
                   <div
                      className={'customScroll'}
@@ -150,6 +166,15 @@ export default class Txs extends Component {
                         overflowY: 'scroll',
                         overflowX: 'hidden'
                      }}>
+                     {/*OPEN ORDERS TABLE HEADER*/}
+                     <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
+                        <div style={{ width: '20%' }}>&nbsp;</div>
+                        <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                           Size ({baseCurrency.value})
+                        </div>
+                        <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                     </div>
+
                      {openOrdersRows.length === 0 ? (
                         <div style={{ color: COLORS.grey, fontSize: 11 }}>No Open Orders</div>
                      ) : (
