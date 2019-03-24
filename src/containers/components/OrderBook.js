@@ -18,11 +18,18 @@ export default class OrderBook extends Component {
       this.updateInput = updateInput.bind(this);
    }
 
-   componentWillMount() {
+   componentDidMount() {
       // TODO how to set scroll position..
       // if (this.orderBookWrap !== null) {
       //    this.orderBookWrap.scrollTop = 1000;
       // }
+      let el = document.querySelector('#orderBookWrap');
+      console.log('orderBookWrap height');
+      console.log(el.offsetHeight);
+      console.log('Screen height');
+      console.log(this.props.winH);
+      el.scrollTop = 1000 - this.props.winH * 0.4;
+      //el.scrollTop = 1000;
    }
 
    render() {
@@ -30,23 +37,19 @@ export default class OrderBook extends Component {
 
       const Orders = props => {
          let orderRows = [];
-
          //console.log(props.orders);
 
          // Sort the order book by best offers/asks
          let sortedOrders = props.orders.sort(function(a, b) {
             let d1 = a.specification.totalPrice.value / a.specification.quantity.value;
             let d2 = b.specification.totalPrice.value / b.specification.quantity.value;
-            if (props.type === 'asks') {
-               return d1 - d2;
-            } else {
-               return d2 - d1;
-            }
+            return d2 - d1;
          });
 
          sortedOrders.map((order, i) => {
             orderRows.push(
                <Order
+                  type={props.type}
                   key={`${props.type}_${i}`}
                   order={order}
                   updateFromOrder={order => this.props.updateFromOrder(order)}
@@ -64,36 +67,26 @@ export default class OrderBook extends Component {
             ref={this.orderBookWrap}
             className={'noScrollBar'}
             style={{
-               //scrollSnapAlign: 'center',
-               //display: 'flex',
                height: this.props.winH,
                overflowY: 'auto',
                color: COLORS.white,
                padding: 15,
-               fontSize: 11
-               //flexDirection: this.props.action === 'buy' ? 'row' : 'row-reverse'
+               fontSize: 11,
+               paddingBottom: 65
             }}>
             <Row
                style={{
                   width: '100%'
                }}>
-               {/*<h2*/}
-               {/*style={{*/}
-               {/*color: this.props.action === 'buy' ? COLORS.red : COLORS.white,*/}
-               {/*opacity: this.props.action === 'buy' ? 1 : 0.5,*/}
-               {/*textAlign: titleTextAlign*/}
-               {/*}}>*/}
-               {/*OFFERS TO SELL*/}
-               {/*</h2>*/}
                <div
-                  //className={'customScroll'}
                   style={{
-                     maxHeight: height
-                     // overflowY: 'scroll',
-                     // overflowX: 'hidden',
-                     //opacity: this.props.action === 'buy' ? 1 : 0.5
+                     display: 'flex',
+                     color: COLORS.red,
+                     height: 1000
                   }}>
-                  <Orders orders={orderBook.asks} type={'asks'} />
+                  <Row style={{ alignSelf: 'flex-end', width: '100%' }}>
+                     <Orders orders={orderBook.asks.reverse()} type={'asks'} />
+                  </Row>
                </div>
             </Row>
             <Row>Spread</Row>
@@ -101,21 +94,10 @@ export default class OrderBook extends Component {
                style={{
                   width: '100%'
                }}>
-               {/*<h2*/}
-               {/*style={{*/}
-               {/*color: this.props.action === 'sell' ? COLORS.green : COLORS.white,*/}
-               {/*opacity: this.props.action === 'sell' ? 1 : 0.5,*/}
-               {/*textAlign: titleTextAlign*/}
-               {/*}}>*/}
-               {/*OFFERS TO BUY*/}
-               {/*</h2>*/}
                <div
-                  //className={'customScroll'}
                   style={{
-                     maxHeight: height
-                     // overflowY: 'scroll',
-                     // overflowX: 'hidden',
-                     //opacity: this.props.action === 'sell' ? 1 : 0.5
+                     color: COLORS.green,
+                     height: 1000
                   }}>
                   <Orders orders={orderBook.bids} type={'bids'} />
                </div>

@@ -114,7 +114,7 @@ export default class Balances extends Component {
                      </Popover>
                   }>
                   <div style={{ display: 'flex', justifyContent: 'space-between', margin: '5px 0' }}>
-                     <label>{key}</label>
+                     <label style={{ opacity: 0.5 }}>{key}</label>
                      <label className={this.checkForUpdate(key)}>
                         {this.props.assetTotals[key].formatted}
                      </label>
@@ -130,7 +130,7 @@ export default class Balances extends Component {
          <div>
             {/*XRP balanec*/}
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '5px 0' }}>
-               <label>XRP</label>
+               <label style={{ opacity: 0.5 }}>XRP</label>
                <label className={this.checkForUpdate('XRP')}>
                   <img
                      src={xrpIcon}

@@ -4,11 +4,12 @@ const Title = ({ text }) => {
    return (
       <div
          style={{
+            fontSize: 12,
             color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             background: '#303b42',
-            padding: '10px 15px'
+            padding: '8px 13px'
          }}>
          {text}
       </div>

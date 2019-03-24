@@ -166,8 +166,8 @@ class Dashboard extends Component {
    render() {
       //const [winH, updateWidth] = useState(window.innerHeight);
       let winH = window.innerHeight;
-      console.log('winH');
-      console.log(window.innerHeight);
+      // console.log('winH');
+      // console.log(window.innerHeight);
 
       const {
          action,
@@ -453,6 +453,13 @@ class Dashboard extends Component {
                <Col span={5}>
                   {/*ORDER BOOK*/}
                   <Title text={'Order Book'} />
+                  <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
+                     <div style={{ width: '20%' }}>&nbsp;</div>
+                     <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                        Size ({baseCurrency.value})
+                     </div>
+                     <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                  </div>
                   {orderBook !== null ? (
                      <OrderBook
                         winH={winH}
@@ -477,36 +484,44 @@ class Dashboard extends Component {
                   )}
                </Col>
                <Col id={'centerCol'} span={9}>
-                  <Title text={`${baseCurrency.value}/${counterCurrency.value}`} />
-                  <Row>
-                     <LineChart
-                        data={exchangeHistory}
-                        baseCurrency={baseCurrency}
-                        counterCurrency={counterCurrency}
-                     />
-                  </Row>
-                  <Row>
-                     <Title text={`Open Orders`} />
-                     {rippleApiConnected > 0 && publicAddress !== null ? (
-                        <Txs
-                           publicAddress={publicAddress}
-                           allTxs={allTxs}
-                           openOrders={this.props.openOrders}
-                           getTxs={address => this.props.getTxs(address)}
-                           getOrders={address => this.props.getOrders(address, { limit: 10 })}
-                           cancelOrder={tx => {
-                              console.log(tx);
-                              this.props.cancelOrder(publicAddress, {
-                                 orderSequence: tx.properties.sequence
-                              });
-                           }}
+                  <Row
+                     className={'noScrollBar'}
+                     style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
+                     <Title text={`${baseCurrency.value}/${counterCurrency.value} Price & Volume`} />
+                     <Row style={{ marginBottom: -80 }}>
+                        <LineChart
+                           data={exchangeHistory}
+                           baseCurrency={baseCurrency}
+                           counterCurrency={counterCurrency}
                         />
-                     ) : (
-                        <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
-                     )}
+                     </Row>
+                     <Row>
+                        <Title text={`Open Orders`} />
+                        <Row style={{ marginTop: 10 }}>
+                           {rippleApiConnected > 0 && publicAddress !== null ? (
+                              <Txs
+                                 publicAddress={publicAddress}
+                                 allTxs={allTxs}
+                                 openOrders={this.props.openOrders}
+                                 getTxs={address => this.props.getTxs(address)}
+                                 getOrders={address => this.props.getOrders(address, { limit: 10 })}
+                                 cancelOrder={tx => {
+                                    console.log(tx);
+                                    this.props.cancelOrder(publicAddress, {
+                                       orderSequence: tx.properties.sequence
+                                    });
+                                 }}
+                              />
+                           ) : (
+                              <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
+                           )}
+                        </Row>
+                     </Row>
                   </Row>
                </Col>
-               <Col span={5}>Trade History</Col>
+               <Col span={5}>
+                  <Title text={`Trade History`} />
+               </Col>
             </Row>
          </div>
       );

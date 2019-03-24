@@ -100,7 +100,7 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
    const updateOrderBook = (address, pair) => {
       return rippleAPI
          .getOrderbook(address, pair, {
-            limit: 50
+            limit: 60
          })
          .then(orderBook => {
             return orderBook;

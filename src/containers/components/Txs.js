@@ -64,7 +64,7 @@ export default class Txs extends Component {
          return (
             <div>
                <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
-                  <h2>ORDER HISTORY</h2>
+                  {/*<h2>ORDER HISTORY</h2>*/}
                   <div
                      className={'customScroll'}
                      style={{
@@ -140,7 +140,7 @@ export default class Txs extends Component {
          return (
             <div>
                <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
-                  <h2>OPEN ORDERS</h2>
+                  {/*<h2>OPEN ORDERS</h2>*/}
                   <div
                      className={'customScroll'}
                      style={{

@@ -92,22 +92,44 @@ export default class LineChart extends Component {
    }
 
    render() {
+      const { data, baseCurrency, counterCurrency } = this.props;
+
+      {
+         /*<div style={{ textAlign: 'center' }}>*/
+      }
+      {
+         /*<h2*/
+      }
+      {
+         /*style={{ position: 'absolute', display: 'inline-flex', marginTop: -7, marginLeft: -23 }}>*/
+      }
+      {
+         /*<span style={{ opacity: 0.5, marginRight: 5 }}>PRICE</span>*/
+      }
+      {
+         /*<span style={{ color: COLORS.aqua }}>*/
+      }
+      {
+         /*{baseCurrency.value}/{counterCurrency.value}*/
+      }
+      {
+         /*</span>*/
+      }
+      {
+         /*</h2>*/
+      }
+      {
+         /*</div>*/
+      }
+
       return (
          <div
             style={{
                padding: '18px 10px 10px 10px'
             }}>
             {/*PRICE CHART*/}
-            {this.props.data !== null && this.props.data.exchanges.length > 0 ? (
-               <div style={{ textAlign: 'center' }}>
-                  <h2
-                     style={{ position: 'absolute', display: 'inline-flex', marginTop: -7, marginLeft: -23 }}>
-                     <span style={{ opacity: 0.5, marginRight: 5 }}>PRICE</span>
-                     <span style={{ color: COLORS.aqua }}>
-                        {this.props.baseCurrency.value}/{this.props.counterCurrency.value}
-                     </span>
-                  </h2>
-               </div>
+            {data !== null && data.exchanges.length > 0 ? (
+               <div />
             ) : (
                <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
                   <div
@@ -121,13 +143,13 @@ export default class LineChart extends Component {
                   </div>
                </div>
             )}
-            <div id={'priceChart'} style={{ marginBottom: 15 }}>
+
+            <div id={'priceChart'}>
                <XYPlot
                   style={{
-                     display:
-                        this.props.data !== null && this.props.data.exchanges.length > 0 ? 'block' : 'none'
+                     display: data !== null && data.exchanges.length > 0 ? 'block' : 'none'
                   }}
-                  height={250}
+                  height={200}
                   width={this.state.width}
                   yDomain={[0, this.state.highestPrice]}
                   onMouseLeave={() => this.setState({ crosshairValues: [] })}>
@@ -161,11 +183,9 @@ export default class LineChart extends Component {
                         {/*PRICE*/}
                         <div>
                            {this.state.crosshairValues.length > 0
-                              ? `${
-                                   CurrencyFormatter.findCurrency(this.props.counterCurrency.value).symbol
-                                }${parseFloat(this.state.crosshairValues[0].y).toFixed(4)} ${
-                                   this.props.counterCurrency.value
-                                }`
+                              ? `${CurrencyFormatter.findCurrency(counterCurrency.value).symbol}${parseFloat(
+                                   this.state.crosshairValues[0].y
+                                ).toFixed(4)} ${counterCurrency.value}`
                               : false}
                         </div>
                      </div>
@@ -188,26 +208,28 @@ export default class LineChart extends Component {
             </div>
 
             {/*VOLUME CHART*/}
-            {this.props.data !== null && this.props.data.exchanges.length > 0 ? (
-               <div style={{ textAlign: 'center' }}>
-                  <h2 style={{ position: 'absolute', display: 'inline-flex', opacity: 0.5, marginTop: -7 }}>
-                     VOLUME
-                  </h2>
-               </div>
-            ) : (
-               false
-            )}
-            <div id={'volumeChart'}>
+            {/*{data !== null && data.exchanges.length > 0 ? (*/}
+            {/*<div style={{ textAlign: 'center' }}>*/}
+            {/*<h2 style={{ position: 'absolute', display: 'inline-flex', opacity: 0.5, marginTop: -7 }}>*/}
+            {/*VOLUME*/}
+            {/*</h2>*/}
+            {/*</div>*/}
+            {/*) : (*/}
+            {/*false*/}
+            {/*)}*/}
+            {/*<div id={'volumeChart'} style={{ position: 'absolute', top: 118 }}>*/}
+            <div id={'volumeChart'} style={{ position: 'relative', top: -60 }}>
                <XYPlot
                   style={{
-                     display:
-                        this.props.data !== null && this.props.data.exchanges.length > 0 ? 'block' : 'none'
+                     opacity: 0.6,
+                     display: data !== null && data.exchanges.length > 0 ? 'block' : 'none'
                   }}
-                  height={150}
+                  height={100}
                   width={this.state.width}
                   yDomain={[0, this.state.highestVolume]}
                   onMouseLeave={() => this.setState({ crosshairValues: [] })}>
-                  <HorizontalGridLines style={{ opacity: 0.1 }} />
+                  {/*<HorizontalGridLines style={{ opacity: 0.1 }} />*/}
+                  {/*<YAxis tickFormat={v => Numeral(v).format('0a')} orientation={'right'} />*/}
                   <YAxis tickFormat={v => Numeral(v).format('0a')} />
                   <VerticalBarSeries
                      data={this.state.volumeData}
@@ -237,11 +259,9 @@ export default class LineChart extends Component {
                         {/*VOLUME*/}
                         <div>
                            {this.state.crosshairValues.length > 0
-                              ? `${
-                                   CurrencyFormatter.findCurrency(this.props.counterCurrency.value).symbol
-                                }${Numeral(this.state.crosshairValues[1].y).format('0a')} ${
-                                   this.props.counterCurrency.value
-                                }`
+                              ? `${CurrencyFormatter.findCurrency(counterCurrency.value).symbol}${Numeral(
+                                   this.state.crosshairValues[1].y
+                                ).format('0a')} ${counterCurrency.value}`
                               : false}
                         </div>
                      </div>
