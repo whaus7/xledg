@@ -488,7 +488,7 @@ class Dashboard extends Component {
                      className={'noScrollBar'}
                      style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
                      <Title text={`${baseCurrency.value}/${counterCurrency.value} Price & Volume`} />
-                     <Row style={{ marginBottom: -80 }}>
+                     <Row style={{ marginBottom: 20 }}>
                         <LineChart
                            data={exchangeHistory}
                            baseCurrency={baseCurrency}

@@ -94,44 +94,16 @@ export default class LineChart extends Component {
    render() {
       const { data, baseCurrency, counterCurrency } = this.props;
 
-      {
-         /*<div style={{ textAlign: 'center' }}>*/
-      }
-      {
-         /*<h2*/
-      }
-      {
-         /*style={{ position: 'absolute', display: 'inline-flex', marginTop: -7, marginLeft: -23 }}>*/
-      }
-      {
-         /*<span style={{ opacity: 0.5, marginRight: 5 }}>PRICE</span>*/
-      }
-      {
-         /*<span style={{ color: COLORS.aqua }}>*/
-      }
-      {
-         /*{baseCurrency.value}/{counterCurrency.value}*/
-      }
-      {
-         /*</span>*/
-      }
-      {
-         /*</h2>*/
-      }
-      {
-         /*</div>*/
-      }
-
       return (
          <div
             style={{
-               padding: '18px 10px 10px 10px'
+               padding: '0 10px 10px 10px'
             }}>
             {/*PRICE CHART*/}
             {data !== null && data.exchanges.length > 0 ? (
                <div />
             ) : (
-               <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
+               <div style={{ display: 'flex', minHeight: 300, color: '#ffffff' }}>
                   <div
                      style={{
                         width: '100%',
@@ -149,7 +121,7 @@ export default class LineChart extends Component {
                   style={{
                      display: data !== null && data.exchanges.length > 0 ? 'block' : 'none'
                   }}
-                  height={200}
+                  height={300}
                   width={this.state.width}
                   yDomain={[0, this.state.highestPrice]}
                   onMouseLeave={() => this.setState({ crosshairValues: [] })}>
@@ -207,18 +179,7 @@ export default class LineChart extends Component {
                </XYPlot>
             </div>
 
-            {/*VOLUME CHART*/}
-            {/*{data !== null && data.exchanges.length > 0 ? (*/}
-            {/*<div style={{ textAlign: 'center' }}>*/}
-            {/*<h2 style={{ position: 'absolute', display: 'inline-flex', opacity: 0.5, marginTop: -7 }}>*/}
-            {/*VOLUME*/}
-            {/*</h2>*/}
-            {/*</div>*/}
-            {/*) : (*/}
-            {/*false*/}
-            {/*)}*/}
-            {/*<div id={'volumeChart'} style={{ position: 'absolute', top: 118 }}>*/}
-            <div id={'volumeChart'} style={{ position: 'relative', top: -60 }}>
+            <div id={'volumeChart'} style={{ position: 'relative', top: 40 }}>
                <XYPlot
                   style={{
                      opacity: 0.6,
@@ -228,8 +189,6 @@ export default class LineChart extends Component {
                   width={this.state.width}
                   yDomain={[0, this.state.highestVolume]}
                   onMouseLeave={() => this.setState({ crosshairValues: [] })}>
-                  {/*<HorizontalGridLines style={{ opacity: 0.1 }} />*/}
-                  {/*<YAxis tickFormat={v => Numeral(v).format('0a')} orientation={'right'} />*/}
                   <YAxis tickFormat={v => Numeral(v).format('0a')} />
                   <VerticalBarSeries
                      data={this.state.volumeData}
