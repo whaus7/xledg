@@ -496,7 +496,6 @@ class Dashboard extends Component {
                         />
                      </Row>
                      <Row>
-                        <Title text={`Open Orders`} />
                         <Row style={{ marginTop: 10 }}>
                            {rippleApiConnected > 0 && publicAddress !== null ? (
                               <Txs

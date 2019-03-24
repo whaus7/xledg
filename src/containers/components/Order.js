@@ -4,6 +4,17 @@ import Numeral from 'numeral';
 import COLORS from '../../services/colors';
 
 export default class Order extends Component {
+   formatZeros(num) {
+      let numSplit = num.toString().split('.');
+
+      return (
+         <span>
+            <span style={{ opacity: numSplit[0] === '0' ? 0.4 : 1 }}>{numSplit[0]}</span>.
+            <span style={{ opacity: numSplit[1] === '00' ? 0.4 : 1 }}>{numSplit[1]}</span>
+         </span>
+      );
+   }
+
    render() {
       const { order, type } = this.props;
 
@@ -14,22 +25,34 @@ export default class Order extends Component {
             className={'orderRow'}
             style={{ display: 'flex', margin: '1px 0' }}
             onClick={() => this.props.updateFromOrder(order)}>
+            {/*AMOUNT BAR*/}
             <div style={{ width: '20%' }}>
                <div
                   style={{
-                     width: Math.log10(orderQuantity.value < 1 ? 1 : orderQuantity.value) * 6,
+                     width: Math.log10(orderQuantity.value < 1 ? 1 : orderQuantity.value) * 10,
                      height: 15,
                      background: type === 'asks' ? COLORS.red : COLORS.green,
                      opacity: 0.4
                   }}
                />
             </div>
-            <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
-               {Numeral(orderQuantity.value).format(orderQuantity.currency === 'BTC' ? '0,0.0000' : '0,0.00')}
+
+            {/*SIZE*/}
+            <div
+               style={{ width: '40%', marginRight: 20, textAlign: 'right', color: '#ffffff', opacity: 0.9 }}>
+               {this.formatZeros(
+                  Numeral(orderQuantity.value).format(
+                     orderQuantity.currency === 'BTC' ? '0,0.0000' : '0,0.00'
+                  )
+               )}
             </div>
+
+            {/*PRICE*/}
             <div style={{ width: '40%' }}>
-               {Numeral(order.specification.totalPrice.value / orderQuantity.value).format(
-                  order.specification.totalPrice.currency === 'BTC' ? '0,0.000000' : '0,0.0000'
+               {this.formatZeros(
+                  Numeral(order.specification.totalPrice.value / orderQuantity.value).format(
+                     order.specification.totalPrice.currency === 'BTC' ? '0,0.000000' : '0,0.0000'
+                  )
                )}{' '}
             </div>
          </div>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import COLORS from '../../services/colors';
+import Title from '../ui/Title';
 
 export default class Txs extends Component {
    constructor(props) {
@@ -172,9 +173,11 @@ export default class Txs extends Component {
                   width: '100%'
                }}>
                <div>
+                  <Title text={`Open Orders`} />
                   <OpenOrders />
                </div>
                <div>
+                  <Title text={`Filled Orders`} />
                   <Txs />
                </div>
             </div>

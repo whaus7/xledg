@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+import Numeral from 'numeral';
 
 import { updateInput } from '../../services/helpers';
 import COLORS from '../../services/colors';
@@ -16,24 +17,23 @@ export default class OrderBook extends Component {
       this.orderBookWrap = React.createRef();
 
       this.updateInput = updateInput.bind(this);
+
+      this.bestAsk = 0;
+      this.bestBid = 0;
    }
 
    componentDidMount() {
-      // TODO how to set scroll position..
-      // if (this.orderBookWrap !== null) {
-      //    this.orderBookWrap.scrollTop = 1000;
-      // }
+      // Center the order book depending on the screen height
       let el = document.querySelector('#orderBookWrap');
       console.log('orderBookWrap height');
       console.log(el.offsetHeight);
       console.log('Screen height');
       console.log(this.props.winH);
       el.scrollTop = 1000 - this.props.winH * 0.4;
-      //el.scrollTop = 1000;
    }
 
    render() {
-      const { orderBook, titleTextAlign, height } = this.props;
+      const { orderBook } = this.props;
 
       const Orders = props => {
          let orderRows = [];
@@ -45,6 +45,16 @@ export default class OrderBook extends Component {
             let d2 = b.specification.totalPrice.value / b.specification.quantity.value;
             return d2 - d1;
          });
+
+         // Calculate the order book spread
+         if (props.type === 'asks') {
+            this.bestAsk =
+               sortedOrders[sortedOrders.length - 1].specification.totalPrice.value /
+               sortedOrders[sortedOrders.length - 1].specification.quantity.value;
+         } else {
+            this.bestBid =
+               sortedOrders[0].specification.totalPrice.value / sortedOrders[0].specification.quantity.value;
+         }
 
          sortedOrders.map((order, i) => {
             orderRows.push(
@@ -85,11 +95,15 @@ export default class OrderBook extends Component {
                      height: 1000
                   }}>
                   <Row style={{ alignSelf: 'flex-end', width: '100%' }}>
-                     <Orders orders={orderBook.asks.reverse()} type={'asks'} />
+                     <Orders orders={orderBook.asks} type={'asks'} />
                   </Row>
                </div>
             </Row>
-            <Row>Spread</Row>
+
+            <Row style={{ textAlign: 'center', padding: '5px 0' }}>
+               Spread - {Numeral(this.bestAsk - this.bestBid).format('0.0000')}
+            </Row>
+
             <Row
                style={{
                   width: '100%'
@@ -110,7 +124,5 @@ export default class OrderBook extends Component {
 OrderBook.propTypes = {
    orderBook: PropTypes.object,
    action: PropTypes.string,
-   updateFromOrder: PropTypes.func,
-   titleTextAlign: PropTypes.string,
-   height: PropTypes.number
+   updateFromOrder: PropTypes.func
 };
