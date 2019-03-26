@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import ReduxActions from '../redux/XledgRedux';
 
-import { Row, Col } from 'antd';
+import { Row, Col, Tabs } from 'antd';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
@@ -20,6 +20,8 @@ import { notification } from '../services/helpers';
 import InfoMenu from './components/InfoMenu';
 import Instructions from './components/Instructions';
 import Title from './ui/Title';
+
+const TabPane = Tabs.TabPane;
 
 class Dashboard extends Component {
    constructor(props) {
@@ -39,6 +41,12 @@ class Dashboard extends Component {
 
       // Connect to Ripple API
       this.props.connect();
+   }
+
+   componentDidMount() {
+      window.addEventListener('resize', evt => {
+         this.props.updateWindowDimensions(evt.target.innerWidth, evt.target.innerHeight);
+      });
    }
 
    componentWillReceiveProps(nextProps) {
@@ -164,12 +172,9 @@ class Dashboard extends Component {
    }
 
    render() {
-      //const [winH, updateWidth] = useState(window.innerHeight);
-      let winH = window.innerHeight;
-      // console.log('winH');
-      // console.log(window.innerHeight);
-
       const {
+         winH,
+         winW,
          action,
          baseCurrency,
          baseAmount,
@@ -193,11 +198,9 @@ class Dashboard extends Component {
          <div
             style={{
                position: 'absolute',
+               background: '#202020',
                height: winH,
                width: '100%',
-               background: '#202020',
-               //#1c2428
-               //height: this.state.connectionScreen ? '100vh' : 'auto',
                overflow: 'hidden'
             }}>
             {/*CONNECTION SCREEN*/}
@@ -211,9 +214,9 @@ class Dashboard extends Component {
                      width: '100%',
                      justifyContent: 'center',
                      textAlign: 'center',
-                     background: 'rgb(32, 32, 32, 1)',
+                     background: '#202020',
                      color: COLORS.white,
-                     zIndex: 1
+                     zIndex: 2
                   }}>
                   {/*Hardware Ledger Connection Screen*/}
                   <Motion
@@ -333,7 +336,7 @@ class Dashboard extends Component {
                                     1000
                                  );
                               }}>
-                              JUST BROWSING
+                              VIEW DEMO WALLET
                            </div>
                         </div>
                      )}
@@ -350,180 +353,349 @@ class Dashboard extends Component {
             )}
 
             {/*HEADER*/}
-            <Row
-               style={{
-                  padding: 15,
-                  borderBottom: '1px solid #383939'
-               }}>
-               <Col span={12}>
-                  <Logo size={'xs'} margin={'0'} />
-               </Col>
-               <Col span={12}>
-                  {/*TEMP KEY INPUT*/}
-                  <input
-                     placeholder={'for testing'}
-                     onChange={e => {
-                        this.setState({
-                           key: e.target.value
-                        });
-                     }}
-                     value={this.state.key}
-                  />
-               </Col>
-            </Row>
-
-            {/*MAIN*/}
-            <Row gutter={3}>
-               <Col span={5}>
+            {winW > 1000 ? (
+               <Row>
                   <Row
-                     className={'noScrollBar'}
-                     style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
-                     {/*BALANCES*/}
-                     <Title text={'Wallet Balance'} />
-                     <Row style={{ color: '#ffffff', padding: 15 }}>
-                        {gateways !== null &&
-                        //this.props.balanceSheet !== null &&
-                        accountInfo !== null ? (
-                           <Balances
-                              gateways={gateways}
-                              accountInfo={accountInfo}
-                              balanceSheet={balanceSheet}
-                              balances={balances}
-                              assetTotals={assetTotals}
+                     style={{
+                        padding: 15,
+                        borderBottom: '1px solid #383939'
+                     }}>
+                     <Col span={12}>
+                        <Logo size={'xs'} margin={'0'} />
+                     </Col>
+                     <Col span={12}>
+                        {/*TEMP KEY INPUT*/}
+                        <input
+                           placeholder={'for testing'}
+                           onChange={e => {
+                              this.setState({
+                                 key: e.target.value
+                              });
+                           }}
+                           value={this.state.key}
+                        />
+                     </Col>
+                  </Row>
+
+                  {/*MAIN*/}
+                  <Row gutter={3}>
+                     <Col span={5}>
+                        <Row
+                           className={'noScrollBar'}
+                           style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
+                           {/*BALANCES*/}
+                           <Title text={'Wallet Balance'} />
+                           <Row style={{ color: '#ffffff', padding: 15 }}>
+                              {gateways !== null &&
+                              //this.props.balanceSheet !== null &&
+                              accountInfo !== null ? (
+                                 <Balances
+                                    gateways={gateways}
+                                    accountInfo={accountInfo}
+                                    balanceSheet={balanceSheet}
+                                    balances={balances}
+                                    assetTotals={assetTotals}
+                                 />
+                              ) : (
+                                 false
+                              )}
+                           </Row>
+
+                           {/*TRADING UI - OFFERS/ASK*/}
+                           <Row>
+                              <TradingUI
+                                 {...this.props}
+                                 // prepareOrder={() =>
+                                 //    this.props.prepareOrder(
+                                 //       this.props.publicAddress,
+                                 //       {
+                                 //          direction: this.props.action,
+                                 //          quantity: {
+                                 //             currency: baseCurrency.value,
+                                 //             value: baseAmount
+                                 //          },
+                                 //          totalPrice: {
+                                 //             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
+                                 //             currency: counterCurrency.value,
+                                 //             value: (counterPrice * baseAmount).toString()
+                                 //          }
+                                 //       }
+                                 //       {
+                                 //          maxFee: 500,
+                                 //          maxLedgerVersion: 100
+                                 //       }
+                                 //    )
+                                 // }
+                                 prepareOrder={() =>
+                                    this.props.prepareOrder(
+                                       this.props.publicAddress,
+                                       {
+                                          source: {
+                                             address: this.props.publicAddress,
+                                             maxAmount: {
+                                                value: '1',
+                                                currency: 'XRP'
+                                             }
+                                          },
+                                          destination: {
+                                             address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+                                             amount: {
+                                                value: '1',
+                                                currency: 'XRP'
+                                             }
+                                          }
+                                       }
+                                       // {
+                                       //    maxFee: 500,
+                                       //    maxLedgerVersion: 100
+                                       // }
+                                    )
+                                 }
+                              />
+                           </Row>
+                        </Row>
+                     </Col>
+                     <Col span={5}>
+                        {/*ORDER BOOK*/}
+                        <Title text={'Order Book'} />
+                        <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
+                           <div style={{ width: '20%' }}>&nbsp;</div>
+                           <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                              Size ({baseCurrency.value})
+                           </div>
+                           <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                        </div>
+                        {orderBook !== null ? (
+                           <OrderBook
+                              winH={winH}
+                              orderBook={orderBook}
+                              action={action}
+                              updateFromOrder={order => this.props.updateFromOrder(order)}
+                              titleTextAlign={'center'}
+                              height={1000}
                            />
                         ) : (
-                           false
+                           <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
+                              <div
+                                 style={{
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    alignSelf: 'center',
+                                    fontSize: 12
+                                 }}>
+                                 Select a Trading Pair to View Order Book
+                              </div>
+                           </div>
                         )}
-                     </Row>
-
-                     {/*TRADING UI - OFFERS/ASK*/}
-                     <Row>
-                        <TradingUI
-                           {...this.props}
-                           // prepareOrder={() =>
-                           //    this.props.prepareOrder(
-                           //       this.props.publicAddress,
-                           //       {
-                           //          direction: this.props.action,
-                           //          quantity: {
-                           //             currency: baseCurrency.value,
-                           //             value: baseAmount
-                           //          },
-                           //          totalPrice: {
-                           //             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
-                           //             currency: counterCurrency.value,
-                           //             value: (counterPrice * baseAmount).toString()
-                           //          }
-                           //       }
-                           //       {
-                           //          maxFee: 500,
-                           //          maxLedgerVersion: 100
-                           //       }
-                           //    )
-                           // }
-                           prepareOrder={() =>
-                              this.props.prepareOrder(
-                                 this.props.publicAddress,
-                                 {
-                                    source: {
-                                       address: this.props.publicAddress,
-                                       maxAmount: {
-                                          value: '1',
-                                          currency: 'XRP'
-                                       }
-                                    },
-                                    destination: {
-                                       address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
-                                       amount: {
-                                          value: '1',
-                                          currency: 'XRP'
-                                       }
-                                    }
-                                 }
-                                 // {
-                                 //    maxFee: 500,
-                                 //    maxLedgerVersion: 100
-                                 // }
-                              )
-                           }
-                        />
-                     </Row>
-                  </Row>
-               </Col>
-               <Col span={5}>
-                  {/*ORDER BOOK*/}
-                  <Title text={'Order Book'} />
-                  <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
-                     <div style={{ width: '20%' }}>&nbsp;</div>
-                     <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
-                        Size ({baseCurrency.value})
-                     </div>
-                     <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
-                  </div>
-                  {orderBook !== null ? (
-                     <OrderBook
-                        winH={winH}
-                        orderBook={orderBook}
-                        action={action}
-                        updateFromOrder={order => this.props.updateFromOrder(order)}
-                        titleTextAlign={'center'}
-                        height={1000}
-                     />
-                  ) : (
-                     <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
-                        <div
-                           style={{
-                              width: '100%',
-                              textAlign: 'center',
-                              alignSelf: 'center',
-                              fontSize: 12
-                           }}>
-                           Select a Trading Pair to View Order Book
-                        </div>
-                     </div>
-                  )}
-               </Col>
-               <Col id={'centerCol'} span={9}>
-                  <Row
-                     className={'noScrollBar'}
-                     style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
-                     <Title text={`${baseCurrency.value}/${counterCurrency.value} Price & Volume`} />
-                     <Row style={{ marginBottom: 20 }}>
-                        <LineChart
-                           data={exchangeHistory}
-                           baseCurrency={baseCurrency}
-                           counterCurrency={counterCurrency}
-                        />
-                     </Row>
-                     <Row>
-                        <Row style={{ marginTop: 10 }}>
-                           {rippleApiConnected > 0 && publicAddress !== null ? (
-                              <Txs
-                                 publicAddress={publicAddress}
-                                 allTxs={allTxs}
-                                 openOrders={this.props.openOrders}
+                     </Col>
+                     <Col
+                        //id={'centerCol'}
+                        span={9}>
+                        <Row
+                           className={'noScrollBar'}
+                           style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
+                           <Title text={`${baseCurrency.value}/${counterCurrency.value} Price & Volume`} />
+                           <Row style={{ marginBottom: 20 }}>
+                              <LineChart
+                                 data={exchangeHistory}
                                  baseCurrency={baseCurrency}
                                  counterCurrency={counterCurrency}
-                                 getTxs={address => this.props.getTxs(address)}
-                                 getOrders={address => this.props.getOrders(address, { limit: 10 })}
-                                 cancelOrder={tx => {
-                                    console.log(tx);
-                                    this.props.cancelOrder(publicAddress, {
-                                       orderSequence: tx.properties.sequence
-                                    });
-                                 }}
+                              />
+                           </Row>
+                           <Row>
+                              <Row style={{ marginTop: 10 }}>
+                                 {rippleApiConnected > 0 && publicAddress !== null ? (
+                                    <Txs
+                                       publicAddress={publicAddress}
+                                       allTxs={allTxs}
+                                       openOrders={this.props.openOrders}
+                                       baseCurrency={baseCurrency}
+                                       counterCurrency={counterCurrency}
+                                       getTxs={address => this.props.getTxs(address)}
+                                       getOrders={address => this.props.getOrders(address, { limit: 10 })}
+                                       cancelOrder={tx => {
+                                          console.log(tx);
+                                          this.props.cancelOrder(publicAddress, {
+                                             orderSequence: tx.properties.sequence
+                                          });
+                                       }}
+                                    />
+                                 ) : (
+                                    <div style={{ color: COLORS.grey, fontSize: 11 }}>
+                                       No Pending Transactions
+                                    </div>
+                                 )}
+                              </Row>
+                           </Row>
+                        </Row>
+                     </Col>
+                     <Col span={5}>
+                        <Title text={`Trade History`} />
+                     </Col>
+                  </Row>
+               </Row>
+            ) : (
+               <Row id={'mobileLayout'}>
+                  {/*MOBILE*/}
+                  <Tabs defaultActiveKey="trade">
+                     <TabPane tab="Trade" key="trade">
+                        <Row
+                           className={'noScrollBar'}
+                           style={{
+                              height: winH,
+                              overflowY: 'auto',
+                              paddingBottom: 65
+                           }}>
+                           {/*BALANCES*/}
+                           <Title text={'Wallet Balance'} />
+                           <Row style={{ color: '#ffffff', padding: 15 }}>
+                              {gateways !== null &&
+                              //this.props.balanceSheet !== null &&
+                              accountInfo !== null ? (
+                                 <Balances
+                                    gateways={gateways}
+                                    accountInfo={accountInfo}
+                                    balanceSheet={balanceSheet}
+                                    balances={balances}
+                                    assetTotals={assetTotals}
+                                 />
+                              ) : (
+                                 false
+                              )}
+                           </Row>
+
+                           {/*TRADING UI - OFFERS/ASK*/}
+                           <Row>
+                              <TradingUI
+                                 {...this.props}
+                                 // prepareOrder={() =>
+                                 //    this.props.prepareOrder(
+                                 //       this.props.publicAddress,
+                                 //       {
+                                 //          direction: this.props.action,
+                                 //          quantity: {
+                                 //             currency: baseCurrency.value,
+                                 //             value: baseAmount
+                                 //          },
+                                 //          totalPrice: {
+                                 //             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', // Bitstamp
+                                 //             currency: counterCurrency.value,
+                                 //             value: (counterPrice * baseAmount).toString()
+                                 //          }
+                                 //       }
+                                 //       {
+                                 //          maxFee: 500,
+                                 //          maxLedgerVersion: 100
+                                 //       }
+                                 //    )
+                                 // }
+                                 prepareOrder={() =>
+                                    this.props.prepareOrder(
+                                       this.props.publicAddress,
+                                       {
+                                          source: {
+                                             address: this.props.publicAddress,
+                                             maxAmount: {
+                                                value: '1',
+                                                currency: 'XRP'
+                                             }
+                                          },
+                                          destination: {
+                                             address: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
+                                             amount: {
+                                                value: '1',
+                                                currency: 'XRP'
+                                             }
+                                          }
+                                       }
+                                       // {
+                                       //    maxFee: 500,
+                                       //    maxLedgerVersion: 100
+                                       // }
+                                    )
+                                 }
+                              />
+                           </Row>
+                        </Row>
+                     </TabPane>
+                     <TabPane tab="Order Book" key="book">
+                        <Row>
+                           {/*ORDER BOOK*/}
+                           <Title text={'Order Book'} />
+                           <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
+                              <div style={{ width: '20%' }}>&nbsp;</div>
+                              <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                                 Size ({baseCurrency.value})
+                              </div>
+                              <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                           </div>
+                           {orderBook !== null ? (
+                              <OrderBook
+                                 winH={winH}
+                                 orderBook={orderBook}
+                                 action={action}
+                                 updateFromOrder={order => this.props.updateFromOrder(order)}
+                                 titleTextAlign={'center'}
+                                 height={1000}
                               />
                            ) : (
-                              <div style={{ color: COLORS.grey, fontSize: 11 }}>No Pending Transactions</div>
+                              <div style={{ display: 'flex', minHeight: 160, color: '#ffffff' }}>
+                                 <div
+                                    style={{
+                                       width: '100%',
+                                       textAlign: 'center',
+                                       alignSelf: 'center',
+                                       fontSize: 12
+                                    }}>
+                                    Select a Trading Pair to View Order Book
+                                 </div>
+                              </div>
                            )}
                         </Row>
-                     </Row>
-                  </Row>
-               </Col>
-               <Col span={5}>
-                  <Title text={`Trade History`} />
-               </Col>
-            </Row>
+                     </TabPane>
+                     <TabPane tab="Chart" key="chart">
+                        <Row id={'centerCol'} className={'noScrollBar'}>
+                           <Title text={`${baseCurrency.value}/${counterCurrency.value} Price & Volume`} />
+                           <Row style={{ marginBottom: 20 }}>
+                              <LineChart
+                                 data={exchangeHistory}
+                                 baseCurrency={baseCurrency}
+                                 counterCurrency={counterCurrency}
+                              />
+                           </Row>
+                           <Row>
+                              <Row style={{ marginTop: 10 }}>
+                                 {rippleApiConnected > 0 && publicAddress !== null ? (
+                                    <Txs
+                                       publicAddress={publicAddress}
+                                       allTxs={allTxs}
+                                       openOrders={this.props.openOrders}
+                                       baseCurrency={baseCurrency}
+                                       counterCurrency={counterCurrency}
+                                       getTxs={address => this.props.getTxs(address)}
+                                       getOrders={address => this.props.getOrders(address, { limit: 10 })}
+                                       cancelOrder={tx => {
+                                          console.log(tx);
+                                          this.props.cancelOrder(publicAddress, {
+                                             orderSequence: tx.properties.sequence
+                                          });
+                                       }}
+                                    />
+                                 ) : (
+                                    <div style={{ color: COLORS.grey, fontSize: 11 }}>
+                                       No Pending Transactions
+                                    </div>
+                                 )}
+                              </Row>
+                           </Row>
+                        </Row>
+                     </TabPane>
+                     <TabPane tab="History" key="history">
+                        <Row>Trade History</Row>
+                     </TabPane>
+                  </Tabs>
+               </Row>
+            )}
          </div>
       );
    }
@@ -531,6 +703,8 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => {
    return {
+      winH: state.xledg.winH, // window width
+      winW: state.xledg.winW, // window height
       publicAddress: state.xledg.publicAddress,
       publicKey: state.xledg.publicKey,
       db: state.xledg.db,
@@ -560,6 +734,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
    return {
+      updateWindowDimensions: (width, height) => {
+         dispatch(ReduxActions.updateWindowDimensions(width, height));
+      },
       connect: () => {
          dispatch(ReduxActions.connect());
       },

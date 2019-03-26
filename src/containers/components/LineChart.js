@@ -31,20 +31,26 @@ export default class LineChart extends Component {
 
       // Need to manually set the width for react-vis charts
       window.onload = function() {
-         this.setState({
-            width: document.getElementById('centerCol').clientWidth
-         });
+         if (document.getElementById('centerCol')) {
+            this.setState({
+               width: document.getElementById('centerCol').clientWidth
+            });
+         }
       }.bind(this);
 
       window.addEventListener(
          'resize',
          function() {
-            this.setState({
-               width: document.getElementById('centerCol').clientWidth
-            });
+            if (document.getElementById('centerCol')) {
+               this.setState({
+                  width: document.getElementById('centerCol').clientWidth
+               });
+            }
          }.bind(this)
       );
    }
+
+   componentDidMount() {}
 
    componentWillReceiveProps(nextProps) {
       if (nextProps.data !== null) {

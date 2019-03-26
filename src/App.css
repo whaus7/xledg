@@ -733,3 +733,16 @@ h2 {
   border-left-color: #ffffff;
   bottom: -10px;
 }
+
+
+/*MOBILE*/
+#mobileLayout .ant-tabs-bar {
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    background: #fff;
+    width: 100%;
+    margin-bottom: 0;
+    padding: 10px;
+    text-align: center;
+}

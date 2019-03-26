@@ -9,6 +9,9 @@ PouchDB.plugin(require('pouchdb-upsert'));
 
 /* ------------- Types and Action Creators ------------- */
 const { Types, Creators } = createActions({
+   // UI Actions
+   updateWindowDimensions: ['width', 'height'],
+
    // xLedg Actions
    setAccount: ['status'], // 'new', 'existing', 'corrupt'
    updateAction: ['action'],
@@ -88,6 +91,10 @@ export default Creators;
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = {
+   // UI
+   winH: window.innerHeight,
+   winW: window.innerWidth,
+
    // xLedg UI
    publicAddress: 'rPyURAVppfVm76jdSRsPyZBACdGiXYu4bf',
    //publicAddress: null,
@@ -141,6 +148,18 @@ export const INITIAL_STATE = {
 };
 
 /* ------------- Reducers ------------- */
+export const uiReducer = (state, action) => {
+   switch (action.type) {
+      case 'UPDATE_WINDOW_DIMENSIONS':
+         return update(state, {
+            winH: { $set: action.height },
+            winW: { $set: action.width }
+         });
+      default:
+         return state;
+   }
+};
+
 export const xledgReducer = (state, action) => {
    switch (action.type) {
       case 'RESET_TO_IDLE':
@@ -522,6 +541,9 @@ export const ledgerApiReducer = (state, action) => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
+   // UI Actions
+   [Types.UPDATE_WINDOW_DIMENSIONS]: uiReducer,
+
    // xLedg Actions
    [Types.SET_ACCOUNT]: xledgReducer,
    [Types.UPDATE_ACTION]: xledgReducer,
