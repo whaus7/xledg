@@ -103,6 +103,8 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
             limit: 60
          })
          .then(orderBook => {
+            console.log('orderBook');
+            console.log(orderBook);
             return orderBook;
          })
          .catch(error => {

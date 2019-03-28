@@ -20,6 +20,8 @@ import { notification } from '../services/helpers';
 import InfoMenu from './components/InfoMenu';
 import Instructions from './components/Instructions';
 import Title from './ui/Title';
+import Order from './components/Order';
+import OrderHistory from './components/OrderHistory';
 
 const TabPane = Tabs.TabPane;
 
@@ -488,9 +490,7 @@ class Dashboard extends Component {
                            </div>
                         )}
                      </Col>
-                     <Col
-                        //id={'centerCol'}
-                        span={9}>
+                     <Col id={'centerCol'} span={9}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -531,6 +531,7 @@ class Dashboard extends Component {
                      </Col>
                      <Col span={5}>
                         <Title text={`Trade History`} />
+                        <OrderHistory />
                      </Col>
                   </Row>
                </Row>
@@ -616,13 +617,44 @@ class Dashboard extends Component {
                                  }
                               />
                            </Row>
+
+                           <Row style={{ marginTop: 15 }}>
+                              {rippleApiConnected > 0 && publicAddress !== null ? (
+                                 <Txs
+                                    publicAddress={publicAddress}
+                                    allTxs={allTxs}
+                                    openOrders={this.props.openOrders}
+                                    baseCurrency={baseCurrency}
+                                    counterCurrency={counterCurrency}
+                                    getTxs={address => this.props.getTxs(address)}
+                                    getOrders={address => this.props.getOrders(address, { limit: 10 })}
+                                    cancelOrder={tx => {
+                                       console.log(tx);
+                                       this.props.cancelOrder(publicAddress, {
+                                          orderSequence: tx.properties.sequence
+                                       });
+                                    }}
+                                 />
+                              ) : (
+                                 <div style={{ color: COLORS.grey, fontSize: 11 }}>
+                                    No Pending Transactions
+                                 </div>
+                              )}
+                           </Row>
                         </Row>
                      </TabPane>
                      <TabPane tab="Order Book" key="book">
                         <Row>
                            {/*ORDER BOOK*/}
                            <Title text={'Order Book'} />
-                           <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
+                           {/*TABLE HEADER*/}
+                           <div
+                              style={{
+                                 display: 'flex',
+                                 fontSize: 11,
+                                 padding: '5px 15px',
+                                 color: '#ffffff'
+                              }}>
                               <div style={{ width: '20%' }}>&nbsp;</div>
                               <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
                                  Size ({baseCurrency.value})
@@ -653,8 +685,8 @@ class Dashboard extends Component {
                            )}
                         </Row>
                      </TabPane>
-                     <TabPane tab="Chart" key="chart">
-                        <Row id={'centerCol'} className={'noScrollBar'}>
+                     <TabPane tab="Chart" key="chart" forceRender>
+                        <Row className={'noScrollBar'}>
                            <Title text={`${baseCurrency.value}/${counterCurrency.value} Price & Volume`} />
                            <Row style={{ marginBottom: 20 }}>
                               <LineChart
@@ -663,35 +695,10 @@ class Dashboard extends Component {
                                  counterCurrency={counterCurrency}
                               />
                            </Row>
-                           <Row>
-                              <Row style={{ marginTop: 10 }}>
-                                 {rippleApiConnected > 0 && publicAddress !== null ? (
-                                    <Txs
-                                       publicAddress={publicAddress}
-                                       allTxs={allTxs}
-                                       openOrders={this.props.openOrders}
-                                       baseCurrency={baseCurrency}
-                                       counterCurrency={counterCurrency}
-                                       getTxs={address => this.props.getTxs(address)}
-                                       getOrders={address => this.props.getOrders(address, { limit: 10 })}
-                                       cancelOrder={tx => {
-                                          console.log(tx);
-                                          this.props.cancelOrder(publicAddress, {
-                                             orderSequence: tx.properties.sequence
-                                          });
-                                       }}
-                                    />
-                                 ) : (
-                                    <div style={{ color: COLORS.grey, fontSize: 11 }}>
-                                       No Pending Transactions
-                                    </div>
-                                 )}
-                              </Row>
-                           </Row>
                         </Row>
                      </TabPane>
                      <TabPane tab="History" key="history">
-                        <Row>Trade History</Row>
+                        <OrderHistory />
                      </TabPane>
                   </Tabs>
                </Row>

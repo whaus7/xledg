@@ -5,7 +5,8 @@ import CurrencyFormatter from 'currency-formatter';
 import Numeral from 'numeral';
 import 'react-vis/dist/style.css';
 import {
-   XYPlot,
+   //XYPlot,
+   FlexibleWidthXYPlot,
    YAxis,
    LineSeries,
    VerticalBarSeries,
@@ -28,26 +29,6 @@ export default class LineChart extends Component {
          crosshairValues: [],
          currIndex: null
       };
-
-      // Need to manually set the width for react-vis charts
-      window.onload = function() {
-         if (document.getElementById('centerCol')) {
-            this.setState({
-               width: document.getElementById('centerCol').clientWidth
-            });
-         }
-      }.bind(this);
-
-      window.addEventListener(
-         'resize',
-         function() {
-            if (document.getElementById('centerCol')) {
-               this.setState({
-                  width: document.getElementById('centerCol').clientWidth
-               });
-            }
-         }.bind(this)
-      );
    }
 
    componentDidMount() {}
@@ -123,12 +104,11 @@ export default class LineChart extends Component {
             )}
 
             <div id={'priceChart'}>
-               <XYPlot
+               <FlexibleWidthXYPlot
                   style={{
                      display: data !== null && data.exchanges.length > 0 ? 'block' : 'none'
                   }}
                   height={300}
-                  width={this.state.width}
                   yDomain={[0, this.state.highestPrice]}
                   onMouseLeave={() => this.setState({ crosshairValues: [] })}>
                   <HorizontalGridLines style={{ opacity: 0.1 }} />
@@ -182,17 +162,16 @@ export default class LineChart extends Component {
                   ) : (
                      false
                   )}
-               </XYPlot>
+               </FlexibleWidthXYPlot>
             </div>
 
             <div id={'volumeChart'} style={{ position: 'relative', top: 40 }}>
-               <XYPlot
+               <FlexibleWidthXYPlot
                   style={{
                      opacity: 0.6,
                      display: data !== null && data.exchanges.length > 0 ? 'block' : 'none'
                   }}
                   height={100}
-                  width={this.state.width}
                   yDomain={[0, this.state.highestVolume]}
                   onMouseLeave={() => this.setState({ crosshairValues: [] })}>
                   <YAxis tickFormat={v => Numeral(v).format('0a')} />
@@ -231,7 +210,7 @@ export default class LineChart extends Component {
                         </div>
                      </div>
                   </Crosshair>
-               </XYPlot>
+               </FlexibleWidthXYPlot>
             </div>
          </div>
       );

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import COLORS from '../../services/colors';
 import Title from '../ui/Title';
 import Order from './Order';
+import AmountBar from '../ui/AmountBar';
+import Number from '../ui/Number';
 
 export default class Txs extends Component {
    constructor(props) {
@@ -23,6 +25,11 @@ export default class Txs extends Component {
    render() {
       const { publicAddress, allTxs, openOrders, baseCurrency, counterCurrency } = this.props;
 
+      console.log('openOrders');
+      console.log(openOrders);
+      // console.log('allTxs');
+      // console.log(allTxs);
+
       const Txs = () => {
          let completedTxsRows = [];
 
@@ -31,41 +38,74 @@ export default class Txs extends Component {
                publicAddress in tx.outcome.orderbookChanges &&
                tx.outcome.orderbookChanges[publicAddress][0].status === 'filled'
             ) {
+               // console.log('filled tx');
+               // console.log(tx);
                let txChanges = tx.outcome.orderbookChanges[publicAddress][0];
 
-               // completedTxsRows.push(
-               //    <Order
-               //       type={'asks'}
-               //       key={`filled_order_${i}`}
-               //       order={txChanges}
-               //       //updateFromOrder={order => this.props.updateFromOrder(order)}
-               //    />
-               // );
-
                completedTxsRows.push(
-                  <div key={`completed_txs_${i}`} style={{ margin: '0 0 10px 0', lineHeight: '14px' }}>
-                     <div style={{ width: '100%' }}>
-                        {/*index debug*/}
-                        {/*{i}.*/}
+                  <div key={`completed_txs_${i}`} style={{ display: 'flex', width: '100%', margin: '1px 0' }}>
+                     {/*AMOUNT BAR*/}
+                     <div style={{ width: '20%' }}>
+                        <AmountBar
+                           val={txChanges.quantity.value}
+                           color={txChanges.direction === 'buy' ? COLORS.green : COLORS.red}
+                        />
+                     </div>
+
+                     {/*BUY/SELL SIDE*/}
+                     <div
+                        style={{
+                           width: '20%'
+                        }}>
                         <span
                            style={{
                               color: txChanges.direction === 'buy' ? COLORS.green : COLORS.red
                            }}>
                            {txChanges.direction.toUpperCase()}
-                        </span>{' '}
-                        {parseFloat(txChanges.quantity.value).toFixed(2)}
-                        {txChanges.quantity.currency}
+                        </span>
                      </div>
 
-                     <div style={{ display: 'flex', width: '100%' }}>
-                        <div style={{ width: 8, marginRight: 7, position: 'relative', top: -1 }}>@</div>
-                        <div style={{ width: 100 }}>
-                           {(
-                              parseFloat(txChanges.totalPrice.value) / parseFloat(txChanges.quantity.value)
-                           ).toFixed(6)}{' '}
-                           {txChanges.totalPrice.currency}
-                        </div>
+                     {/*AMOUNT*/}
+                     <div
+                        style={{
+                           width: '30%'
+                        }}>
+                        <Number val={txChanges.quantity.value} type={txChanges.quantity.currency} />
                      </div>
+
+                     {/*TOTAL PRICE*/}
+                     <div
+                        style={{
+                           width: '30%'
+                        }}>
+                        <Number
+                           val={parseFloat(txChanges.totalPrice.value) / parseFloat(txChanges.quantity.value)}
+                           type={txChanges.totalPrice.currency}
+                        />
+                     </div>
+
+                     {/*<div style={{ width: '100%' }}>*/}
+                     {/*/!*index debug*!/*/}
+                     {/*/!*{i}.*!/*/}
+                     {/*<span*/}
+                     {/*style={{*/}
+                     {/*color: txChanges.direction === 'buy' ? COLORS.green : COLORS.red*/}
+                     {/*}}>*/}
+                     {/*{txChanges.direction.toUpperCase()}*/}
+                     {/*</span>{' '}*/}
+                     {/*{parseFloat(txChanges.quantity.value).toFixed(2)}*/}
+                     {/*{txChanges.quantity.currency}*/}
+                     {/*</div>*/}
+
+                     {/*<div style={{ display: 'flex', width: '100%' }}>*/}
+                     {/*<div style={{ width: 8, marginRight: 7, position: 'relative', top: -1 }}>@</div>*/}
+                     {/*<div style={{ width: 100 }}>*/}
+                     {/*{(*/}
+                     {/*parseFloat(txChanges.totalPrice.value) / parseFloat(txChanges.quantity.value)*/}
+                     {/*).toFixed(6)}{' '}*/}
+                     {/*{txChanges.totalPrice.currency}*/}
+                     {/*</div>*/}
+                     {/*</div>*/}
                   </div>
                );
             }
@@ -75,16 +115,26 @@ export default class Txs extends Component {
          return (
             <div>
                <div style={{ marginBottom: 15, paddingBottom: 15, borderBottom: '1px solid #383939' }}>
-                  {/*<h2>ORDER HISTORY</h2>*/}
+                  {/*FILLED ORDERS TABLE HEADER*/}
+                  <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
+                     <div style={{ width: '20%' }}>&nbsp;</div>
+                     <div style={{ width: '20%' }}>Side</div>
+                     <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                        Size ({baseCurrency.value})
+                     </div>
+                     <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                  </div>
                   <div
                      className={'customScroll'}
                      style={{
-                        maxHeight: 150,
+                        maxHeight: 250,
                         overflowY: 'scroll',
                         overflowX: 'hidden'
                      }}>
                      {completedTxsRows.length === 0 ? (
-                        <div style={{ color: COLORS.grey, fontSize: 11 }}>No Transactions Found</div>
+                        <div style={{ color: COLORS.grey, fontSize: 11 }}>
+                           This wallet has no filled orders
+                        </div>
                      ) : (
                         completedTxsRows
                      )}
@@ -98,24 +148,69 @@ export default class Txs extends Component {
          let openOrdersRows = [];
 
          openOrders.map((tx, i) => {
+            let direction = tx.specification.direction;
+            let amount = tx.specification.quantity;
+            let total = tx.specification.totalPrice;
+
             openOrdersRows.push(
                <div
                   key={`pending_txs_${i}`}
                   //className={'btnHover'}
                   style={{
                      display: 'flex',
-                     justifyContent: 'space-between',
-                     margin: '0 0 10px 0'
+                     //justifyContent: 'space-between',
+                     margin: '1px 0'
                   }}
                   onClick={() => this.props.cancelOrder(tx)}>
-                  <Order
-                     type={'asks'}
-                     category={'open'}
-                     key={`open_order_${i}`}
-                     order={tx}
-                     //updateFromOrder={order => this.props.updateFromOrder(order)}
-                  />
-                  {/*ORDER*/}
+                  {/*AMOUNT BAR*/}
+                  <div style={{ width: '20%' }}>
+                     <AmountBar val={amount.value} color={direction === 'buy' ? COLORS.green : COLORS.red} />
+                  </div>
+
+                  {/*BUY/SELL SIDE*/}
+                  <div
+                     style={{
+                        width: '10%'
+                     }}>
+                     <span
+                        style={{
+                           color: direction === 'buy' ? COLORS.green : COLORS.red
+                        }}>
+                        {direction.toUpperCase()}
+                     </span>
+                  </div>
+
+                  {/*AMOUNT*/}
+                  <div
+                     style={{
+                        width: '30%'
+                     }}>
+                     <Number val={amount.value} type={amount.currency} />
+                  </div>
+
+                  {/*TOTAL PRICE*/}
+                  <div
+                     style={{
+                        width: '30%'
+                     }}>
+                     <Number val={total.value / amount.value} type={total.currency} />
+                  </div>
+
+                  {/*ACTION*/}
+                  <div
+                     style={{
+                        width: '10%'
+                     }}>
+                     <div
+                        className={'btnHover'}
+                        style={{
+                           fontSize: 16,
+                           padding: '0 5px'
+                        }}>
+                        x
+                     </div>
+                  </div>
+
                   {/*<div style={{ lineHeight: '14px' }}>*/}
                   {/*<div style={{ width: '100%' }}>*/}
                   {/*/!*index debug*!/*/}
@@ -140,7 +235,8 @@ export default class Txs extends Component {
                   {/*</div>*/}
                   {/*</div>*/}
                   {/*</div>*/}
-                  {/*/!*CANCEL ICON*!/*/}
+
+                  {/*CANCEL ICON*/}
                   {/*<div*/}
                   {/*className={'btnHover'}*/}
                   {/*style={{*/}
@@ -169,10 +265,12 @@ export default class Txs extends Component {
                      {/*OPEN ORDERS TABLE HEADER*/}
                      <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
                         <div style={{ width: '20%' }}>&nbsp;</div>
-                        <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                        <div style={{ width: '10%' }}>Side</div>
+                        <div style={{ width: '30%', marginRight: 20, textAlign: 'right' }}>
                            Size ({baseCurrency.value})
                         </div>
-                        <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                        <div style={{ width: '30%' }}>Price ({counterCurrency.value})</div>
+                        <div style={{ width: '10%' }}>&nbsp;</div>
                      </div>
 
                      {openOrdersRows.length === 0 ? (
