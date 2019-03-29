@@ -354,9 +354,10 @@ class Dashboard extends Component {
                false
             )}
 
-            {/*HEADER*/}
+            {/*DESKTOP*/}
             {winW > 1000 ? (
                <Row>
+                  {/*HEADER*/}
                   <Row
                      style={{
                         padding: 15,
@@ -530,8 +531,12 @@ class Dashboard extends Component {
                         </Row>
                      </Col>
                      <Col span={5}>
-                        <Title text={`Trade History`} />
-                        <OrderHistory />
+                        <Row
+                           className={'noScrollBar'}
+                           style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
+                           <Title text={`Trade History`} />
+                           <OrderHistory allTxs={allTxs} />
+                        </Row>
                      </Col>
                   </Row>
                </Row>

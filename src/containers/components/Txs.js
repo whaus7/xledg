@@ -25,10 +25,10 @@ export default class Txs extends Component {
    render() {
       const { publicAddress, allTxs, openOrders, baseCurrency, counterCurrency } = this.props;
 
-      console.log('openOrders');
-      console.log(openOrders);
-      // console.log('allTxs');
-      // console.log(allTxs);
+      // console.log('openOrders');
+      // console.log(openOrders);
+      console.log('allTxs');
+      console.log(allTxs);
 
       const Txs = () => {
          let completedTxsRows = [];

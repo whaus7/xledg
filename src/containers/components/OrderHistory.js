@@ -18,8 +18,57 @@ export default class OrderHistory extends Component {
    componentDidMount() {}
 
    render() {
-      const { history } = this.props;
+      const { allTxs } = this.props;
 
-      return <Row>history</Row>;
+      return (
+         <Row>
+            <ReactTable
+               //filterable
+               // defaultFilterMethod={(filter, row) =>
+               // 	row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) >= 0
+               // }
+               defaultSorted={[
+                  {
+                     id: 'filename',
+                     desc: false
+                  }
+               ]}
+               data={allTxs}
+               columns={[
+                  // {
+                  // 	Header: '',
+                  // 	id: 'bar',
+                  // 	accessor: row => row.specification.direction,
+                  // 	Cell: row => (
+                  // 		<span
+                  // 			style={{
+                  // 				color: row.value === 'buy' ? COLORS.green : COLORS.red
+                  // 			}}>
+                  //         {row.value.toUpperCase()}
+                  //      </span>
+                  // 	)
+                  // },
+                  {
+                     Header: 'Side',
+                     id: 'side',
+                     accessor: row => row.specification.direction,
+                     Cell: row => (
+                        <span
+                           style={{
+                              color: row.value === 'buy' ? COLORS.green : COLORS.red
+                           }}>
+                           {row.value.toUpperCase()}
+                        </span>
+                     )
+                  }
+               ]}
+               showPagination={false}
+               defaultPageSize={300}
+               noDataText={'Loading Trade History..'}
+               minRows={2}
+               className="-highlight"
+            />
+         </Row>
+      );
    }
 }
