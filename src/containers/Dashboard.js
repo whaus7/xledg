@@ -381,8 +381,8 @@ class Dashboard extends Component {
                   </Row>
 
                   {/*MAIN*/}
-                  <Row gutter={3}>
-                     <Col span={5}>
+                  <div style={{ display: 'flex' }}>
+                     <div style={{ flex: '0 0 250px' }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -457,8 +457,8 @@ class Dashboard extends Component {
                               />
                            </Row>
                         </Row>
-                     </Col>
-                     <Col span={5}>
+                     </div>
+                     <div style={{ flex: '0 0 280px' }}>
                         {/*ORDER BOOK*/}
                         <Title text={'Order Book'} />
                         <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
@@ -490,8 +490,8 @@ class Dashboard extends Component {
                               </div>
                            </div>
                         )}
-                     </Col>
-                     <Col id={'centerCol'} span={9}>
+                     </div>
+                     <div id={'centerCol'} style={{ flex: 1 }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -529,16 +529,16 @@ class Dashboard extends Component {
                               </Row>
                            </Row>
                         </Row>
-                     </Col>
-                     <Col span={5}>
+                     </div>
+                     <div style={{ flex: '0 0 280px' }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
                            <Title text={`Trade History`} />
                            <OrderHistory allTxs={allTxs} />
                         </Row>
-                     </Col>
-                  </Row>
+                     </div>
+                  </div>
                </Row>
             ) : (
                <Row id={'mobileLayout'}>
