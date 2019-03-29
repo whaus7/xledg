@@ -382,7 +382,7 @@ class Dashboard extends Component {
 
                   {/*MAIN*/}
                   <div style={{ display: 'flex' }}>
-                     <div style={{ flex: '0 0 250px' }}>
+                     <div style={{ flexBasis: 250 }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -458,7 +458,7 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ flex: '0 0 280px' }}>
+                     <div style={{ flexBasis: 280 }}>
                         {/*ORDER BOOK*/}
                         <Title text={'Order Book'} />
                         <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
@@ -530,7 +530,7 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ flex: '0 0 280px' }}>
+                     <div style={{ flexBasis: 280 }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
