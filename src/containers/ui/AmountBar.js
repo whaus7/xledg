@@ -4,7 +4,7 @@ const AmountBar = ({ val, color }) => {
    return (
       <div
          style={{
-            width: Math.log10(val <= 1 ? 2 : val) * 10,
+            width: Math.log10(val <= 1 ? 1.5 : val) * 10,
             height: 15,
             background: color,
             opacity: 0.4

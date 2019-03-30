@@ -66,6 +66,7 @@ export default class OrderHistory extends Component {
                   {
                      Header: `Size ${baseCurrency.value}`,
                      id: 'size',
+                     maxWidth: 50,
                      style: {
                         textAlign: 'right'
                      },
@@ -75,6 +76,7 @@ export default class OrderHistory extends Component {
                   {
                      Header: `Price (${counterCurrency.value})`,
                      id: 'price',
+                     maxWidth: 50,
                      accessor: row => row.specification,
                      Cell: row => (
                         <Number
@@ -86,28 +88,19 @@ export default class OrderHistory extends Component {
                   {
                      Header: `Time`,
                      id: 'time',
+                     maxWidth: 50,
                      // style: {
                      // 	textAlign: 'right'
                      // },
                      accessor: row => row.outcome.timestamp,
-                     Cell: row => moment(row.value).fromNow()
+                     Cell: row => moment(row.value).fromNow(true)
                   }
-                  // {
-                  //    Header: 'Side',
-                  //    id: 'side',
-                  //    accessor: row => row.specification.direction,
-                  //    Cell: row => (
-                  //       <span
-                  //          style={{
-                  //             color: row.value === 'buy' ? COLORS.green : COLORS.red
-                  //          }}>
-                  //          {row.value.toUpperCase()}
-                  //       </span>
-                  //    )
-                  // },
                ]}
                showPagination={false}
                defaultPageSize={300}
+               style={{
+                  height: this.props.winH - 60
+               }}
                noDataText={'Loading Trade History..'}
                minRows={2}
                className="-highlight"

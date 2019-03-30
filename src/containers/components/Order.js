@@ -27,12 +27,12 @@ export default class Order extends Component {
 
             {/*SIZE*/}
             <div
-               style={{ width: '40%', marginRight: 20, textAlign: 'right', color: '#ffffff', opacity: 0.9 }}>
+               style={{ width: '40%', marginRight: 10, textAlign: 'right', color: '#ffffff', opacity: 0.9 }}>
                <Number val={orderQuantity.value} type={orderQuantity.currency} />
             </div>
 
             {/*PRICE*/}
-            <div style={{ width: '40%' }}>
+            <div style={{ width: '40%', textAlign: 'right' }}>
                <Number
                   val={order.specification.totalPrice.value / orderQuantity.value}
                   type={order.specification.totalPrice.currency}

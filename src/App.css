@@ -60,7 +60,10 @@ h2 {
 }
 
 /*REACT TABLE*/
-.tightTable .ReactTable .rt-th, .ReactTable .rt-td {
+.tightTable .ReactTable .rt-th {
+  padding: 2px 5px !important;
+}
+.tightTable .ReactTable .rt-td {
   padding: 0px 5px !important;
 }
 

@@ -25,6 +25,8 @@ import OrderHistory from './components/OrderHistory';
 
 const TabPane = Tabs.TabPane;
 
+const MAX_COL_WIDTH = 280;
+
 class Dashboard extends Component {
    constructor(props) {
       super(props);
@@ -382,7 +384,7 @@ class Dashboard extends Component {
 
                   {/*MAIN*/}
                   <div style={{ display: 'flex', overflowX: 'auto' }}>
-                     <div style={{ flexBasis: 250, minWidth: 220 }}>
+                     <div style={{ maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -458,15 +460,17 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ flexBasis: 280, minWidth: 250 }}>
+                     <div style={{ maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
                         {/*ORDER BOOK*/}
                         <Title text={'Order Book'} />
-                        <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
+                        <div style={{ display: 'flex', fontSize: 11, padding: '5px 15px', color: '#ffffff' }}>
                            <div style={{ width: '20%' }}>&nbsp;</div>
-                           <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                           <div style={{ width: '40%', marginRight: 10, textAlign: 'right' }}>
                               Size ({baseCurrency.value})
                            </div>
-                           <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                           <div style={{ width: '40%', textAlign: 'right' }}>
+                              Price ({counterCurrency.value})
+                           </div>
                         </div>
                         {orderBook !== null ? (
                            <OrderBook
@@ -491,7 +495,7 @@ class Dashboard extends Component {
                            </div>
                         )}
                      </div>
-                     <div id={'centerCol'} style={{ flex: 1 }}>
+                     <div id={'centerCol'} style={{ flex: 1, minWidth: 500, padding: '0 1px' }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -530,12 +534,13 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ flexBasis: 280, minWidth: 250 }}>
+                     <div style={{ maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
+                        <Title text={`Trade History`} />
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
-                           <Title text={`Trade History`} />
                            <OrderHistory
+                              winH={winH}
                               allTxs={allTxs}
                               baseCurrency={baseCurrency}
                               counterCurrency={counterCurrency}
@@ -665,10 +670,12 @@ class Dashboard extends Component {
                                  color: '#ffffff'
                               }}>
                               <div style={{ width: '20%' }}>&nbsp;</div>
-                              <div style={{ width: '40%', marginRight: 20, textAlign: 'right' }}>
+                              <div style={{ width: '40%', marginRight: 10, textAlign: 'right' }}>
                                  Size ({baseCurrency.value})
                               </div>
-                              <div style={{ width: '40%' }}>Price ({counterCurrency.value})</div>
+                              <div style={{ width: '40%', textAlign: 'right' }}>
+                                 Price ({counterCurrency.value})
+                              </div>
                            </div>
                            {orderBook !== null ? (
                               <OrderBook

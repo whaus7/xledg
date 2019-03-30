@@ -15,7 +15,7 @@ function formatZeros(num) {
 const Number = ({ val, type }) => {
    return (
       <span>
-         {formatZeros(Numeral(val).format(type === 'BTC' || type === 'USD' ? '0,0.0000' : '0,0.00'))}
+         {formatZeros(Numeral(val).format(type === 'BTC' || type === 'USD' ? '0,0.000000' : '0,0.00'))}
       </span>
    );
 };
