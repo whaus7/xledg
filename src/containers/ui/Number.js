@@ -7,7 +7,7 @@ function formatZeros(num) {
    return (
       <span>
          <span style={{ opacity: numSplit[0] === '0' ? 0.4 : 1 }}>{numSplit[0]}</span>.
-         <span style={{ opacity: numSplit[1] === '00' ? 0.4 : 1 }}>{numSplit[1]}</span>
+         <span style={{ opacity: numSplit[1] === '000000' ? 0.4 : 1 }}>{numSplit[1]}</span>
       </span>
    );
 }
@@ -15,7 +15,7 @@ function formatZeros(num) {
 const Number = ({ val, type }) => {
    return (
       <span>
-         {formatZeros(Numeral(val).format(type === 'BTC' || type === 'USD' ? '0,0.000000' : '0,0.00'))}
+         {formatZeros(Numeral(val).format(type === 'BTC' || type === 'USD' ? '0,0.000000' : '0,0.000000'))}
       </span>
    );
 };

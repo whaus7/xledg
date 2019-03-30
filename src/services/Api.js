@@ -189,11 +189,11 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
 
    const getTxs = account => {
       return rippleAPI
-         .getTransactions(account, {
+         .getTransactions('rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', {
             types: ['order'],
             limit: 200,
-            excludeFailures: true,
-            earliestFirst: true
+            excludeFailures: true
+            //earliestFirst: true
          })
          .then(txs => {
             return txs;
