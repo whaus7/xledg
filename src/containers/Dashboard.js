@@ -25,7 +25,8 @@ import OrderHistory from './components/OrderHistory';
 
 const TabPane = Tabs.TabPane;
 
-const MAX_COL_WIDTH = 280;
+const MIN_COL_WIDTH = 250;
+const MAX_COL_WIDTH = 350;
 
 class Dashboard extends Component {
    constructor(props) {
@@ -384,7 +385,7 @@ class Dashboard extends Component {
 
                   {/*MAIN*/}
                   <div style={{ display: 'flex', overflowX: 'auto' }}>
-                     <div style={{ maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
+                     <div style={{ minWidth: MIN_COL_WIDTH, maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -460,7 +461,7 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
+                     <div style={{ minWidth: MIN_COL_WIDTH, maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
                         {/*ORDER BOOK*/}
                         <Title text={'Order Book'} />
                         <div style={{ display: 'flex', fontSize: 11, padding: '5px 15px', color: '#ffffff' }}>
@@ -534,7 +535,7 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
+                     <div style={{ minWidth: MIN_COL_WIDTH, maxWidth: MAX_COL_WIDTH, padding: '0 1px' }}>
                         <Title text={`Trade History`} />
                         <Row
                            className={'noScrollBar'}
