@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import moment from 'moment';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import ReactTable from 'react-table';
@@ -9,6 +10,8 @@ import 'react-table/react-table.css';
 import Numeral from 'numeral';
 
 import COLORS from '../../services/colors';
+import AmountBar from '../ui/AmountBar';
+import Number from '../ui/Number';
 
 export default class OrderHistory extends Component {
    constructor(props) {
@@ -18,10 +21,10 @@ export default class OrderHistory extends Component {
    componentDidMount() {}
 
    render() {
-      const { allTxs } = this.props;
+      const { allTxs, counterCurrency, baseCurrency } = this.props;
 
       return (
-         <Row>
+         <Row className={'tightTable'} style={{ color: '#ffffff', fontSize: 11 }}>
             <ReactTable
                //filterable
                // defaultFilterMethod={(filter, row) =>
@@ -49,18 +52,59 @@ export default class OrderHistory extends Component {
                   // 	)
                   // },
                   {
-                     Header: 'Side',
-                     id: 'side',
-                     accessor: row => row.specification.direction,
+                     Header: '',
+                     id: 'amount_bar',
+                     maxWidth: 50,
+                     accessor: row => row.specification,
                      Cell: row => (
-                        <span
-                           style={{
-                              color: row.value === 'buy' ? COLORS.green : COLORS.red
-                           }}>
-                           {row.value.toUpperCase()}
-                        </span>
+                        <AmountBar
+                           val={row.value.quantity.value}
+                           color={row.value.direction === 'buy' ? COLORS.green : COLORS.red}
+                        />
                      )
+                  },
+                  {
+                     Header: `Size ${baseCurrency.value}`,
+                     id: 'size',
+                     style: {
+                        textAlign: 'right'
+                     },
+                     accessor: row => row.specification,
+                     Cell: row => <Number val={row.value.quantity.value} type={row.value.quantity.currency} />
+                  },
+                  {
+                     Header: `Price (${counterCurrency.value})`,
+                     id: 'price',
+                     accessor: row => row.specification,
+                     Cell: row => (
+                        <Number
+                           val={row.value.totalPrice.value / row.value.quantity.value}
+                           type={row.value.quantity.currency}
+                        />
+                     )
+                  },
+                  {
+                     Header: `Time`,
+                     id: 'time',
+                     // style: {
+                     // 	textAlign: 'right'
+                     // },
+                     accessor: row => row.outcome.timestamp,
+                     Cell: row => moment(row.value).fromNow()
                   }
+                  // {
+                  //    Header: 'Side',
+                  //    id: 'side',
+                  //    accessor: row => row.specification.direction,
+                  //    Cell: row => (
+                  //       <span
+                  //          style={{
+                  //             color: row.value === 'buy' ? COLORS.green : COLORS.red
+                  //          }}>
+                  //          {row.value.toUpperCase()}
+                  //       </span>
+                  //    )
+                  // },
                ]}
                showPagination={false}
                defaultPageSize={300}

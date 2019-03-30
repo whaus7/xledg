@@ -191,7 +191,7 @@ const apiHaus = (baseURL = 'https://data.ripple.com/v2/', rippleApiBaseURL = 'ws
       return rippleAPI
          .getTransactions(account, {
             types: ['order'],
-            limit: 300,
+            limit: 1000,
             excludeFailures: true
          })
          .then(txs => {

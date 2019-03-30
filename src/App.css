@@ -59,6 +59,11 @@ h2 {
   opacity: 1;
 }
 
+/*REACT TABLE*/
+.tightTable .ReactTable .rt-th, .ReactTable .rt-td {
+  padding: 0px 5px !important;
+}
+
 /*GLOBAL COMPONENTS*/
 .btn {
   float: left;

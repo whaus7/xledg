@@ -381,8 +381,8 @@ class Dashboard extends Component {
                   </Row>
 
                   {/*MAIN*/}
-                  <div style={{ display: 'flex' }}>
-                     <div style={{ flexBasis: 250 }}>
+                  <div style={{ display: 'flex', overflowX: 'auto' }}>
+                     <div style={{ flexBasis: 250, minWidth: 220 }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
@@ -458,7 +458,7 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ flexBasis: 280 }}>
+                     <div style={{ flexBasis: 280, minWidth: 250 }}>
                         {/*ORDER BOOK*/}
                         <Title text={'Order Book'} />
                         <div style={{ display: 'flex', fontSize: 11, margin: '5px 0', color: '#ffffff' }}>
@@ -530,12 +530,16 @@ class Dashboard extends Component {
                            </Row>
                         </Row>
                      </div>
-                     <div style={{ flexBasis: 280 }}>
+                     <div style={{ flexBasis: 280, minWidth: 250 }}>
                         <Row
                            className={'noScrollBar'}
                            style={{ height: winH, overflowY: 'auto', paddingBottom: 65 }}>
                            <Title text={`Trade History`} />
-                           <OrderHistory allTxs={allTxs} />
+                           <OrderHistory
+                              allTxs={allTxs}
+                              baseCurrency={baseCurrency}
+                              counterCurrency={counterCurrency}
+                           />
                         </Row>
                      </div>
                   </div>
