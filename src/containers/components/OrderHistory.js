@@ -54,7 +54,7 @@ export default class OrderHistory extends Component {
                   {
                      Header: '',
                      id: 'amount_bar',
-                     maxWidth: 50,
+                     maxWidth: 30,
                      accessor: row => row.specification,
                      Cell: row => (
                         <AmountBar
@@ -64,9 +64,9 @@ export default class OrderHistory extends Component {
                      )
                   },
                   {
-                     Header: `Size ${baseCurrency.value}`,
+                     Header: `Size (${baseCurrency.value})`,
                      id: 'size',
-                     maxWidth: 50,
+                     maxWidth: 80,
                      style: {
                         textAlign: 'right'
                      },
@@ -76,7 +76,7 @@ export default class OrderHistory extends Component {
                   {
                      Header: `Price (${counterCurrency.value})`,
                      id: 'price',
-                     maxWidth: 50,
+                     maxWidth: 80,
                      accessor: row => row.specification,
                      Cell: row => (
                         <Number
@@ -88,7 +88,7 @@ export default class OrderHistory extends Component {
                   {
                      Header: `Time`,
                      id: 'time',
-                     maxWidth: 50,
+                     maxWidth: 80,
                      // style: {
                      // 	textAlign: 'right'
                      // },
