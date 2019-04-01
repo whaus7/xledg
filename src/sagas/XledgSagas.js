@@ -173,7 +173,30 @@ export function* getTxs(api, { address }) {
       notifyError(response);
       yield put(XledgActions.getTxsFailure(response));
    } else {
-      yield put(XledgActions.getTxsSuccess(response));
+      console.log('get TXs response');
+      console.log(response);
+
+      let filteredTxs = response.filter(tx => {
+         let isFilled = false;
+
+         Object.entries(tx.outcome.orderbookChanges).forEach(([key, value]) => {
+            //console.log(key, value);
+
+            value.map(orderBookChange => {
+               //console.log(orderBookChange.status);
+
+               if (orderBookChange.status === 'partially-filled') {
+                  isFilled = true;
+               }
+            });
+
+            //return isFilled;
+         });
+
+         return isFilled;
+      });
+
+      yield put(XledgActions.getTxsSuccess(filteredTxs));
    }
 }
 
