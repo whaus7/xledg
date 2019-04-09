@@ -6,7 +6,6 @@ import { Row, Col, Tabs } from 'antd';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 import spinner1 from '../images/spinners/xLedg-Spinner-1.svg';
-import Logo from './components/Logo';
 import xrpIcon from '../images/xrp-icon.svg';
 
 import Balances from './components/Balances';
@@ -22,6 +21,7 @@ import Instructions from './components/Instructions';
 import Title from './ui/Title';
 import Order from './components/Order';
 import OrderHistory from './components/OrderHistory';
+import Header from './components/Header';
 
 const TabPane = Tabs.TabPane;
 
@@ -361,27 +361,7 @@ class Dashboard extends Component {
             {winW > 1000 ? (
                <Row>
                   {/*HEADER*/}
-                  <Row
-                     style={{
-                        padding: 15,
-                        borderBottom: '1px solid #383939'
-                     }}>
-                     <Col span={12}>
-                        <Logo size={'xs'} margin={'0'} />
-                     </Col>
-                     <Col span={12}>
-                        {/*TEMP KEY INPUT*/}
-                        <input
-                           placeholder={'for testing'}
-                           onChange={e => {
-                              this.setState({
-                                 key: e.target.value
-                              });
-                           }}
-                           value={this.state.key}
-                        />
-                     </Col>
-                  </Row>
+                  <Header nav={'wallet'} />
 
                   {/*MAIN*/}
                   <div style={{ display: 'flex', overflowX: 'auto' }}>
